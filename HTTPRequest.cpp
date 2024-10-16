@@ -1,6 +1,4 @@
 #include "HTTPRequest.hpp"
-#include "webserv.h"
-#include <unistd.h>
 
 // Default constructor
 HTTPRequest::HTTPRequest() { return; }
