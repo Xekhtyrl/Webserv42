@@ -9,7 +9,8 @@
 class HTTPReponse {
  public:
   HTTPReponse();
-  HTTPReponse(HTTPRequest);
+  HTTPReponse(std::string);
+  HTTPReponse(std::string, HTTPRequest);
   HTTPReponse(const HTTPReponse &other);
   HTTPReponse &operator=(const HTTPReponse &rhs);
   std::string const getFinal() const;
