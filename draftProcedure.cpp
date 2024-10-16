@@ -4,17 +4,16 @@
 #define EXTENSION_CGI ".py" // A DEFINIR EN FCT DE NOS CGI OU SI PLUSIEURS EXTENSION POSSIBLE, FERAIS UNE FCONCTION
 
 //ALL THIS IS JUST AN IDEA, DRAFT OF HOW IT WOULD PROCEED
-//Quid de un fork seulement dans le cas de CGI et donc de la separation en 3 par method, retourne juste le prompt pour execve? et execve dans executeRequest?
 void	executeGET(HTTPRequest request, std::string& response) {
 
 }
 void	executePOST(HTTPRequest request, std::string& response) {
 
 }
-void	executeCGI(HTTPRequest request, std::string& response) {
+void	executeDELETE(HTTPRequest request, std::string& response) {
 
 }
-void	executeDELETE(HTTPRequest request, std::string& response) {
+void	executeCGI(HTTPRequest request, std::string& response) {
 
 }
 
