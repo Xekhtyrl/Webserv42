@@ -53,6 +53,9 @@ std::string	HTTPRequest::getProtocolHTTP() const {
 std::string	HTTPRequest::getBody() const {
 	return _body;
 }
+std::map<std::string, std::string>	HTTPRequest::getHeader() const {
+	return _header;
+}
 
 std::map<std::string, std::string> HTTPRequest::splitHeader(std::string request) {
 	std::string tmp;

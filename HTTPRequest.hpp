@@ -21,6 +21,7 @@ class HTTPRequest {
   std::string	getContent() const;
   std::string	getProtocolHTTP() const;
   std::string	getBody() const;
+  std::map<std::string, std::string>	getHeader() const;
 
  private:
   std::map<std::string, std::string> splitHeader(std::string request);
