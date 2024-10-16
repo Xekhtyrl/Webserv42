@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <exception>
 
 // Class declaration
 class HTTPRequest {
@@ -25,6 +26,7 @@ class HTTPRequest {
   std::map<std::string, std::string> splitHeader(std::string request);
   bool	checkMethod(std::string method);
   bool	checkLink(std::string& link);
+  bool	checkHeaders();
   std::string	_header;
   std::string	_body;
   std::string	_method;

@@ -7,17 +7,21 @@ HTTPRequest::HTTPRequest(std::string const request) {
 	_method = tmp.substr(0, tmp.find_first_of(' '));
 	// std::cout<<!checkMethod(_method)<<std::endl;
 	if (!checkMethod(_method))
-		return; // put adequate error here?
+		std::runtime_error("405 Method Not Allowed");
 	_content = tmp.substr(tmp.find_first_of(' ') + 1, tmp.find_last_of(' ') - tmp.find_first_of(' ') - 1);
 	// std::cout<<!checkLink(_content)<<std::endl;
 	if (!checkLink(_content))
-		return; // put adequate error here?
+		std::runtime_error("404 Not Found");
 	_protocolHTTP = tmp.substr(tmp.find_last_of(' ') + 1, tmp.length() - tmp.find_last_of(' ')); // needed to check?
+	if (_protocolHTTP != "HTTP/1.1")
+		throw std::runtime_error("400 Bad Request");
 	_header = splitHeader(request);
 	if (!_header["Content-Lengtgh"].empty() || !_header["Transfer-Encoding"].empty())
 		_body = request.substr(request.find("\r\n\r\n") + 4, request.size() - request.find("\r\n\r\n") - 4);
 	else
 		_body = "";
+	if (!checkHeaders())
+		return; // error
 	return; }
 
 // Copy constructor
@@ -77,4 +81,21 @@ bool	HTTPRequest::checkLink(std::string& link) {
 	// 	return false;
 	// link = path;
 	return true;
+}
+
+bool	HTTPRequest::checkHeaders() {
+	if (_header["Host"].empty())
+		throw std::runtime_error("400 Bad Request");
+	if (_method == "POST"){
+		if (_header["Content-Length"].empty())
+			throw std::runtime_error("411 Length Required");
+		if (_header["Content-Type"].empty() || (_header["Content-Length"].empty() && !_body.empty())
+			|| !_header["Range"].empty() || !_header["If-Modified-Since"].empty() || !_header["If-None-Matc"].empty())
+			throw std::runtime_error("400 Bad Request");
+	}
+	if (_method == "DELETE")
+		if ((_body.empty() && (!_header["Content-Type"].empty() || !_header["Content-Length"].empty())))
+			throw std::runtime_error("400 Bad Request");
+	if (!_body.empty() && (_header["Content-Type"].empty() || _method == "GET"))
+		throw std::runtime_error("400 Bad Request");
 }
