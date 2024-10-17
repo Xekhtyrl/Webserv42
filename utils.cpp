@@ -16,10 +16,24 @@ std::string strTrim(std::string str, std::string set) {
 	return (str.substr(start, n - start + 1));
 }
 
-std::string&	getTimeStamp() {
+std::string	getTimeStamp() {
 	time_t timestamp;
 	time(&timestamp);
 
 	std::string timeStr(ctime(&timestamp));
-	return timeStr;
+	return strTrim(timeStr, "\n");
+}
+
+std::string fileToStr(std::string filename) {
+	std::string fileStr;
+	std::string tmp;
+	std::ifstream file(filename, std::ios::in);
+	if (!file)
+		; //put basic output here?
+	while(getline(file, tmp)){
+		tmp.append("\r\n");
+		fileStr.append(tmp);
+	}
+	file.close();
+	return fileStr;
 }

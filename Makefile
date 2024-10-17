@@ -1,8 +1,9 @@
 NAME = webserv
 
-SRC =	HTTPReponse.cpp	\
+SRC =	HTTPReponse.cpp		\
 		HTTPRequest.cpp		\
 		utils.cpp			\
+		draftProcedure.cpp	\
 		test.cpp
 
 INCLUDE = -I .

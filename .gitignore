@@ -4,6 +4,4 @@ src/*.o
 */*.a
 */*/*.a
 minishell
-test.c
-test
-includes/ee/order66.sh
+test2.cpp

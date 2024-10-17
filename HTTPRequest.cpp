@@ -2,26 +2,32 @@
 
 // Default constructor
 HTTPRequest::HTTPRequest() { return; }
-HTTPRequest::HTTPRequest(std::string const request) { 
-	std::string tmp = request.substr(0, request.find_first_of('\n'));
-	_method = tmp.substr(0, tmp.find_first_of(' '));
+
+HTTPRequest::HTTPRequest(std::string request) { 
+	std::string tmp = request.substr(0, request.find_first_of('\r'));
+	_method = tmp.substr(0, tmp.find_first_of(32));
 	// std::cout<<!checkMethod(_method)<<std::endl;
+	std::cout<<"WWWWWWWWWWWWWWWAAAAAAAAAAAAZZZZZZZZZAAAAAAAA    :"<<tmp[3]<<tmp.find_first_of(32)<<std::endl;
 	if (!checkMethod(_method))
 		std::runtime_error("405 Method Not Allowed");
+	std::cout<<"WWWWWWWWWWWWWWWAAAAAAAAAAAAZZZZZZZZZAAAAAAAA    :"<<_method<<std::endl;
 	_content = tmp.substr(tmp.find_first_of(' ') + 1, tmp.find_last_of(' ') - tmp.find_first_of(' ') - 1);
 	// std::cout<<!checkLink(_content)<<std::endl;
 	if (!checkLink(_content))
 		std::runtime_error("404 Not Found");
 	_protocolHTTP = tmp.substr(tmp.find_last_of(' ') + 1, tmp.length() - tmp.find_last_of(' ')); // needed to check?
-	if (_protocolHTTP != "HTTP/1.1")
+	std::cout<<_protocolHTTP<<std::endl;
+	if (_protocolHTTP.find("HTTP/1.1") > _protocolHTTP.size())
 		throw std::runtime_error("400 Bad Request");
+	std::cout<<"WWWWWWWWWWWWWWWAAAAAAAAAAAAZZZZZZZZZAAAAAAAA"<<std::endl;
 	_header = splitHeader(request);
 	if (!_header["Content-Lengtgh"].empty() || !_header["Transfer-Encoding"].empty())
 		_body = request.substr(request.find("\r\n\r\n") + 4, request.size() - request.find("\r\n\r\n") - 4);
 	else
 		_body = "";
-	if (!checkHeaders())
-		return; // error
+	std::cout<<"WWWWWWWWWWWWWWWAAAAAAAAAAAAZZZZZZZZZAAAAAAAA"<<std::endl;
+	checkHeaders();
+	std::cout<<"WWWWWWWWWWWWWWWAAAAAAAAAAAAZZZZZZZZZAAAAAAAA"<<std::endl;
 	return; }
 
 // Copy constructor
@@ -37,7 +43,8 @@ HTTPRequest &HTTPRequest::operator=(const HTTPRequest &rhs) {
 }
 
 // Default destructor
-HTTPRequest::~HTTPRequest() { 
+HTTPRequest::~HTTPRequest() {
+	std::cout<<"REQUEST DELETED"<<std::endl;
 	_header.clear();
 	return; }
 
@@ -83,10 +90,11 @@ bool	HTTPRequest::checkLink(std::string& link) {
 	// if (!access(path.c_str(), F_OK))
 	// 	return false;
 	// link = path;
+	(void)link;
 	return true;
 }
 
-bool	HTTPRequest::checkHeaders() {
+void	HTTPRequest::checkHeaders() {
 	if (_header["Host"].empty())
 		throw std::runtime_error("400 Bad Request");
 	if (_method == "POST"){
@@ -101,4 +109,8 @@ bool	HTTPRequest::checkHeaders() {
 			throw std::runtime_error("400 Bad Request");
 	if (!_body.empty() && (_header["Content-Type"].empty() || _method == "GET"))
 		throw std::runtime_error("400 Bad Request");
+}
+
+void	HTTPRequest::addToHeader(std::string val, std::string cont) {
+	_header[val] = cont;
 }

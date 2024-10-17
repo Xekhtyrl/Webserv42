@@ -11,7 +11,7 @@
 #define MAX_CLIENT_SIZE 100000
 
 //ALL THIS IS JUST AN IDEA, DRAFT OF HOW IT WOULD PROCEED
-void	executeGET(HTTPRequest request, std::string& response) {
+void	executeGET(HTTPRequest& request, std::string& response) {
 	std::ifstream file(GET_LOCATION + request.getContent(), std::ios::in);
 	std::string tmp;
 
@@ -23,9 +23,13 @@ void	executeGET(HTTPRequest request, std::string& response) {
 	if (response.size() > MAX_CLIENT_SIZE){
 		response.clear();
 		throw std::runtime_error("400 Bad Request");}
+	//instead of doing this probably do a function that will get the extension and put the content depending on it
+	request.addToHeader("Content-Type", request.getHeader()["Accept"]);
+	request.addToHeader("Content-Length", ftToString(response.length()));
+	std::cout<<request.getHeader()["Content-Type"]<<": "<<request.getHeader()["Content-Length"]<<std::endl;
 }
 // Pas sur du tout de cet execution de POST :| 
-void	executePOST(HTTPRequest request, std::string& response) {
+void	executePOST(HTTPRequest& request, std::string& response) {
 	std::string filename;
 	std::string tmp;
 	std::string body = request.getBody();
@@ -59,7 +63,7 @@ void	executePOST(HTTPRequest request, std::string& response) {
 	response = "File uploaded successfully.\r\n";
 }
 
-void	executeDELETE(HTTPRequest request, std::string& response) {
+void	executeDELETE(HTTPRequest& request, std::string& response) {
 	std::string file = POST_LOCATION + request.getContent();
 
 	if (access(file.c_str(), F_OK) == -1)
@@ -68,11 +72,12 @@ void	executeDELETE(HTTPRequest request, std::string& response) {
 	response = "File removed succesfully";
 }
 
-void	executeCGI(HTTPRequest request, std::string& response) {
-	(void)request, response;
+void	executeCGI(HTTPRequest& request, std::string& response) {
+	(void)request;
+	(void)response;
 }
 
-void	executeRequest(HTTPRequest request, std::string& response){
+void	executeRequest(HTTPRequest& request, std::string& response){
 	if (request.getMethod() == "GET")
 		executeGET(request, response);
 	else if (request.getMethod() == "POST" && request.getContent().find(EXTENSION_CGI) < request.getContent().size())
@@ -89,11 +94,12 @@ std::string	requestToResponseProcess(std::string req) {
 
 	try {
 		HTTPRequest request(req);
+		std::cout<<">>>>>>>>>>> THIS IS THE REQUEST: "<<request.getMethod()<<std::endl;
 		executeRequest(request, repBody); //CGI???
+		std::cout<<">>>>>>>>>>> THIS IS THE REQUEST: "<<request.getMethod()<<std::endl;
 		HTTPReponse response(repBody, request);
 		final = response.getFinal();
 		request.~HTTPRequest();
-		response.~HTTPReponse();
 	}
 	catch (std::exception& e) {
 		HTTPReponse error((std::string)e.what());
