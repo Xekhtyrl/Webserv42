@@ -1,0 +1,9 @@
+*.o
+src/*.o
+*.a
+*/*.a
+*/*/*.a
+minishell
+test.c
+test
+includes/ee/order66.sh

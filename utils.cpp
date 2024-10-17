@@ -1,4 +1,5 @@
 #include "webserv.h"
+#include <ctime>
 
 std::string strTrim(std::string str, std::string set) {
 	int	n;
@@ -13,4 +14,12 @@ std::string strTrim(std::string str, std::string set) {
 	while (set.find(str[n], 0) <= str.size() && n != 0)
 		n--;
 	return (str.substr(start, n - start + 1));
+}
+
+std::string&	getTimeStamp() {
+	time_t timestamp;
+	time(&timestamp);
+
+	std::string timeStr(ctime(&timestamp));
+	return timeStr;
 }

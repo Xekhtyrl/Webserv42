@@ -2,6 +2,7 @@
 #include "HTTPRequest.hpp"
 #include <cstdio>
 #include <unistd.h>
+#include "webserv.h"
 
 // ces macro sont defini ici par facilité de code mais seront des valeurs recuperer du conf file
 #define EXTENSION_CGI ".py"
@@ -13,6 +14,7 @@
 void	executeGET(HTTPRequest request, std::string& response) {
 	std::ifstream file(GET_LOCATION + request.getContent(), std::ios::in);
 	std::string tmp;
+
 	if (!file.is_open())
 		throw std::runtime_error("404 Not Found");
 	while(getline(file, tmp))
@@ -22,12 +24,14 @@ void	executeGET(HTTPRequest request, std::string& response) {
 		response.clear();
 		throw std::runtime_error("400 Bad Request");}
 }
+// Pas sur du tout de cet execution de POST :| 
 void	executePOST(HTTPRequest request, std::string& response) {
 	std::string filename;
 	std::string tmp;
 	std::string body = request.getBody();
 	std::stringstream s(body);
 	std::string boundary = request.getHeader()["Content-type"];
+
 	boundary = boundary.substr(boundary.find("boundary=") + 9);
 	boundary = strTrim(boundary, "\" \n");
 	getline(s, tmp, '\n');
@@ -41,7 +45,9 @@ void	executePOST(HTTPRequest request, std::string& response) {
 	if (filename.empty())
 		throw std::runtime_error("400 Bad Request");
 	filename = (POST_LOCATION + filename);
+
 	std::ofstream file(filename, std::ios::out);
+
 	if (!file.is_open())
 		throw std::runtime_error("400 Bad Request");
 	while(getline(s, tmp, '\n')){
@@ -55,13 +61,15 @@ void	executePOST(HTTPRequest request, std::string& response) {
 
 void	executeDELETE(HTTPRequest request, std::string& response) {
 	std::string file = POST_LOCATION + request.getContent();
+
 	if (access(file.c_str(), F_OK) == -1)
 		throw std::runtime_error("404 Not Found");
 	remove(file.c_str());
 	response = "File removed succesfully";
 }
-void	executeCGI(HTTPRequest request, std::string& response) {
 
+void	executeCGI(HTTPRequest request, std::string& response) {
+	(void)request, response;
 }
 
 void	executeRequest(HTTPRequest request, std::string& response){
@@ -77,8 +85,9 @@ void	executeRequest(HTTPRequest request, std::string& response){
 
 std::string	requestToResponseProcess(std::string req) {
 	std::string final;
+	std::string repBody;
+
 	try {
-		std::string repBody;
 		HTTPRequest request(req);
 		executeRequest(request, repBody); //CGI???
 		HTTPReponse response(repBody, request);

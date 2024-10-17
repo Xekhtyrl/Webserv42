@@ -57,9 +57,8 @@ int main(int argc, char const *argv[])
 		std::string val(buffer);
 		file<<val;
 		file.close();
-		HTTPRequest request(val);
-		std::cout<<"\n\nTEEEEEESSSST "<<request.getMethod()<<" "<<request.getContent()<<" "<<request.getProtocolHTTP()<<"\nBODY >>> "<<request.getBody()<<"\nEND OF DEBBUG\n"<<std::endl;
-        printf("%s\n",buffer );
+		val = requestToResponseProcess(val);
+		printf("%s\n",buffer );
         write(new_socket , hello , strlen(hello));
         printf("------------------Hello message sent-------------------");
         close(new_socket);
