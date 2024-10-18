@@ -12,20 +12,16 @@
 
 //ALL THIS IS JUST AN IDEA, DRAFT OF HOW IT WOULD PROCEED
 void	executeGET(HTTPRequest& request, std::string& response) {
-	std::ifstream file(GET_LOCATION + request.getContent(), std::ios::in);
-	std::string tmp;
-
-	if (!file.is_open())
-		throw std::runtime_error("404 Not Found");
-	while(getline(file, tmp))
-		response.append(tmp);
-	file.close();
+	if (isBinaryFile(request.getContent(), request.getHeader()["Content-Type"])){
+		std::vector<unsigned char> vec = binaryFileToVector(GET_LOCATION + request.getContent());
+		response = vecToStr(vec);
+	}
+	else
+		response = fileToStr(GET_LOCATION + request.getContent());
 	if (response.size() > MAX_CLIENT_SIZE){
 		response.clear();
 		throw std::runtime_error("400 Bad Request");}
-	//instead of doing this probably do a function that will get the extension and put the content depending on it
-	request.addToHeader("Content-Type", request.getHeader()["Accept"]);
-	request.addToHeader("Content-Length", ftToString(response.length()));
+	request.addToHeader("Content-Length", ftToString(response.size()));
 	std::cout<<request.getHeader()["Content-Type"]<<": "<<request.getHeader()["Content-Length"]<<std::endl;
 }
 // Pas sur du tout de cet execution de POST :| 

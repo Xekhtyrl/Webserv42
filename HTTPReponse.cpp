@@ -13,11 +13,9 @@ HTTPReponse::HTTPReponse(std::string errorMsg) {
 }
 HTTPReponse::HTTPReponse(std::string body, HTTPRequest& request) {
 	_statusLine = "HTTP/1.1 " + ftToString(200) + "\r\n";
-	std::string tmp(request.getHeader()["Content-Type"]);
-	std::cout<<request.getHeader()["Content-Type"]<<std::endl;
-	if (tmp.empty())
-		tmp = "text/plain";
-	std::cout<<tmp<<std::endl;
+	std::string tmp;
+	isBinaryFile(request.getContent(), tmp);
+	// std::cout<<tmp<<std::endl;
 	_header =	headerLineFormat("Date", getTimeStamp()) + \
 				headerLineFormat("Content-Type", tmp);
 				headerLineFormat("Connection", "close");

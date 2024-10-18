@@ -24,16 +24,16 @@ std::string	getTimeStamp() {
 	return strTrim(timeStr, "\n");
 }
 
-std::string fileToStr(std::string filename, int binary) {
+std::string fileToStr(std::string filename) {
 	std::string fileStr;
 	std::string tmp;
 	std::ifstream file;
-	if (!binary)
+	// if (!binary)
 		file.open(filename, std::ios::in);
-	else
-		file.open(filename, std::ios::in | std::ios::binary);
+	// else
+	// 	file.open(filename, std::ios::in | std::ios::binary);
 	if (!file)
-		; //put basic output here?
+		throw std::runtime_error("404 Not Found");
 	while(getline(file, tmp)){
 		tmp.append("\r\n");
 		fileStr.append(tmp);
@@ -41,23 +41,41 @@ std::string fileToStr(std::string filename, int binary) {
 	file.close();
 	return fileStr;
 }
+std::vector<unsigned char>	binaryFileToVector(std::string filename) {
+	std::ifstream file(filename, std::ios::in | std::ios::binary);
+	if (!file)
+		throw std::runtime_error("404 Not Found");
+	std::vector<unsigned char>str((std::istreambuf_iterator<char>(file)),std::istreambuf_iterator<char>());
+	file.close();
+	return str;
+}
 
-bool isBinaryFile(std::string filename, std::string& type) {
-	std::string image[] = {".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tiff", ".ico", ".svg", 0};
-	std::string audio[] = {".mp3", ".wav", ".flac", ".ogg", ".aac", ".wma", 0}; 
-	std::string video[] = {".mp4", ".avi", ".mov", ".mkv", ".wmv", ".flv", 0}; 
-	std::string	exec[] = {".exe", ".dll", ".so", ".bin", ".elf", ".dylib", ".out", 0};
-	std::string	compr[] = {".zip", ".rar", ".tar", ".gz", ".7z", ".bz2", 0};
-	std::string	doc[] = {".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", 0};
-	std::string	oth[] = {".psd", ".iso", ".dat", ".class", ".swf", ".ttf", ".otf", 0};
+std::string	vecToStr(std::vector<unsigned char>& vec) {
+	std::string str;
+	str.resize(vec.size());
+
+	for (size_t i = 0; i < vec.size(); i++)
+		str[i] = vec[i];
+	return str;
+}
+
+bool	isBinaryFile(std::string filename, std::string& type) {
+	std::string image[] = {".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tiff", ".ico", ".svg", ""};
+	std::string audio[] = {".mp3", ".wav", ".flac", ".ogg", ".aac", ".wma", ""}; 
+	std::string video[] = {".mp4", ".avi", ".mov", ".mkv", ".wmv", ".flv", ""}; 
+	std::string	exec[] = {".exe", ".dll", ".so", ".bin", ".elf", ".dylib", ".out", ""};
+	std::string	compr[] = {".zip", ".rar", ".tar", ".gz", ".7z", ".bz2", ""};
+	std::string	doc[] = {".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ""};
+	std::string	oth[] = {".psd", ".iso", ".dat", ".class", ".swf", ".ttf", ".otf", ""};
 
 	for (int i = 0; !image[i].empty(); i++){
-		if (filename.find(image[i])) {
+		if (filename.find(image[i]) < filename.size()) {
+			std::cout<<i<<filename<<"<<<<<<<<<<<<<<<"<<std::endl;
 			switch (i){
-				case 5:
+				case 6:
 					type = "image/x-icon";
 					break;
-				case 6:
+				case 7:
 					type = "image/svg+xml";
 					break;
 				default:
@@ -66,7 +84,7 @@ bool isBinaryFile(std::string filename, std::string& type) {
 		return true;
 	}}
 	for (int i = 0; !audio[i].empty(); i++){
-		if (filename.find(audio[i])) {
+		if (filename.find(audio[i]) < filename.size()) {
 			switch (i){
 				case 6:
 					type = "audio/x-ms-wma";
@@ -77,7 +95,7 @@ bool isBinaryFile(std::string filename, std::string& type) {
 		return true;
 	}}
 	for (int i = 0; !video[i].empty(); i++){
-		if (filename.find(video[i])) {
+		if (filename.find(video[i]) < filename.size()) {
 			switch (i){
 				case 0:
 					type = "video/mp4";
@@ -101,7 +119,7 @@ bool isBinaryFile(std::string filename, std::string& type) {
 		return true;
 	}}
 	for (int i = 0; !exec[i].empty(); i++){
-		if (filename.find(exec[i])) {
+		if (filename.find(exec[i]) < filename.size()) {
 			switch (i){
 				case 0:
 					type = "application/x-msdownload";
@@ -116,7 +134,7 @@ bool isBinaryFile(std::string filename, std::string& type) {
 		return true;
 	}}
 	for (int i = 0; !compr[i].empty(); i++){
-		if (filename.find(compr[i])) {
+		if (filename.find(compr[i]) < filename.size()) {
 			switch (i){
 				case 0:
 					type = "application/zip";
@@ -140,7 +158,7 @@ bool isBinaryFile(std::string filename, std::string& type) {
 		return true;
 	}}
 	for (int i = 0; !doc[i].empty(); i++){
-		if (filename.find(doc[i])) {
+		if (filename.find(doc[i]) < filename.size()) {
 			switch (i){
 				case 0:
 					type = "application/pdf";
@@ -167,7 +185,7 @@ bool isBinaryFile(std::string filename, std::string& type) {
 		return true;
 	}}
 	for (int i = 0; !oth[i].empty(); i++){
-		if (filename.find(oth[i])) {
+		if (filename.find(oth[i]) < filename.size()) {
 			switch (i){
 				case 0:
 					type = "image/vnd.adobe.photoshop";
@@ -193,7 +211,7 @@ bool isBinaryFile(std::string filename, std::string& type) {
 			}
 		return true;
 	}}
-	if (filename.find(".html"))
+	if (filename.find(".html") < filename.size())
 		type = "text/html";
 	else
 		type = "text/plain";
