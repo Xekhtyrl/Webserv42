@@ -10,7 +10,7 @@
 #define POST_LOCATION "./webdata"
 #define MAX_CLIENT_SIZE 100000
 
-//ALL THIS IS JUST AN IDEA, DRAFT OF HOW IT WOULD PROCEED
+//ALL THIS IS NOT JUST AN IDEA ANYMORE, IT'S GETTING MORE AND MORE CONCRETE AFTER EACH COMMIT
 void	executeGET(HTTPRequest& request, std::string& response) {
 	if (isBinaryFile(request.getContent(), request.getHeader()["Content-Type"])){
 		std::vector<unsigned char> vec = binaryFileToVector(GET_LOCATION + request.getContent());
@@ -24,7 +24,7 @@ void	executeGET(HTTPRequest& request, std::string& response) {
 	request.addToHeader("Content-Length", ftToString(response.size()));
 	std::cout<<request.getHeader()["Content-Type"]<<": "<<request.getHeader()["Content-Length"]<<std::endl;
 }
-// Pas sur du tout de cet execution de POST :| 
+// Pas sur du tout de cette execution de POST :| ... WELL... STILL NEED TO CHECK THIS GUY
 void	executePOST(HTTPRequest& request, std::string& response) {
 	std::string filename;
 	std::string tmp;
@@ -65,9 +65,10 @@ void	executeDELETE(HTTPRequest& request, std::string& response) {
 	if (access(file.c_str(), F_OK) == -1)
 		throw std::runtime_error("404 Not Found");
 	remove(file.c_str());
-	response = "File removed succesfully";
+	response = "File removed succesfully: " + request.getContent();
 }
 
+//NEED TO BE DONE :|
 void	executeCGI(HTTPRequest& request, std::string& response) {
 	(void)request;
 	(void)response;
