@@ -24,10 +24,14 @@ std::string	getTimeStamp() {
 	return strTrim(timeStr, "\n");
 }
 
-std::string fileToStr(std::string filename) {
+std::string fileToStr(std::string filename, int binary) {
 	std::string fileStr;
 	std::string tmp;
-	std::ifstream file(filename, std::ios::in);
+	std::ifstream file;
+	if (!binary)
+		file.open(filename, std::ios::in);
+	else
+		file.open(filename, std::ios::in | std::ios::binary);
 	if (!file)
 		; //put basic output here?
 	while(getline(file, tmp)){
@@ -36,4 +40,162 @@ std::string fileToStr(std::string filename) {
 	}
 	file.close();
 	return fileStr;
+}
+
+bool isBinaryFile(std::string filename, std::string& type) {
+	std::string image[] = {".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tiff", ".ico", ".svg", 0};
+	std::string audio[] = {".mp3", ".wav", ".flac", ".ogg", ".aac", ".wma", 0}; 
+	std::string video[] = {".mp4", ".avi", ".mov", ".mkv", ".wmv", ".flv", 0}; 
+	std::string	exec[] = {".exe", ".dll", ".so", ".bin", ".elf", ".dylib", ".out", 0};
+	std::string	compr[] = {".zip", ".rar", ".tar", ".gz", ".7z", ".bz2", 0};
+	std::string	doc[] = {".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", 0};
+	std::string	oth[] = {".psd", ".iso", ".dat", ".class", ".swf", ".ttf", ".otf", 0};
+
+	for (int i = 0; !image[i].empty(); i++){
+		if (filename.find(image[i])) {
+			switch (i){
+				case 5:
+					type = "image/x-icon";
+					break;
+				case 6:
+					type = "image/svg+xml";
+					break;
+				default:
+					type = "image/" + image[i].substr(1);
+			}
+		return true;
+	}}
+	for (int i = 0; !audio[i].empty(); i++){
+		if (filename.find(audio[i])) {
+			switch (i){
+				case 6:
+					type = "audio/x-ms-wma";
+					break;
+				default:
+					type = "audio/" + audio[i].substr(1);
+			}
+		return true;
+	}}
+	for (int i = 0; !video[i].empty(); i++){
+		if (filename.find(video[i])) {
+			switch (i){
+				case 0:
+					type = "video/mp4";
+					break;
+				case 1:
+					type = "video/x-msvideo";
+					break;
+				case 2:
+					type = "video/quicktime";
+					break;
+				case 3:
+					type = "video/x-matroska";
+					break;
+				case 4:
+					type = "video/x-ms-wmv";
+					break;
+				case 5:
+					type = "video/x-flv";
+					break;
+			}
+		return true;
+	}}
+	for (int i = 0; !exec[i].empty(); i++){
+		if (filename.find(exec[i])) {
+			switch (i){
+				case 0:
+					type = "application/x-msdownload";
+					break;
+				case 1:
+					type = "application/x-msdownload";
+					break;
+				default:
+					type = "application/octet-stream";
+					break;
+			}
+		return true;
+	}}
+	for (int i = 0; !compr[i].empty(); i++){
+		if (filename.find(compr[i])) {
+			switch (i){
+				case 0:
+					type = "application/zip";
+					break;
+				case 1:
+					type = "application/vnd.rar";
+					break;
+				case 2:
+					type = "application/x-tar";
+					break;
+				case 3:
+					type = "application/gzip";
+					break;
+				case 4:
+					type = "application/x-7z-compressed";
+					break;
+				case 5:
+					type = "application/x-bzip2";
+					break;
+			}
+		return true;
+	}}
+	for (int i = 0; !doc[i].empty(); i++){
+		if (filename.find(doc[i])) {
+			switch (i){
+				case 0:
+					type = "application/pdf";
+					break;
+				case 1:
+					type = "application/msword";
+					break;
+				case 2:
+					type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+					break;
+				case 3:
+					type = "application/vnd.ms-excel";
+					break;
+				case 4:
+					type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+					break;
+				case 5:
+					type = "application/vnd.ms-powerpoint";
+					break;
+				case 6:
+					type = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+					break;
+			}
+		return true;
+	}}
+	for (int i = 0; !oth[i].empty(); i++){
+		if (filename.find(oth[i])) {
+			switch (i){
+				case 0:
+					type = "image/vnd.adobe.photoshop";
+					break;
+				case 1:
+					type = "application/x-iso9660-image";
+					break;
+				case 2:
+					type = "application/octet-stream";
+					break;
+				case 3:
+					type = "application/java-vm";
+					break;
+				case 4:
+					type = "application/x-shockwave-flash";
+					break;
+				case 5:
+					type = "font/ttf";
+					break;
+				case 6:
+					type = "font/otf";
+					break;
+			}
+		return true;
+	}}
+	if (filename.find(".html"))
+		type = "text/html";
+	else
+		type = "text/plain";
+	return false;
 }
