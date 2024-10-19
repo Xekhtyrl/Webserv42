@@ -1,10 +1,14 @@
 NAME = webserv
 
-SRC =	HTTPReponse.cpp		\
-		HTTPRequest.cpp		\
-		utils.cpp			\
-		draftProcedure.cpp	\
-		PostMethod.cpp		\
+SRC =	HTTPReponse.cpp				\
+		HTTPRequest.cpp				\
+		utils/utils.cpp				\
+		utils/FileToVar.cpp			\
+		utils/VarToFile.cpp			\
+		HTTPMethod/GET.cpp			\
+		HTTPMethod/POST.cpp			\
+		HTTPMethod/DELETE.cpp		\
+		HTTPRequestHandler.cpp		\
 		test.cpp
 
 INCLUDE = -I .
@@ -51,10 +55,10 @@ debug: CFLAGS += -fsanitize=address -g3
 add:
 	@if [ -z "$(MSG)" ]; then \
 		read -p "Enter commit message: " msg; \
-		git add Makefile $(SRC) webdata error/*.html *.hpp .gitignore; \
+		git add Makefile $(SRC) webdata error/*.html utils HTTPMethod *.hpp .gitignore; \
 		git commit -m "$$msg"; \
 	else \
-		git add Makefile $(SRC) webdata error/*.html *.hpp .gitignore; \
+		git add Makefile $(SRC) webdata error/*.html utils HTTPMethod *.hpp .gitignore; \
 		git commit -m "$(MSG)"; \
 	fi; \
 	git push
