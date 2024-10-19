@@ -4,31 +4,28 @@
 HTTPRequest::HTTPRequest() { return; }
 
 HTTPRequest::HTTPRequest(std::string request) { 
+	std::ofstream file ("./requestLog", std::ios::out);
+	file<<request<<std::endl;
+	file.close();
 	std::string tmp = request.substr(0, request.find_first_of('\r'));
 	_method = tmp.substr(0, tmp.find_first_of(32));
-	// std::cout<<!checkMethod(_method)<<std::endl;
-	std::cout<<"WWWWWWWWWWWWWWWAAAAAAAAAAAAZZZZZZZZZAAAAAAAA    :"<<tmp[3]<<tmp.find_first_of(32)<<std::endl;
 	if (!checkMethod(_method))
 		std::runtime_error("405 Method Not Allowed");
-	std::cout<<"WWWWWWWWWWWWWWWAAAAAAAAAAAAZZZZZZZZZAAAAAAAA    :"<<_method<<std::endl;
 	_content = tmp.substr(tmp.find_first_of(' ') + 1, tmp.find_last_of(' ') - tmp.find_first_of(' ') - 1);
-	// std::cout<<!checkLink(_content)<<std::endl;
 	if (!checkLink(_content))
 		std::runtime_error("404 Not Found");
 	_protocolHTTP = tmp.substr(tmp.find_last_of(' ') + 1, tmp.length() - tmp.find_last_of(' ')); // needed to check?
 	std::cout<<_protocolHTTP<<std::endl;
 	if (_protocolHTTP.find("HTTP/1.1") > _protocolHTTP.size())
 		throw std::runtime_error("400 Bad Request");
-	std::cout<<"WWWWWWWWWWWWWWWAAAAAAAAAAAAZZZZZZZZZAAAAAAAA"<<std::endl;
 	_header = splitHeader(request);
 	if (!_header["Content-Lengtgh"].empty() || !_header["Transfer-Encoding"].empty())
 		_body = request.substr(request.find("\r\n\r\n") + 4, request.size() - request.find("\r\n\r\n") - 4);
 	else
 		_body = "";
-	std::cout<<"WWWWWWWWWWWWWWWAAAAAAAAAAAAZZZZZZZZZAAAAAAAA"<<std::endl;
 	checkHeaders();
-	std::cout<<"WWWWWWWWWWWWWWWAAAAAAAAAAAAZZZZZZZZZAAAAAAAA"<<std::endl;
-	return; }
+	return;
+}
 
 // Copy constructor
 HTTPRequest::HTTPRequest(const HTTPRequest &other) {

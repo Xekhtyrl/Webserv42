@@ -4,6 +4,7 @@ SRC =	HTTPReponse.cpp		\
 		HTTPRequest.cpp		\
 		utils.cpp			\
 		draftProcedure.cpp	\
+		PostMethod.cpp		\
 		test.cpp
 
 INCLUDE = -I .

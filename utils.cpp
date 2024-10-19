@@ -16,6 +16,13 @@ std::string strTrim(std::string str, std::string set) {
 	return (str.substr(start, n - start + 1));
 }
 
+std::string	intToHex(int n) {
+	std::stringstream ss;
+	ss << std::hex << n;
+	std::string res (ss.str());
+	return res;
+}
+
 std::string	getTimeStamp() {
 	time_t timestamp;
 	time(&timestamp);
@@ -23,15 +30,57 @@ std::string	getTimeStamp() {
 	std::string timeStr(ctime(&timestamp));
 	return strTrim(timeStr, "\n");
 }
+bool	findWithIter(std::string::iterator pos, std::string::iterator end, int size, std::string toFind) {
+	int i = 0;
+	for (std::string::iterator it = pos; it != end && i < size; it++) {
+		if (*it != toFind[i++])
+			return false;
+	}
+	return true;
+}
+
+void	StrToBinaryFile(std::string filename, std::string& body, std::string boundary) {
+	std::string::iterator it1 = body.begin();
+	std::vector<char>str;
+
+	if (!boundary.empty())
+		for (size_t i = 0; i < body.find_first_of(boundary) + boundary.size(); i++){
+			it1++;
+		}
+	for (std::string::iterator it = it1; it != body.end(); it++) {
+		if (findWithIter(it, body.end(), boundary.size(), boundary))
+			break;
+		if (*it != '\r')
+			str.push_back(*it);
+	}
+	std::ofstream file(POST_LOCATION + filename, std::ios::out);
+	if (!file.is_open())
+		throw std::runtime_error("400 Bad Request");
+	file.write(str.data(), str.size());
+	file.close();
+}
+
+void	StrToTextFile(std::string filename, std::stringstream& s, std::string boundary) {
+	std::string tmp;
+
+	std::ofstream file(filename, std::ios::out);
+
+	if (!file.is_open())
+		throw std::runtime_error("400 Bad Request");
+	while(getline(s, tmp, '\n')){
+		if (!boundary.empty() && tmp == boundary)
+			break;
+		file<<strTrim(tmp, "\r\n")<<std::endl;
+	}
+	file.close();
+}
 
 std::string fileToStr(std::string filename) {
 	std::string fileStr;
 	std::string tmp;
 	std::ifstream file;
-	// if (!binary)
-		file.open(filename, std::ios::in);
-	// else
-	// 	file.open(filename, std::ios::in | std::ios::binary);
+	
+	file.open(filename, std::ios::in);
 	if (!file)
 		throw std::runtime_error("404 Not Found");
 	while(getline(file, tmp)){
@@ -41,6 +90,7 @@ std::string fileToStr(std::string filename) {
 	file.close();
 	return fileStr;
 }
+
 std::vector<unsigned char>	binaryFileToVector(std::string filename) {
 	std::ifstream file(filename, std::ios::in | std::ios::binary);
 	if (!file)
