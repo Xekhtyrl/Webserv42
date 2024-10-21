@@ -1,10 +1,18 @@
 #include "Server.hpp"
 
-Server::Server(int domain, int service, int protocol, int port, u_long interface, int backlog) {
+Server::Server(int domain, int service, int protocol, int port, u_long interface, int backlog, std::string name) {
 	_listenSocket = new ListenSocket(domain, service, protocol, port, interface, backlog);
+	_name = name;
 	_max_fd = _listenSocket->getSocket();
 	std::cout << "Listening to new connections on port " << ntohs(_listenSocket->getAddress().sin_port) << std::endl;
 }
+Server::Server(int port, std::string name) {
+	_listenSocket = new ListenSocket(AF_INET, SOCK_STREAM, 0, port, INADDR_ANY, 20);
+	_name = name;
+	_max_fd = _listenSocket->getSocket();
+	std::cout << "Listening to new connections on port " << ntohs(_listenSocket->getAddress().sin_port) << std::endl;
+}
+
 
 Server::~Server(void) {
 	close(_listenSocket->getSocket());
@@ -58,15 +66,17 @@ void Server::checkSockets(void) { //to be called before EVERY read or write.
 }
 
 void parse_buffer_to_find_message_size_to_then_read_the_missing_data(int sock) {
+	std::cout << "Client " << sock << " sent a big message" << std::endl;
 	(void)sock;
 }
 
 void Server::readSocket(int sock) {
-	std::cout << "readSocket()" << std::endl;
 	memset(_buffer, 0, BUFFER_SIZE);
 	int received = read(sock, _buffer, BUFFER_SIZE); //lecture avec buffer conséquent, normal.
-	if (received < 0) {
-		removeConnection(sock); //pas certain de la gestion des mauvais read. On kill la connection?
+	if (received <= 0) {
+		if (received == 0)
+			std::cout << "Client " << sock << " closed the connection gracefully" << std::endl;
+		removeConnection(sock); //pas certain de la gestion des mauvais read (< 0). On kill la connection?
 	}
 	else if (received == BUFFER_SIZE) { //si le buffer statique n'était pas suffisant pour tout le message, 
 		parse_buffer_to_find_message_size_to_then_read_the_missing_data(sock);
@@ -75,7 +85,7 @@ void Server::readSocket(int sock) {
 	}
 	else {
 		std::string rawRequest(_buffer);
-		std::cout << "CLIENT " << sock << ":" << std::endl << rawRequest << std::endl;
+		std::cout << "Client " << sock << ":" << std::endl << rawRequest << std::endl;
 		parsing_CGI_response(sock, rawRequest); //this function then adds the response to the _writeQueue
 	}
 }
@@ -110,7 +120,7 @@ void Server::listenNewConnections(void) {
 			_activeConnections.push_back(newClientSocket);
 			if (newClientSocket > _max_fd)
 				_max_fd = newClientSocket;
-			std::cout << "New socket: " << newClientSocket << std::endl;
+			std::cout << "New socket on fd: " << newClientSocket << std::endl;
 		}
 	}
 }
@@ -128,5 +138,5 @@ void Server::removeConnection(int socket) {
 
 
 void Server::parsing_CGI_response(int sock, std::string rawRequest) {
-	_writeQueue.push(std::make_pair(sock, "[" + rawRequest + "]"));
+	_writeQueue.push(std::make_pair(sock, "*" + _name + " response* [" + rawRequest + "]"));
 }

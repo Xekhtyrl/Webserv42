@@ -12,7 +12,6 @@
 
 class Server {
 	private:
-		void launch();
 		void listenNewConnections(void) ;
 		void removeConnection(int socket);
 		void processReadQueue(void);
@@ -34,16 +33,17 @@ class Server {
 		fd_set	_readFds;
 		fd_set	_writeFds;
 		int _max_fd;
+		std::string _name;
 
 
 
 	public:
-		Server(int domain, int service, int protocol, int port, u_long interface, int backlog);
+		Server(int domain, int service, int protocol, int port, u_long interface, int backlog, std::string name);
+		Server(int port, std::string name);
 		~Server(void);
 
 		ListenSocket * getSocket(void) const ;
-
-
+		void launch(void);
 };
 
 #endif

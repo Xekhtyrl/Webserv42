@@ -48,9 +48,9 @@ void Client::talk(int n_xchange) {
     std::string msg = _name + " sending message number ";
     std::string response;
     while (n_xchange--) {
-        sendMsg(msg + std::to_string(++i));
+        sendMsg(msg + std::to_string(++_msgCount));
         response = receiveMsg();
-        std::cout << "CLIENT:" << std::endl << msg + std::to_string(i) << std::endl;
+        std::cout << "CLIENT:" << std::endl << msg + std::to_string(_msgCount) << std::endl;
         std::cout << "SERVER:" << std::endl << response << std::endl;
     }
 }

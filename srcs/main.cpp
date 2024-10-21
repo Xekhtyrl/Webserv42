@@ -14,7 +14,7 @@ int main(int argc, char **argv) {
 	if (argc == 2)
 		port = atoi(argv[1]);
 
-	Server *server = new Server(AF_INET, SOCK_STREAM, 0, port, INADDR_ANY, 2);
+	Server *server = new Server(AF_INET, SOCK_STREAM, 0, port, INADDR_ANY, 20, "serv");
 
 	server->launch();
 

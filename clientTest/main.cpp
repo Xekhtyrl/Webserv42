@@ -16,14 +16,13 @@ int main(int argc, char **argv) {
 	if (argc == 3)
 		port = atoi(argv[2]);
 
-	Client Allan(port, "Allan");
-    Client Herbert(port, "Herbert");
+	Client A(port, "A");
+    Client B(port, "B");
+	// Client C(port, "C");
+	// Client D(port, "D");
 
-    Allan.talk(2);
-	Herbert.talk(1);
-	Allan.talk(1);
-	Herbert.talk(2);
-    
-
+    A.talk(1);
+	B.talk(2);
+	
     return 0;
 }
