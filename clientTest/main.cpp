@@ -7,22 +7,13 @@
 
 int main(int argc, char **argv) {
 
-	if (argc == 1) {
-		std::cout << "Please enter the number of client connections, and optional port" << std::endl;
-		std::cout << "./client number_of_clients [port:8080]" << std::endl;
+	int n_clients = 10;	//atoi(argv[1]);
+
+	Client* clients = new Client[n_clients]; //port 8080 par défaut
+    for (int i=0; i < n_clients; ++i) {
+		clients[i].talk(1);
 	}
-	//int n_clients = atoi(argv[1]);
-	int port = 8080;
-	if (argc == 3)
-		port = atoi(argv[2]);
-
-	Client A(port, "A");
-    Client B(port, "B");
-	// Client C(port, "C");
-	// Client D(port, "D");
-
-    A.talk(1);
-	B.talk(2);
+	delete[] clients;
 	
     return 0;
 }

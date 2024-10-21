@@ -29,6 +29,13 @@ Client::Client(int port) {
     std::cout << _name << " connected to server successfully" << std::endl;
 }
 
+Client::Client(void) {
+    _socket = new ConnectSocket(AF_INET, SOCK_STREAM, 0, 8080, INADDR_ANY);
+    _name = makeName();
+    _msgCount = 0;
+    std::cout << _name << " connected to server successfully" << std::endl;
+}
+
 Client::~Client(void) {
     delete _socket;
 }
@@ -36,9 +43,11 @@ Client::~Client(void) {
 std::string Client::makeName(void) {
     std::string name = "";
     char c;
-    srand((int)time(0));
+    unsigned int address_seed = (reinterpret_cast<std::uintptr_t>(this));
+    unsigned int time_seed = static_cast<unsigned int>(time(0));
+    srand(address_seed + time_seed);
     for (int i=0; i < 6; ++i) {
-        c = rand() % 26 + 'A';
+        c = rand() % 26 + 'a';
         name += c;
     }
     return name;

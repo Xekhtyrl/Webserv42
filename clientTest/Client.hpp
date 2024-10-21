@@ -13,6 +13,7 @@ class Client {
 		Client(int domain, int service, int protocol, int port, u_long interface, std::string name);
 		Client(int port, std::string name);
 		Client(int port);
+		Client(void);
 		~Client(void);
 
 		std::string makeName(void);
