@@ -20,7 +20,7 @@ class HTTPRequest {
   std::string	getMethod() const;
   std::string	getContent() const;
   std::string	getProtocolHTTP() const;
-  std::string	getBody() const;
+  std::string&	getBody();
   void			addToHeader(std::string, std::string);
   std::map<std::string, std::string>	getHeader() const;
 

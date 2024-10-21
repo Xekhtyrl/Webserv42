@@ -55,15 +55,18 @@ int main()
 		std::ofstream file("./test.txt", std::ios::app);
         valread = read( new_socket , buffer, 30000);
 		std::string val(buffer);
-		// file<<val;
+        valread = read( new_socket , buffer, 30000);
+		val.append(buffer);
+		std::cout<<val<<std::endl;
+		file<<val;
 		val = requestToResponseProcess(val);
 		file<<val;
 		// printf("%s", val.c_str());
 		file.close();
-		printf("%s\n",buffer );
         write(new_socket , val.c_str() , val.length());
         printf("------------------Hello message sent-------------------");
         close(new_socket);
     }
+	close(server_fd);
     return 0;
 }

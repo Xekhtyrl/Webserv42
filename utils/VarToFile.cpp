@@ -38,7 +38,7 @@ void	StrToTextFile(std::string filename, std::stringstream& s, std::string bound
 	if (!file.is_open())
 		throw std::runtime_error("400 Bad Request");
 	while(getline(s, tmp, '\n')){
-		if (!boundary.empty() && tmp == boundary)
+		if (!boundary.empty() && tmp.find(boundary) < tmp.size())
 			break;
 		file<<strTrim(tmp, "\r\n")<<std::endl;
 	}
