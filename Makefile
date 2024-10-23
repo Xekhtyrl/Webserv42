@@ -1,19 +1,28 @@
 NAME = webserv
 
-SRC =	HTTPReponse.cpp				\
-		HTTPRequest.cpp				\
-		utils/utils.cpp				\
-		utils/FileToVar.cpp			\
-		utils/VarToFile.cpp			\
-		HTTPMethod/GET.cpp			\
-		HTTPMethod/POST.cpp			\
-		HTTPMethod/DELETE.cpp		\
-		HTTPRequestHandler.cpp		\
-		test.cpp
+DIR_SRCS	=	srcs/
+DIR_OBJS	=	obj/
+DIR_NET		=	network/
+DIR_UTI		=	utils/
+DIR_REQ		=	HTTPProtocol/
+DIR_MET		=	HTTPMethod/
+DIR_TEST	=	clientTest/
 
-INCLUDE = -I .
+NETWORK		=	ASocket.cpp BindSocket.cpp ConnectSocket.cpp ListenSocket.cpp Server.cpp
+UTILS		=	utils.cpp FileToVar.cpp VarToFile.cpp
+METHOD		=	DELETE.cpp GET.cpp POST.cpp
+PROTOCOL	=	HTTPReponse.cpp HTTPRequest.cpp HTTPRequestHandler.cpp
 
-OBJ = $(SRC:.cpp=.o)
+SRCS		=	$(addprefix $(DIR_NET), $(NETWORK))		\
+				$(addprefix $(DIR_UTI), $(UTILS))		\
+				$(addprefix $(DIR_REQ), $(PROTOCOL))	\
+				$(addprefix $(DIR_MET), $(METHOD))		\
+				main.cpp
+PATH_SRCS	=	$(addprefix $(DIR_SRCS), $(SRCS))				
+
+OBJS		=	$(addprefix $(DIR_OBJS), $(SRCS:.cpp=.o))
+
+INCLUDE = -I . -I includes/ -I $(DIR_SRCS)$(DIR_MET) -I $(DIR_SRCS)$(DIR_NET) -I $(DIR_SRCS)$(DIR_REQ) -I $(DIR_SRCS)$(DIR_UTI)
 
 C_GREEN = \033[0;32m
 
@@ -31,15 +40,17 @@ CFLAGS = -Wall -Wextra -Werror -std=c++98
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
-	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ)
+$(NAME):  $(OBJS)
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 	@echo "$(C_GREEN)$(NAME) compiled with $(C_BPURP)$(CFLAGS)$(C_END)"
 
-%.o:	%.cpp
+
+$(DIR_OBJS)%.o: $(DIR_SRCS)%.cpp
+	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 clean:
-	@rm -rf $(OBJ)
+	@rm -rf $(DIR_OBJS)
 	@echo "$(C_RED)$(NAME) cleanse$(C_END)"
 
 fclean: clean
@@ -55,12 +66,52 @@ debug: re
 add:
 	@if [ -z "$(MSG)" ]; then \
 		read -p "Enter commit message: " msg; \
-		git add Makefile $(SRC) webdata error/*.html utils HTTPMethod *.hpp .gitignore; \
+		git add Makefile $(PATH_SRCS) webdata error/*.html includes .gitignore; \
 		git commit -m "$$msg"; \
 	else \
-		git add Makefile $(SRC) webdata error/*.html utils HTTPMethod *.hpp .gitignore; \
+		git add Makefile $(PATH_SRCS) webdata error/*.html includes .gitignore; \
 		git commit -m "$(MSG)"; \
 	fi; \
 	git push
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re add debug
+# NAME		=	webserv
+
+# DIR_SRCS	=	srcs/
+# DIR_OBJS	=	obj/
+# DIR_NET		=	network/
+
+# NETWORK		=	ASocket.cpp BindSocket.cpp ConnectSocket.cpp ListenSocket.cpp Server.cpp
+
+
+# SRCS		=	$(addprefix $(DIR_NET), $(NETWORK)) \
+# 				main.cpp
+# PATH_SRCS	=	$(addprefix $(DIR_SRCS), $(SRCS))				
+
+# OBJS		=	$(addprefix $(DIR_OBJS), $(notdir $(SRCS:.cpp=.o)))
+
+# C		=	c++
+# CFLAGS	=	-Wall -Werror -Wextra -std=c++98
+
+# $(NAME)	:	$(OBJS)
+# 			$(C) $(OBJS) -o $(NAME)
+
+# $(DIR_OBJS)%.o: $(DIR_SRCS)%.cpp
+# 			@mkdir -p $(DIR_OBJS)
+# 			$(C) $(CFLAGS) -I $(DIR_SRCS) -I $(DIR_NET) -c $< -o $@
+
+
+# $(DIR_OBJS)%.o: $(DIR_SRCS)$(DIR_NET)%.cpp
+# 			@mkdir -p $(DIR_OBJS)
+# 			$(C) $(CFLAGS) -I $(DIR_SRCS) -I $(DIR_NET) -c $< -o $@
+
+# all		:	$(NAME)
+
+# clean	:
+# 			rm -rf $(DIR_OBJS)
+
+# fclean	:	clean
+# 			rm -f $(NAME) 
+
+# re		:	fclean all
+# >>>>>>> oli
