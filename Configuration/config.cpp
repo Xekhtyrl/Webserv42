@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:00:53 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/23 21:33:26 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/23 21:46:35 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,6 @@ void	parseConfigFile() {
 }
 
 // Getters
-
-std::vector<int>		Config::getPorts() {
-	return (ports);
-}
 
 std::map <int, Server>	Config::getServers() {
 	return (servers);
