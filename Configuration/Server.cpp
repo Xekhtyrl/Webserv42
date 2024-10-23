@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:16:46 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/22 19:43:29 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/23 21:40:04 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 Server::Server() {
 	host = "localhost";
-	clientMaxBodySize = std::numeric_limits<size_t>::max();
+	clientMaxBodySize = 1024 * 1024; // 1MB
 }
 
 // SETTERS
@@ -52,4 +52,14 @@ size_t			Server::getClientMaxBodySize() {
 
 Route			Server::getRoute(std::string route) {
 	return (routes[route]);
+}
+
+// OVERLOADED OPERATOR
+
+bool		Server::operator[](int code) {
+	return (!getErrorPage(code).empty());
+}
+
+Route	Server::operator[](std::string route) {
+	return (getRoute(route));
 }
