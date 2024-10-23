@@ -49,16 +49,16 @@ fclean: clean
 
 re: fclean all
 
-debug: re
 debug: CFLAGS += -fsanitize=address -g3
+debug: re
 
 add:
 	@if [ -z "$(MSG)" ]; then \
 		read -p "Enter commit message: " msg; \
-		git add Makefile $(SRC) webdata error/*.html utils HTTPMethod *.hpp *.h .gitignore; \
+		git add Makefile $(SRC) webdata error/*.html utils HTTPMethod *.hpp .gitignore; \
 		git commit -m "$$msg"; \
 	else \
-		git add Makefile $(SRC) webdata error/*.html utils HTTPMethod *.hpp *.h .gitignore; \
+		git add Makefile $(SRC) webdata error/*.html utils HTTPMethod *.hpp .gitignore; \
 		git commit -m "$(MSG)"; \
 	fi; \
 	git push
