@@ -55,10 +55,10 @@ debug: CFLAGS += -fsanitize=address -g3
 add:
 	@if [ -z "$(MSG)" ]; then \
 		read -p "Enter commit message: " msg; \
-		git add Makefile $(SRC) webdata error/*.html utils HTTPMethod *.hpp .gitignore; \
+		git add Makefile $(SRC) webdata error/*.html utils HTTPMethod *.hpp *.h .gitignore; \
 		git commit -m "$$msg"; \
 	else \
-		git add Makefile $(SRC) webdata error/*.html utils HTTPMethod *.hpp .gitignore; \
+		git add Makefile $(SRC) webdata error/*.html utils HTTPMethod *.hpp *.h .gitignore; \
 		git commit -m "$(MSG)"; \
 	fi; \
 	git push
