@@ -7,25 +7,28 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <exception>
 
 // Class declaration
 class HTTPRequest {
  public:
   HTTPRequest();
-  HTTPRequest::HTTPRequest(std::string const request);
+  HTTPRequest(std::string request);
   HTTPRequest(const HTTPRequest &other);
   HTTPRequest &operator=(const HTTPRequest &rhs);
   ~HTTPRequest();
   std::string	getMethod() const;
   std::string	getContent() const;
   std::string	getProtocolHTTP() const;
-  std::string	getBody() const;
+  std::string&	getBody();
+  void			addToHeader(std::string, std::string);
+  std::map<std::string, std::string>	getHeader() const;
 
  private:
   std::map<std::string, std::string> splitHeader(std::string request);
   bool	checkMethod(std::string method);
   bool	checkLink(std::string& link);
-  std::string	_header;
+  void	checkHeaders();
   std::string	_body;
   std::string	_method;
   std::string	_content;

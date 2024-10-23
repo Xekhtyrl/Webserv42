@@ -8,14 +8,14 @@
 #include <fstream>
 
 #define PORT 8080
-int main(int argc, char const *argv[])
+int main()
 {
     int server_fd, new_socket; long valread;
     struct sockaddr_in address;
     int addrlen = sizeof(address);
     
     // Only this line has been changed. Everything is same.
-    char *hello = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
+    std::string hello = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
     
     // Creating socket file descriptor
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
@@ -55,14 +55,18 @@ int main(int argc, char const *argv[])
 		std::ofstream file("./test.txt", std::ios::app);
         valread = read( new_socket , buffer, 30000);
 		std::string val(buffer);
+        valread = read( new_socket , buffer, 30000);
+		val.append(buffer);
+		std::cout<<val<<std::endl;
 		file<<val;
+		val = requestToResponseProcess(val);
+		file<<val;
+		// printf("%s", val.c_str());
 		file.close();
-		HTTPRequest request(val);
-		std::cout<<"\n\nTEEEEEESSSST "<<request.getMethod()<<" "<<request.getContent()<<" "<<request.getProtocolHTTP()<<"\nBODY >>> "<<request.getBody()<<"\nEND OF DEBBUG\n"<<std::endl;
-        printf("%s\n",buffer );
-        write(new_socket , hello , strlen(hello));
+        write(new_socket , val.c_str() , val.length());
         printf("------------------Hello message sent-------------------");
         close(new_socket);
     }
+	close(server_fd);
     return 0;
 }

@@ -1,0 +1,7 @@
+*.o
+src/*.o
+*.a
+*/*.a
+*/*/*.a
+minishell
+test2.cpp
