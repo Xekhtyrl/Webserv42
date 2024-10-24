@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:00:51 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/23 21:28:13 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/24 17:24:16 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <map>
 # include <fstream>
 
-class	Server;
+class	ServerConfig;
 	
 class	Config {
 	public:
@@ -30,11 +30,12 @@ class	Config {
 		
 		// Getters
 
-		std::vector<int>		getPorts();
-		std::map <int, Server>	getServers();
+		std::vector<int>				getPorts();
+		std::map <int, ServerConfig>	getServers();
 	
 	private:
-		std::ifstream			configFile;
-		std::vector<int>		usedPorts;
-		std::map <int, Server>	servers;
+		std::ifstream					configFile;
+		std::vector<int>				usedPorts;
+		std::map <int, ServerConfig>	servers;
 };
+

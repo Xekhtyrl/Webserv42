@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Route.hpp                                          :+:      :+:    :+:   */
+/*   RouteConfig.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:41:23 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/23 21:29:57 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/24 17:22:39 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 
 enum	Rules { GET, POST, DELETE, REDIRECT, ROOT, AUTOINDEX, INDEX };
 
-class	Route {
+class	RouteConfig {
 	public:
-		Route();
+		RouteConfig();
 		
 		// Setters
 
@@ -38,7 +38,7 @@ class	Route {
 		
 		// Overload Operator
 		
-		bool			Route::operator[](int RULE);
+		bool			operator[](int RULE);
 		
 	private:
 		bool			methods[3];

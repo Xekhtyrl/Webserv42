@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Route.cpp                                          :+:      :+:    :+:   */
+/*   RouteConfig.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:17:11 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/23 21:36:32 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/24 17:22:59 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "Route.hpp"
+# include "RouteConfig.hpp"
 
-Route::Route() {
+RouteConfig::RouteConfig() {
 	for (int i = 0; i < sizeof(methods)/sizeof(methods[0]); i++)
 		methods[i] = false;
 	redirect = "";
@@ -23,51 +23,51 @@ Route::Route() {
 
 // SETTERS
 
-void	Route::allowMethod(int method) {
+void	RouteConfig::allowMethod(int method) {
 	methods[method] = true;
 }
 
-void	Route::setRedirect(std::string redirect) {
+void	RouteConfig::setRedirect(std::string redirect) {
 	this->redirect = redirect;
 }
 
-void	Route::setRoot(std::string root) {
+void	RouteConfig::setRoot(std::string root) {
 	this->root = root;
 }
 
-void	Route::setAutoindex(bool state) {
+void	RouteConfig::setAutoindex(bool state) {
 	autoindex = state;
 }
 
-void	Route::setIndex(std::string index) {
+void	RouteConfig::setIndex(std::string index) {
 	this->index = index;
 }
 
 // GETTERS
 
-bool			Route::isMethodAllowed(int method) {
+bool			RouteConfig::isMethodAllowed(int method) {
 	return (methods[method]);
 }
 
-std::string		Route::getRedirect() {
+std::string		RouteConfig::getRedirect() {
 	return (redirect);
 }
 
-std::string 	Route::getRoot() {
+std::string 	RouteConfig::getRoot() {
 	return (root);
 }
 
-bool			Route::hasAutoindex() {
+bool			RouteConfig::hasAutoindex() {
 	return (autoindex);
 }
 
-std::string		Route::getIndex() {
+std::string		RouteConfig::getIndex() {
 	return (index);
 }
 
 // Overloaded Operator
 
-bool			Route::operator[](int RULE) {
+bool			RouteConfig::operator[](int RULE) {
 	switch (RULE) {
 		case GET:
 		case POST:

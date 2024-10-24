@@ -1,65 +1,65 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Server.cpp                                         :+:      :+:    :+:   */
+/*   ServerConfig.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:16:46 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/23 21:40:04 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/24 17:25:20 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "Server.hpp"
-# include "Route.hpp"
+# include "ServerConfig.hpp"
+# include "RouteConfig.hpp"
 
-Server::Server() {
+ServerConfig::ServerConfig() {
 	host = "localhost";
 	clientMaxBodySize = 1024 * 1024; // 1MB
 }
 
 // SETTERS
 
-void	Server::setHost(std::string name) {
+void	ServerConfig::setHost(std::string name) {
 	host = name;
 }
 
-void	Server::addErrorPage(int code, std::string file) {
+void	ServerConfig::addErrorPage(int code, std::string file) {
 	errorPages[code] = file;
 }
 
-void	Server::setClientMaxBodySize(size_t size) {
+void	ServerConfig::setClientMaxBodySize(size_t size) {
 	clientMaxBodySize = size;
 }
 
-void	Server::addRoute(std::string route) {
-	routes[route] = Route();
+void	ServerConfig::addRoute(std::string route) {
+	routes[route] = RouteConfig();
 }
 
 // GETTERS
 
-std::string		Server::getHost() {
+std::string		ServerConfig::getHost() {
 	return (host);
 }
 
-std::string		Server::getErrorPage(int code) {
+std::string		ServerConfig::getErrorPage(int code) {
 	return (errorPages[code]);
 }
 
-size_t			Server::getClientMaxBodySize() {
+size_t			ServerConfig::getClientMaxBodySize() {
 	return (clientMaxBodySize);
 }
 
-Route			Server::getRoute(std::string route) {
+RouteConfig		ServerConfig::getRoute(std::string route) {
 	return (routes[route]);
 }
 
 // OVERLOADED OPERATOR
 
-bool		Server::operator[](int code) {
+bool		ServerConfig::operator[](int code) {
 	return (!getErrorPage(code).empty());
 }
 
-Route	Server::operator[](std::string route) {
+RouteConfig	ServerConfig::operator[](std::string route) {
 	return (getRoute(route));
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Server.hpp                                         :+:      :+:    :+:   */
+/*   ServerConfig.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:41:17 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/23 21:40:14 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/24 17:26:12 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 # include <string>
 # include <map>
 
-class	Route;
+class	RouteConfig;
 
-class	Server {
+class	ServerConfig {
 	public:
-		Server();
+		ServerConfig();
 
 		// Setters
 
@@ -33,17 +33,17 @@ class	Server {
 		std::string		getHost();
 		std::string		getErrorPage(int code);
 		size_t			getClientMaxBodySize();
-		Route			getRoute(std::string route);
+		RouteConfig		getRoute(std::string route);
 
 		// Overloaded Operators
 
 		bool			operator[](int code);
-		Route			operator[](std::string route);
+		RouteConfig		operator[](std::string route);
 		
 	private:
 		// int								port; // Needed with map ?
-		std::string						host;
-		std::map <int, std::string>		errorPages;
-		size_t							clientMaxBodySize;
-		std::map <std::string, Route>	routes;
+		std::string							host;
+		std::map <int, std::string>			errorPages;
+		size_t								clientMaxBodySize;
+		std::map <std::string, RouteConfig>	routes;
 };
