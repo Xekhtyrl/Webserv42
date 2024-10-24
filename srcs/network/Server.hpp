@@ -3,11 +3,15 @@
 
 # include "ListenSocket.hpp"
 # include <iostream>
+# include <ctime>
+# include <unistd.h>
 # include <vector>
 # include <queue>
+# include <map>
 # include <sys/select.h>
 
 # define BUFFER_SIZE 1024
+# define IDLE_TIMEOUT 600 //disconnects client after 10 minutes of inactivity
 
 
 class Server {
@@ -19,6 +23,8 @@ class Server {
 		void writeSocket(int sock, std::string msg);
 		void readSocket(int sock);
 		void checkSockets(void);
+		void checkIdleClients(void);
+		void updateLastActiveTime(int sock);
 
 		//tmp
 		void parsing_CGI_response(int sock, std::string rawRequest);
@@ -28,6 +34,7 @@ class Server {
 		
 		ListenSocket * _listenSocket;
 		std::vector<int> _activeConnections; //vecteur des connections clients ouvertes
+		std::map<int, time_t> _lastActiveTime;
 		std::queue<int> _readQueue; //queue d'attente de lecture de sockets
 		std::queue<std::pair<int, std::string> > _writeQueue; //int: numero socket. string: HTTP response
 		fd_set	_readFds;

@@ -24,6 +24,7 @@ void Server::launch(void) {
 		listenNewConnections(); //Single listen and accept per loop, do we need more?
 		processWriteQueue(); 
 		processReadQueue();
+		checkIdleClients();
 	}
 }
 
@@ -33,9 +34,11 @@ void Server::processWriteQueue(void) {
 	for (int i=0; i < queueSize; ++i) {
 		sock = _writeQueue.front();
 		_writeQueue.pop();
+		FD_SET(sock.first, &_writeFds);
 	 	checkSockets();
 		if (FD_ISSET(sock.first, &_writeFds)) { //always check the socket is ready for writing
 			writeSocket(sock.first, sock.second); //!
+			FD_CLR(sock.first, &_writeFds);
 		}
 		else 
 			_writeQueue.push(sock); //Socket not ready for writing, try again? Try counter?
@@ -46,6 +49,7 @@ void Server::writeSocket(int sock, std::string msg) {
 	if (write(sock, msg.c_str(), msg.length()) < 0) {
 		removeConnection(sock);
 	}
+	updateLastActiveTime(sock);
 }
 
 ListenSocket* Server::getSocket(void) const {
@@ -65,6 +69,16 @@ void Server::checkSockets(void) { //to be called before EVERY read or write.
 	}
 }
 
+void Server::checkIdleClients(void) {
+	time_t now = std::time(NULL);
+	for (std::map<int, time_t>::iterator it = _lastActiveTime.begin(); it != _lastActiveTime.end(); ++it) {
+		if (it->second + IDLE_TIMEOUT < now) {
+			removeConnection(it->first);
+			--it;
+		}
+	}
+}
+
 void parse_buffer_to_find_message_size_to_then_read_the_missing_data(int sock) {
 	std::cout << "Client " << sock << " sent a big message" << std::endl;
 	(void)sock;
@@ -73,6 +87,7 @@ void parse_buffer_to_find_message_size_to_then_read_the_missing_data(int sock) {
 void Server::readSocket(int sock) {
 	memset(_buffer, 0, BUFFER_SIZE);
 	int received = read(sock, _buffer, BUFFER_SIZE); //lecture avec buffer conséquent, normal.
+	updateLastActiveTime(sock);
 	if (received <= 0) {
 		if (received == 0)
 			std::cout << "Client " << sock << " closed the connection gracefully" << std::endl;
@@ -116,8 +131,8 @@ void Server::listenNewConnections(void) {
 			perror("error: select(): ");
 		else {
 			FD_SET(newClientSocket, &_readFds);
-			FD_SET(newClientSocket, &_writeFds);
 			_activeConnections.push_back(newClientSocket);
+			_lastActiveTime.insert(std::map<int, time_t>::value_type(newClientSocket, std::time(NULL)));
 			if (newClientSocket > _max_fd)
 				_max_fd = newClientSocket;
 			std::cout << "New socket on fd: " << newClientSocket << std::endl;
@@ -129,14 +144,21 @@ void Server::removeConnection(int socket) {
 	close(socket);
 	FD_CLR(socket, &_writeFds);
 	FD_CLR(socket, &_readFds);
-	std::vector<int>::iterator it = std::find(_activeConnections.begin(), _activeConnections.end(), socket);
-    if (it != _activeConnections.end()) {
-        _activeConnections.erase(it);
+	std::vector<int>::iterator it_1 = std::find(_activeConnections.begin(), _activeConnections.end(), socket);
+    if (it_1 != _activeConnections.end()) {
+        _activeConnections.erase(it_1);
+    }
+	std::map<int, time_t>::iterator it_2 = _lastActiveTime.find(socket);
+    if (it_2 != _lastActiveTime.end()) {
+        _lastActiveTime.erase(it_2);
     }
 	std::cout << "Removed connection on socket " << socket << std::endl;
 }
 
 
-void Server::parsing_CGI_response(int sock, std::string rawRequest) {
+void Server::parsing_CGI_response(int sock, std::string rawRequest) { 
 	_writeQueue.push(std::make_pair(sock, "*" + _name + " response* [" + rawRequest + "]"));
+}
+void Server::updateLastActiveTime(int sock) {
+	_lastActiveTime[sock] = std::time(NULL);
 }
