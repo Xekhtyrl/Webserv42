@@ -6,12 +6,12 @@
 #    By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/22 17:39:37 by alexphil          #+#    #+#              #
-#    Updated: 2024/10/22 17:40:23 by alexphil         ###   ########.fr        #
+#    Updated: 2024/10/24 18:25:42 by alexphil         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Target executable
-TARGET      =	array.x
+TARGET      =	conf
 
 # C++ Compiler
 CXX         =	c++

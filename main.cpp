@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:39:55 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/24 17:38:36 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/24 18:18:51 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,11 @@
 
 int	main(int ac, char **av) {
 	
-	Config conf(ac, av);
+	Config config(ac, av);
 	
-	std::map<int, ServerConfig> srvrsConf;
-	srvrsConf = conf.getServers();
+	std::map<int, ServerConfig> srvConfs = config.getServers();
 	
-	ServerConfig srvConf = srvrsConf[42];
+	ServerConfig srvConf = srvConfs[42];
 
 	if (srvConf["/campus"][INDEX])
 		std::string	indexFile = srvConf["/campus"].getIndex();
