@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:17:11 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/24 18:04:45 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/24 18:13:45 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ void	RouteConfig::allowMethod(int method) {
 }
 
 void	RouteConfig::setRedirect(std::string redirect) {
-	redirect = redirect;
+	this->redirect = redirect;
 }
 
 void	RouteConfig::setRoot(std::string root) {
-	root = root;
+	this->root = root;
 }
 
 void	RouteConfig::setAutoindex(bool state) {
@@ -40,7 +40,7 @@ void	RouteConfig::setAutoindex(bool state) {
 }
 
 void	RouteConfig::setIndex(std::string index) {
-	index = index;
+	this->index = index;
 }
 
 // GETTERS
