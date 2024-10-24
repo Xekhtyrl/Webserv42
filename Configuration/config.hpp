@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:00:51 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/24 17:24:16 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/24 18:03:28 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,5 @@ class	Config {
 	private:
 		std::ifstream					configFile;
 		std::vector<int>				usedPorts;
-		std::map <int, ServerConfig>	servers;
+		std::map <int, ServerConfig>	serverConfigs;
 };
-

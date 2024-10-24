@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 17:21:09 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/24 17:24:32 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/24 18:04:56 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ Config::Config(int ac, char **av) {
 	else
 		configFile.open("webserv.conf"); // Open default config
 		// Catch failure exception
-	parseConfigFile();
+	// parseConfigFile();
 }
 
 Config::~Config() {
@@ -39,13 +39,16 @@ bool	Config::hasExtension(std::string filename, std::string extension) {
 	return (filename.substr(filenameLenght - extensionLenght) == extension);
 }
 
-void	parseConfigFile() {
-	; // [WIP]
-}
+// void	Config::parseConfigFile() {
+// 	;
+// }
 
 // Getters
 
-std::map <int, ServerConfig>	Config::getServers() {
-	return (servers);
+std::vector<int>				Config::getPorts() {
+	return (usedPorts);
 }
 
+std::map <int, ServerConfig>	Config::getServers() {
+	return (serverConfigs);
+}

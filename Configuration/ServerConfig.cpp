@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:16:46 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/24 17:25:20 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/24 18:04:06 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,10 @@ ServerConfig::ServerConfig() {
 
 void	ServerConfig::setHost(std::string name) {
 	host = name;
+}
+
+void	ServerConfig::setPort(int port) {
+	port = port;
 }
 
 void	ServerConfig::addErrorPage(int code, std::string file) {
@@ -40,6 +44,10 @@ void	ServerConfig::addRoute(std::string route) {
 
 std::string		ServerConfig::getHost() {
 	return (host);
+}
+
+int				ServerConfig::getPort() {
+	return (port);
 }
 
 std::string		ServerConfig::getErrorPage(int code) {
