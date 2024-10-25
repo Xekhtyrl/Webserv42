@@ -7,13 +7,16 @@ DIR_UTI		=	utils/
 DIR_REQ		=	HTTPProtocol/
 DIR_MET		=	HTTPMethod/
 DIR_TEST	=	clientTest/
+DIR_CONF	=	Configuration/
 
+CONFIG		=	config.cpp	RouteConfig.cpp	ServerConfig.cpp
 NETWORK		=	ASocket.cpp BindSocket.cpp ConnectSocket.cpp ListenSocket.cpp Server.cpp
 UTILS		=	utils.cpp FileToVar.cpp VarToFile.cpp
 METHOD		=	DELETE.cpp GET.cpp POST.cpp
 PROTOCOL	=	HTTPReponse.cpp HTTPRequest.cpp HTTPRequestHandler.cpp
 
 SRCS		=	$(addprefix $(DIR_NET), $(NETWORK))		\
+				$(addprefix $(DIR_CONF), $(CONFIG))		\
 				$(addprefix $(DIR_UTI), $(UTILS))		\
 				$(addprefix $(DIR_REQ), $(PROTOCOL))	\
 				$(addprefix $(DIR_MET), $(METHOD))		\
@@ -66,10 +69,10 @@ debug: re
 add:
 	@if [ -z "$(MSG)" ]; then \
 		read -p "Enter commit message: " msg; \
-		git add Makefile $(PATH_SRCS) webdata error/*.html */*.hpp */*/*.hpp includes .gitignore; \
+		git add Makefile $(PATH_SRCS) webdata error/*.html */*.hpp */*/*.hpp includes *.conf .gitignore; \
 		git commit -m "$$msg"; \
 	else \
-		git add Makefile $(PATH_SRCS) webdata error/*.html */*.hpp */*/*.hpp includes .gitignore; \
+		git add Makefile $(PATH_SRCS) webdata error/*.html */*.hpp */*/*.hpp includes *.conf .gitignore; \
 		git commit -m "$(MSG)"; \
 	fi; \
 	git push
