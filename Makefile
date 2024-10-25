@@ -66,10 +66,10 @@ debug: re
 add:
 	@if [ -z "$(MSG)" ]; then \
 		read -p "Enter commit message: " msg; \
-		git add Makefile $(PATH_SRCS) webdata error/*.html includes .gitignore; \
+		git add Makefile $(PATH_SRCS) webdata error/*.html */*.hpp */*/*.hpp includes .gitignore; \
 		git commit -m "$$msg"; \
 	else \
-		git add Makefile $(PATH_SRCS) webdata error/*.html includes .gitignore; \
+		git add Makefile $(PATH_SRCS) webdata error/*.html */*.hpp */*/*.hpp includes .gitignore; \
 		git commit -m "$(MSG)"; \
 	fi; \
 	git push
