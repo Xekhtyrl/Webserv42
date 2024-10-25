@@ -19,8 +19,8 @@ Server::~Server(void) {
 void Server::loop(int n_loops) {
 	while (n_loops--) {
 		listenNewConnections(); //Single listen and accept per loop, do we need more?
-		processWriteQueue(); 
 		processReadQueue();
+		processWriteQueue(); 
 		checkIdleClients();
 	}
 }
@@ -89,7 +89,7 @@ void Server::checkSockets(void) { //to be called before EVERY read or write.
 		FD_SET(*it, &_writeFds);
 		FD_SET(*it, &_readFds);
 	}
-	if (select(_max_fd + 1, &_readFds, &_writeFds, NULL, NULL) < 0 && errno != EINTR) //EINTR = caught signal
+	if (select(_max_fd + 1, &_readFds, &_writeFds, NULL, "TIMEOUT") < 0 && errno != EINTR) //EINTR = caught signal
 		perror("error: select(): ");
 }
 void Server::checkIdleClients(void) {
@@ -111,7 +111,7 @@ void Server::readSocket(int sock) {
 		if (FD_ISSET(sock, &_readFds)) {
 			received = read(sock, _buffer, BUFFER_SIZE);
 			updateLastActiveTime(sock);
-			_rawClientReq.append(_buffer, received);
+			_rawClientReq.append(_buffer, received); //
 		}
 		else
 			return;
