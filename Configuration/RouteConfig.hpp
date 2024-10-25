@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:41:23 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/24 18:04:19 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/25 16:49:32 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ class	RouteConfig {
 		void			allowMethod(int method);
 		void			setRedirect(std::string redirect);
 		void			setRoot(std::string root);
-		void			setAutoindex(bool state);
+		void			setListing(bool state);
 		void			setIndex(std::string index);
 
 		// Getters
@@ -36,7 +36,7 @@ class	RouteConfig {
 		bool			hasAutoindex();
 		std::string		getIndex();		
 		
-		// Overload Operator
+		// Operator
 		
 		bool			operator[](int RULE);
 		
@@ -49,4 +49,3 @@ class	RouteConfig {
 };
 
 //	[WIP] Execute CGI based on certain file extension (for example .php) and make it work with POST and GET methods.
-//	[WIP] Make the route able to accept uploaded files and configure where they should be saved.

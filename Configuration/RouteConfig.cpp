@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:17:11 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/24 18:13:45 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/25 16:49:55 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	RouteConfig::setRoot(std::string root) {
 	this->root = root;
 }
 
-void	RouteConfig::setAutoindex(bool state) {
+void	RouteConfig::setListing(bool state) {
 	autoindex = state;
 }
 
