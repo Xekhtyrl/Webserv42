@@ -27,9 +27,7 @@ std::string	requestToResponseProcess(std::string req) {
 
 	try {
 		HTTPRequest request(req);
-		std::cout<<"coucou1"<<std::endl;
 		executeRequest(request, repBody); //CGI???
-		std::cout<<"coucou2"<<std::endl;
 		HTTPReponse response(repBody, request);
 		final = response.getFinal();
 	}

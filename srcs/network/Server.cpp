@@ -119,7 +119,7 @@ void Server::readSocket(int sock) {
 	if (received <= 0) //if < 0: error. else if == 0: EOF from client
 		removeConnection(sock); //pas certain de la gestion des mauvais read (< 0). On kill la connection?
 	else 
-		parsing_CGI_response(sock, &_rawRequest); 
+		sendResponse(sock, requestToResponseProcess(&_rawRequest, _config));
 }
 
 void Server::processReadQueue(void) {
