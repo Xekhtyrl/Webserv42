@@ -39,7 +39,7 @@ class Server {
 		void updateLastActiveTime(int sock);
 
 		//tmp
-		void parsing_CGI_response(int sock, std::string rawRequest);
+		void parsing_CGI_response(int sock, std::string& rawRequest);
 		
 		
 		

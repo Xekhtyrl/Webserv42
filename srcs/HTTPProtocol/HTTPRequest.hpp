@@ -13,7 +13,7 @@
 class HTTPRequest {
  public:
   HTTPRequest();
-  HTTPRequest(std::string request);
+  HTTPRequest(std::string request, ServerConfig& conf);
   HTTPRequest(const HTTPRequest &other);
   HTTPRequest &operator=(const HTTPRequest &rhs);
   ~HTTPRequest();
@@ -26,7 +26,7 @@ class HTTPRequest {
 
  private:
   std::map<std::string, std::string> splitHeader(std::string request);
-  bool	checkMethod(std::string method);
+  bool	checkMethod(std::string method, ServerConfig& conf);
   bool	checkLink(std::string& link);
   void	checkHeaders();
   std::string	_body;

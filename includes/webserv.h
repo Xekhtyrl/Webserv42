@@ -24,7 +24,7 @@ class HTTPRequest;
 
 std::string					strTrim(std::string str, std::string set);
 std::string					getTimeStamp();
-std::string					requestToResponseProcess(std::string req);
+std::string					requestToResponseProcess(std::string req, ServerConfig& conf);
 std::string					fileToStr(std::string filename);
 std::vector<unsigned char>	binaryFileToVector(std::string filename);
 bool						isBinaryFile(std::string filename, std::string& type);
