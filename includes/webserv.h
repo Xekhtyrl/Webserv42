@@ -9,6 +9,14 @@
 #include <string.h>
 #include "../srcs/HTTPProtocol/HTTPRequest.hpp"
 #include "../srcs/HTTPProtocol/HTTPReponse.hpp"
+#include "../srcs/Network/ASocket.hpp"
+#include "../srcs/Network/BindSocket.hpp"
+#include "../srcs/Network/ConnectSocket.hpp"
+#include "../srcs/Network/ListenSocket.hpp"
+#include "../srcs/Network/Server.hpp"
+#include "../srcs/Configuration/config.hpp"
+#include "../srcs/Configuration/RouteConfig.hpp"
+#include "../srcs/Configuration/ServerConfig.hpp"
 #include "template.hpp"
 #include <fstream>
 #include <vector>

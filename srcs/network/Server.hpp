@@ -9,7 +9,7 @@
 # include <queue>
 # include <map>
 # include <sys/select.h>
-# include <PATH/TO/ServerConfig.hpp>
+# include "../../includes/webserv.h"
 
 # define BUFFER_SIZE 1024
 # define IDLE_TIMEOUT 600 //disconnects client after 10 minutes of inactivity
