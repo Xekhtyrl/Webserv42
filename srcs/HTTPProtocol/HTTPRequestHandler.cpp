@@ -21,12 +21,12 @@ void	executeRequest(HTTPRequest& request, std::string& response){
 		executeDELETE(request, response);
 }
 // PROTECT BODY SIZE LIMIT!!!
-std::string	requestToResponseProcess(std::string req) {
+std::string	requestToResponseProcess(std::string req, ServerConfig& conf) {
 	std::string final;
 	std::string repBody;
 
 	try {
-		HTTPRequest request(req);
+		HTTPRequest request(req, conf);
 		executeRequest(request, repBody); //CGI???
 		HTTPReponse response(repBody, request);
 		final = response.getFinal();

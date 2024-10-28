@@ -9,6 +9,14 @@
 #include <string.h>
 #include "../srcs/HTTPProtocol/HTTPRequest.hpp"
 #include "../srcs/HTTPProtocol/HTTPReponse.hpp"
+#include "../srcs/Network/ASocket.hpp"
+#include "../srcs/Network/BindSocket.hpp"
+#include "../srcs/Network/ConnectSocket.hpp"
+#include "../srcs/Network/ListenSocket.hpp"
+#include "../srcs/Network/Server.hpp"
+#include "../srcs/Configuration/config.hpp"
+#include "../srcs/Configuration/RouteConfig.hpp"
+#include "../srcs/Configuration/ServerConfig.hpp"
 #include "template.hpp"
 #include <fstream>
 #include <vector>
@@ -16,7 +24,7 @@ class HTTPRequest;
 
 std::string					strTrim(std::string str, std::string set);
 std::string					getTimeStamp();
-std::string					requestToResponseProcess(std::string req);
+std::string					requestToResponseProcess(std::string req, ServerConfig& conf);
 std::string					fileToStr(std::string filename);
 std::vector<unsigned char>	binaryFileToVector(std::string filename);
 bool						isBinaryFile(std::string filename, std::string& type);

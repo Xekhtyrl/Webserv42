@@ -3,7 +3,7 @@
 // Default constructor
 HTTPRequest::HTTPRequest() { return; }
 
-HTTPRequest::HTTPRequest(std::string request) { 
+HTTPRequest::HTTPRequest(std::string request, ServerConfig& conf) { 
 	// std::ofstream file ("./requestLog", std::ios::out);
 	// file<<request<<std::endl;
 	// file.close();
@@ -76,8 +76,19 @@ std::map<std::string, std::string> HTTPRequest::splitHeader(std::string request)
 	return tab;
 }
 
-bool	HTTPRequest::checkMethod(std::string method) {
-	if (method == "GET" || method == "DELETE" || method == "POST")
+bool	HTTPRequest::checkMethod(std::string method, ServerConfig& conf) {
+	std::string	route;
+
+	if (_content == "\\")
+		route = "\\";
+	else if (_content.find_first_of("\\", 1) < _content.size())
+	{
+		if (conf[_content.substr(1, _content.find_first_of("\\", 1) - 1)][REDIRECT])
+			route = _content.substr(1, _content.find_first_of("\\", 1) - 1);
+	}
+	
+	if ((method == "GET" && conf[route][GET]) || (method == "DELETE" && conf[route][DELETE])
+		|| (method == "POST" && conf[route][POST]))
 		return true;
 	return false;
 }

@@ -1,12 +1,12 @@
 #include "Server.hpp"
 
-Server::Server(ServerConfig config, int domain, int service, int protocol, u_long interface, int backlog) {
-	_listenSocket = new ListenSocket(domain, service, protocol, config->getPort(), interface, backlog);
+Server::Server(ServerConfig config, int domain, int service, int protocol, int port, u_long interface, int backlog) {
+	_listenSocket = new ListenSocket(domain, service, protocol, config.getPort(), interface, backlog);
 	_max_fd = _listenSocket->getSocket();
 	std::cout << "Listening to new connections on port " << ntohs(_listenSocket->getAddress().sin_port) << std::endl;
 }
 Server::Server(ServerConfig config) {
-	_listenSocket = new ListenSocket(AF_INET, SOCK_STREAM, 0, config->getPort(), INADDR_ANY, 20);
+	_listenSocket = new ListenSocket(AF_INET, SOCK_STREAM, 0, config.getPort(), INADDR_ANY, 20);
 	_max_fd = _listenSocket->getSocket();
 	std::cout << "Listening to new connections on port " << ntohs(_listenSocket->getAddress().sin_port) << std::endl;
 }
@@ -19,8 +19,8 @@ Server::~Server(void) {
 void Server::loop(int n_loops) {
 	while (n_loops--) {
 		listenNewConnections(); //Single listen and accept per loop, do we need more?
-		processReadQueue();
 		processWriteQueue(); 
+		processReadQueue();
 		checkIdleClients();
 	}
 }
@@ -28,10 +28,12 @@ void Server::loop(int n_loops) {
 void Server::sendResponse(int sock, std::string response) {
 	_writeQueue.push(std::pair<int, std::string>(sock, response));
 }
-
+// is it necessary as the answers should already send the file content? or is it something else?
 void sendFileContent(int sock, std::string path) {
-	std::string fileCont = getFileContent();
-	sendResponse(sock, fileCont);
+	(void)sock;
+	(void)path;
+	/*std::string fileCont = getFileContent();
+	sendResponse(sock, fileCont);*/
 }
 
 void Server::listenNewConnections(void) {
@@ -117,7 +119,7 @@ void Server::readSocket(int sock) {
 			if (received < 0)
 				"ERROR"
 			updateLastActiveTime(sock);
-			_rawClientReq.append(_buffer, received); //
+			_rawClientReq.append(_buffer, received);
 		}
 		else
 			return;
@@ -125,7 +127,7 @@ void Server::readSocket(int sock) {
 	if (received <= 0) //if < 0: error. else if == 0: EOF from client
 		removeConnection(sock); //pas certain de la gestion des mauvais read (< 0). On kill la connection?
 	else 
-		sendResponse(sock, requestToResponseProcess(&_rawRequest, _config));
+		sendResponse(sock, requestToResponseProcess(_rawClientReq, _config)); 
 }
 
 void Server::processReadQueue(void) {
@@ -159,9 +161,8 @@ void Server::removeConnection(int socket) {
 	std::cout << "Removed connection on socket " << socket << std::endl;
 }
 
-
-
 //should this be part of the Server function? 
+//Leo: I think this should be or in the HTTPProtocol/HTTPRequestHandler.cpp or somewhere around the httprequest file
 void Server::parsing_CGI_response(int sock, std::string &rawRequest) {
-	_writeQueue.push(std::make_pair(sock, "*" + _name + " response* [" + rawRequest + "]"));
+	_writeQueue.push(std::make_pair(sock, "*" /*+ _name +*/ " response* [" + rawRequest + "]"));
 }
