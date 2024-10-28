@@ -65,8 +65,9 @@ void Server::processWriteQueue(void) {
 			writeSocket(sock.first, sock.second); //!
 			FD_CLR(sock.first, &_writeFds);
 		}
-		else 
-			_writeQueue.push(sock); //Socket not ready for writing, try again? Try counter?
+		else
+			removeConnection(sock.first);
+			//_writeQueue.push(sock); //Socket not ready for writing, try again? Try counter?
 	}
 }
 
@@ -81,7 +82,9 @@ ListenSocket* Server::getSocket(void) const {
 	return _listenSocket;
 }
 
-void Server::checkSockets(void) { //to be called before EVERY read or write.
+void Server::checkSockets(void) { //to be called before EVERY read or write
+	struct timeval timeout;
+	timeout.tv_sec = 0; timeout.tv_usec = 50000; //0.05 second
 	FD_ZERO(&_readFds); // man said it's necessary to reinitialize the fd_sets
 	FD_ZERO(&_writeFds); //before every select() call
 	FD_SET(_listenSocket->getSocket(), &_readFds);
@@ -89,7 +92,7 @@ void Server::checkSockets(void) { //to be called before EVERY read or write.
 		FD_SET(*it, &_writeFds);
 		FD_SET(*it, &_readFds);
 	}
-	if (select(_max_fd + 1, &_readFds, &_writeFds, NULL, "TIMEOUT") < 0 && errno != EINTR) //EINTR = caught signal
+	if (select(_max_fd + 1, &_readFds, &_writeFds, NULL, timeout) < 0 && errno != EINTR) //EINTR = caught signal
 		perror("error: select(): ");
 }
 void Server::checkIdleClients(void) {
@@ -104,12 +107,15 @@ void Server::checkIdleClients(void) {
 
 void Server::readSocket(int sock) {
 	size_t received = BUFFER_SIZE;
+	size_t msgSize = 0;
 	_rawClientReq = "";
 	while (received == BUFFER_SIZE) {
 		memset(_buffer, 0, BUFFER_SIZE);
 		checkSockets();
 		if (FD_ISSET(sock, &_readFds)) {
 			received = read(sock, _buffer, BUFFER_SIZE);
+			if (received < 0)
+				"ERROR"
 			updateLastActiveTime(sock);
 			_rawClientReq.append(_buffer, received); //
 		}

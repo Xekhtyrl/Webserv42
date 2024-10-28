@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
+/*   By: oladams <oladams@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:39:55 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/24 18:18:51 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/25 14:00:20 by oladams          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	main(int ac, char **av) {
 	
 	std::map<int, ServerConfig> srvConfs = config.getServers();
 	
-	ServerConfig srvConf = srvConfs[42];
+	ServerConfig srvConf = srvConf[42];
 
 	if (srvConf["/campus"][INDEX])
 		std::string	indexFile = srvConf["/campus"].getIndex();
