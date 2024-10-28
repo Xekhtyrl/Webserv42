@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:00:51 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/28 17:13:30 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/28 19:36:46 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,19 +30,17 @@ class	Config {
 		
 		bool		hasExtension(std::string filename, std::string extension);
 		bool		isDirective(std::string token);
-		bool		indentLevel(std::string line, size_t level);
+		bool		isRule(std::string token);
+		bool		indentLevel(size_t level);
 		bool		isCommentLine(std::string line);
 		
-		void		parseServerConfig();
-		void		parseDirective(ServerConfig serverConfig, std::vector <std::string> tokens);
-		
-		void		parseRouteConfig(ServerConfig serverConfig, std::string route);
-		
+		void		processDirective(int port, std::vector <std::string> tokens);
+		void		processRule(int port, std::string route, std::vector <std::string> tokens);	
 		
 		// Setters
 
-		void								addPort(int port);
-		void								addServer(int port, ServerConfig serverConfig);
+		void		addPort(int port);
+		void		addServer(int port, ServerConfig serverConfig);
 		
 		// Getters
 
@@ -54,6 +52,7 @@ class	Config {
 		std::string							line;
 		
 		std::set 	<std::string>			directives;
+		std::set 	<std::string>			rules;
 		
 		std::set	<int>					usedPorts;
 		std::map	<int, ServerConfig>		serverConfigs;
