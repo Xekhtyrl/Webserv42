@@ -11,7 +11,7 @@ class HTTPRequest;
 class HTTPReponse {
  public:
   HTTPReponse();
-  HTTPReponse(std::string errorMsg);
+  HTTPReponse(std::string errorMsg, ServerConfig& conf);
   HTTPReponse(std::string body, HTTPRequest& request);
   HTTPReponse(const HTTPReponse &other);
   HTTPReponse &operator=(const HTTPReponse &rhs);

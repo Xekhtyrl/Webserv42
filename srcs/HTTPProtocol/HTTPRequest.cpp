@@ -3,19 +3,15 @@
 // Default constructor
 HTTPRequest::HTTPRequest() { return; }
 
-HTTPRequest::HTTPRequest(std::string request, ServerConfig& conf) { 
-	// std::ofstream file ("./requestLog", std::ios::out);
-	// file<<request<<std::endl;
-	// file.close();
+HTTPRequest::HTTPRequest(std::string request, ServerConfig& conf) {
 	std::string tmp = request.substr(0, request.find_first_of('\r'));
 	_method = tmp.substr(0, tmp.find_first_of(32));
-	if (!checkMethod(_method))
+	if (!checkMethod(_method, conf))
 		std::runtime_error("405 Method Not Allowed");
 	_content = tmp.substr(tmp.find_first_of(' ') + 1, tmp.find_last_of(' ') - tmp.find_first_of(' ') - 1);
 	if (!checkLink(_content))
 		std::runtime_error("404 Not Found: Ressource Not found");
 	_protocolHTTP = tmp.substr(tmp.find_last_of(' ') + 1, tmp.length() - tmp.find_last_of(' ')); // needed to check?
-	std::cout<<_protocolHTTP<<std::endl;
 	if (_protocolHTTP.find("HTTP/1.1") > _protocolHTTP.size())
 		throw std::runtime_error("400 Bad Request: Wrong or Missing HTTP Protocol");
 	_header = splitHeader(request);
@@ -24,6 +20,7 @@ HTTPRequest::HTTPRequest(std::string request, ServerConfig& conf) {
 	else
 		_body = "";
 	checkHeaders();
+	_message = "200";
 	return;
 }
 

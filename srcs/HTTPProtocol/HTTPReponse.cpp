@@ -3,25 +3,27 @@
 
 // Default constructor
 HTTPReponse::HTTPReponse() { return; }
-HTTPReponse::HTTPReponse(std::string errorMsg) {
-	_statusLine = "HTTP/1.1 " + errorMsg + "\r\n";
+HTTPReponse::HTTPReponse(std::string errorMsg, ServerConfig& conf) {
+	_statusLine = "HTTP/1.1 " + errorMsg.substr(0, errorMsg.find(':')) + "\r\n";
 	_header =	headerLineFormat("Date", getTimeStamp()) + \
 				headerLineFormat("Content-Type", "text/html");
 	_body = fileToStr("./error/" + errorMsg.substr(0, 3) + ".html");
+	// _body = conf.getErrorPage(atoi((errorMsg.substr(0, 3)).c_str()));	//update with Alexis part >> need precision on method
 	_header += headerLineFormat("Content-Length", ftToString(_body.length()));
 	formResponse();
 }
 HTTPReponse::HTTPReponse(std::string body, HTTPRequest& request) {
-	_statusLine = "HTTP/1.1 " + ftToString(200) + "\r\n";
 	std::string tmp;
-	isBinaryFile(request.getContent(), tmp);
-	// std::cout<<tmp<<std::endl;
+	
+	_statusLine = "HTTP/1.1 " + request._message + " OK\r\n";
 	_header =	headerLineFormat("Date", getTimeStamp()) + \
-				headerLineFormat("Content-Type", tmp);
 				headerLineFormat("Connection", "close");
 	_body = body;
-	_header += headerLineFormat("Content-Length", ftToString(_body.length()));
-	(void)request;
+	if (!body.empty()) {
+		isBinaryFile(request.getContent(), tmp);
+		_header += headerLineFormat("Content-Type", tmp);
+		_header += headerLineFormat("Content-Length", ftToString(_body.length()));
+	}
 	formResponse();
 }
 // Copy constructor

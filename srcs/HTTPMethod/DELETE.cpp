@@ -1,6 +1,6 @@
 #include "../../includes/webserv.h"
 
-void	executeDELETE(HTTPRequest& request, std::string& response) {
+void	executeDELETE(HTTPRequest& request, std::string& response, ServerConfig& conf) {
 	std::string file = POST_LOCATION + request.getContent();
 
 	if (access(file.c_str(), F_OK) == -1)

@@ -23,6 +23,7 @@ class HTTPRequest {
   std::string&	getBody();
   void			addToHeader(std::string, std::string);
   std::map<std::string, std::string>	getHeader() const;
+  std::string	_message;
 
  private:
   std::map<std::string, std::string> splitHeader(std::string request);
