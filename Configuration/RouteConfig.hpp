@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:41:23 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/25 16:49:32 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/28 17:34:45 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 # include <string>
 
-enum	Rules { GET, POST, DELETE, REDIRECT, ROOT, AUTOINDEX, INDEX };
+enum	Rules { GET, POST, DELETE, REDIRECT, ROOT, AUTOINDEX, INDEX, UPLOAD};
 
 class	RouteConfig {
 	public:
@@ -25,8 +25,9 @@ class	RouteConfig {
 		void			allowMethod(int method);
 		void			setRedirect(std::string redirect);
 		void			setRoot(std::string root);
-		void			setListing(bool state);
+		void			setAutodindex(bool state);
 		void			setIndex(std::string index);
+		void			setUpload(std::string upload);
 
 		// Getters
 
@@ -34,7 +35,8 @@ class	RouteConfig {
 		std::string		getRedirect();
 		std::string 	getRoot();
 		bool			hasAutoindex();
-		std::string		getIndex();		
+		std::string		getIndex();
+		std::string		getUpload();
 		
 		// Operator
 		
@@ -46,6 +48,5 @@ class	RouteConfig {
 		std::string		root;
 		bool			autoindex;
 		std::string		index;
+		std::string		upload;
 };
-
-//	[WIP] Execute CGI based on certain file extension (for example .php) and make it work with POST and GET methods.
