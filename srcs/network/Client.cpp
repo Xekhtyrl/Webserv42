@@ -10,15 +10,27 @@ int Client::getSock(void) const {
 time_t Client::getLastActiveTime(void) const {
 	return _lastActiveTime;
 }
+char * Client::getWriteBuffer(void) const {
+	return _writeBuffer.data();
+}
+int Client::getWriteBufferSize(void) const {
+	return _writeBuffer.size();
+}
 
 void Client::updateLastActiveTime(void) {
 	_lastActiveTime = std::time(NULL);
 }
 
-void Client::append(char &readBuffer[BUFFER_SIZE], int received) {
+void Client::appendReadBuffer(char &readBuffer[BUFFER_SIZE], int received) {
 	_buffer.insert(_buffer.end(), readBuffer, readBuffer + received);
 }
 
-void Client::clearBuffer(void) {
-	_buffer.clear();
+void Client::clearReadBuffer(void) {
+	_readBuffer.clear();
+}
+void Client::clearWriteBuffer(void) {
+	_writeBuffer.clear();
+}
+void Client::clearWriteBuffer(int size) {
+	_writeBuffer.erase(_writeBuffer.begin(), _writeBuffer.begin() + size);
 }
