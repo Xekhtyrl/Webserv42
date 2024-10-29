@@ -19,9 +19,6 @@ class HTTPReponse {
   ~HTTPReponse();
 
  private:
-//   void	methodGetHeader();
-//   void	methodPostHeader();
-//   void	methodDeleteHeader();
   void	formResponse();
   std::string headerLineFormat(std::string val, std::string content);
   std::string	_final;

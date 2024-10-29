@@ -42,7 +42,7 @@ void	executePOST(HTTPRequest& request, std::string& response, ServerConfig& conf
 	}
 	else if (Content.find("application/x-www-form-urlencoded") < Content.size())
 		throw std::runtime_error("405 Method Not Allowed: This POST option is not implemented");
-	else if (Content.find("application/JSON") < Content.size())
+	else if (Content.find("application/json") < Content.size())
 		throw std::runtime_error("405 Method Not Allowed: This POST option is not implemented");
 	else if (Content.find("text/plain") < Content.size())
 		POSTsimpleContent(response, body);

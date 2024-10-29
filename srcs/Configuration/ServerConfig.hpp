@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:41:17 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/24 18:04:13 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/28 12:18:35 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 # include <string>
 # include <map>
 
-class	RouteConfig;
+# include "RouteConfig.hpp"
 
 class	ServerConfig {
 	public:
@@ -27,7 +27,7 @@ class	ServerConfig {
 		void			setPort(int port);
 		void			addErrorPage(int code, std::string file);
 		void			setClientMaxBodySize(size_t size);
-		void			addRoute(std::string route);		
+		void			addRoute(std::string route, RouteConfig routeConfig);		
 		
 		// Getters
 
@@ -37,7 +37,7 @@ class	ServerConfig {
 		size_t			getClientMaxBodySize();
 		RouteConfig		getRoute(std::string route);
 
-		// Overloaded Operators
+		// Operators
 
 		bool			operator[](int code);
 		RouteConfig		operator[](std::string route);

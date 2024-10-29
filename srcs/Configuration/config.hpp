@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:00:51 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/24 19:27:27 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/28 19:36:46 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,32 @@
 # include <string>
 # include <set>
 # include <map>
+# include <vector>
 # include <fstream>
+# include <sstream>
 
-class	ServerConfig;
+# include "ServerConfig.hpp"
+# include "RouteConfig.hpp"
+
 class	Config {
 	public:
 		Config(int ac, char **av);
-		~Config();
 		
-		// Public Methods
-		bool	hasExtension(std::string filename, std::string extension);
-		bool	isDirective(std::string token);
+		// Methods
+		
+		bool		hasExtension(std::string filename, std::string extension);
+		bool		isDirective(std::string token);
+		bool		isRule(std::string token);
+		bool		indentLevel(size_t level);
+		bool		isCommentLine(std::string line);
+		
+		void		processDirective(int port, std::vector <std::string> tokens);
+		void		processRule(int port, std::string route, std::vector <std::string> tokens);	
 		
 		// Setters
 
-		void								addPort(int port);
-		void								addServer(int port, ServerConfig);
+		void		addPort(int port);
+		void		addServer(int port, ServerConfig serverConfig);
 		
 		// Getters
 
@@ -38,8 +48,12 @@ class	Config {
 		std::map 	<int, ServerConfig>		getServers();
 	
 	private:
-		std::set 	<std::string>			directives;
 		std::ifstream						configFile;
+		std::string							line;
+		
+		std::set 	<std::string>			directives;
+		std::set 	<std::string>			rules;
+		
 		std::set	<int>					usedPorts;
 		std::map	<int, ServerConfig>		serverConfigs;
 };
