@@ -1,9 +1,10 @@
 #include "../../includes/webserv.hpp"
 
-void	uploadFile(std::string boundary, HTTPRequest& request, std::string& response, std::string& body, ServerConfig& conf){
+void	uploadFile(std::string boundary, HTTPRequest& request, std::vector<unsigned char>& response, std::vector<unsigned char>& body, ServerConfig& conf){
 	std::string filename;
 	std::string tmp;
-	std::stringstream s(body);
+	std::string bodyStr = vecToStr(body);
+	std::stringstream s(vecToStr(body));
 
 	getline(s, tmp, '\n');
 	if (!boundary.empty() && tmp.find(boundary) < tmp.size()){
@@ -17,21 +18,22 @@ void	uploadFile(std::string boundary, HTTPRequest& request, std::string& respons
 		throw std::runtime_error("400 Bad Request");
 	filename = (POST_LOCATION + filename);
 	if (access(filename.c_str(), F_OK))
-		request._message = "201";
+		request.setStatus("201");
 	if (isBinaryFile(request.getContent(), tmp))
-		StrToBinaryFile(filename, body, boundary);
+		StrToBinaryFile(filename, bodyStr, boundary);
 	else
 		StrToTextFile(filename, s, boundary);
-	response = "File uploaded successfully.\r\n";
+	appendToVector(response, "File uploaded successfully.\r\n");
 }
 
-void	POSTsimpleContent(std::string& response, std::string body){
-	response = "Input received and stocked: " + body;
+void	POSTsimpleContent(std::vector<unsigned char>& response, std::vector<unsigned char> body){
+	appendToVector(response, "Input received and stocked: ");
+	appendToVector(response, body);
 }
 
 
-void	executePOST(HTTPRequest& request, std::string& response, ServerConfig& conf) {
-	std::string body = request.getBody();
+void	executePOST(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf) {
+	std::vector<unsigned char> body = request.getBody();
 	std::string Content = request.getHeader()["Content-Type"];
 	std::string boundary;
 

@@ -30,9 +30,9 @@ std::string					fileToStr(std::string filename);
 std::vector<unsigned char>	binaryFileToVector(std::string filename);
 bool						isBinaryFile(std::string filename, std::string& type);
 std::string					vecToStr(std::vector<unsigned char>& vec);
-void						executePOST(HTTPRequest& request, std::string & response, ServerConfig& conf);
-void						executeDELETE(HTTPRequest& request, std::string& response, ServerConfig& conf);
-void						executeGET(HTTPRequest& request, std::string& response, ServerConfig& conf);
+void						executePOST(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf);
+void						executeDELETE(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf);
+void						executeGET(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf);
 void						StrToBinaryFile(std::string filename, std::string& body, std::string boundary);
 void						StrToTextFile(std::string filename, std::stringstream& s, std::string boundary);
 

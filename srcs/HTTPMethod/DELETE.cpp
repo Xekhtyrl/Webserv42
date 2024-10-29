@@ -1,10 +1,11 @@
 #include "../../includes/webserv.hpp"
 
-void	executeDELETE(HTTPRequest& request, std::string& response, ServerConfig& conf) {
+void	executeDELETE(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf) {
 	std::string file = POST_LOCATION + request.getContent();
 
 	if (access(file.c_str(), F_OK) == -1)
 		throw std::runtime_error("404 Not Found");
 	remove(file.c_str());
-	response = "File removed succesfully: " + request.getContent();
+	appendToVector(response, "File removed succesfully: ");
+	appendToVector(response, request.getContent());
 }

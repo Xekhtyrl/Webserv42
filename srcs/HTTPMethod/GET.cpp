@@ -1,12 +1,12 @@
 #include "../../includes/webserv.hpp"
 
-void	executeGET(HTTPRequest& request, std::string& response, ServerConfig& conf) {
+void	executeGET(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf) {
 	if (isBinaryFile(request.getContent(), request.getHeader()["Content-Type"])){
 		std::vector<unsigned char> vec = binaryFileToVector(GET_LOCATION + request.getContent());
-		response = vecToStr(vec);
+		response = vec;
 	}
 	else
-		response = fileToStr(GET_LOCATION + request.getContent());
+		appendToVector(response, fileToStr(GET_LOCATION + request.getContent()));
 	if (response.size() > MAX_CLIENT_SIZE){
 		response.clear();
 		throw std::runtime_error("400 Bad Request");}
