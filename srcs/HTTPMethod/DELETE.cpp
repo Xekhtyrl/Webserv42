@@ -1,4 +1,4 @@
-#include "../../includes/webserv.h"
+#include "../../includes/webserv.hpp"
 
 void	executeDELETE(HTTPRequest& request, std::string& response, ServerConfig& conf) {
 	std::string file = POST_LOCATION + request.getContent();

@@ -1,4 +1,4 @@
-#include "../../includes/webserv.h"
+#include "../../includes/webserv.hpp"
 
 std::string fileToStr(std::string filename) {
 	std::string fileStr;

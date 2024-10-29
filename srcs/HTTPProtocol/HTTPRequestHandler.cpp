@@ -2,7 +2,7 @@
 #include "HTTPRequest.hpp"
 #include <cstdio>
 #include <unistd.h>
-#include "../../includes/webserv.h"
+#include "../../includes/webserv.hpp"
 
 //NEED TO BE DONE :|
 void	executeCGI(HTTPRequest& request, std::string& response, ServerConfig& conf) {
@@ -21,19 +21,22 @@ void	executeRequest(HTTPRequest& request, std::string& response, ServerConfig& c
 		executeDELETE(request, response, conf);
 }
 // PROTECT BODY SIZE LIMIT!!!
-std::string	requestToResponseProcess(std::string req, ServerConfig& conf) {
-	std::string final;
+void	requestToResponseProcess(Client& client, ServerConfig& conf) {
+	std::vector<unsigned char> final;
 	std::string repBody;
 
 	try {
-		HTTPRequest request(req, conf);
+		HTTPRequest request(client, conf);
 		executeRequest(request, repBody, conf); //CGI???
 		HTTPReponse response(repBody, request);
 		final = response.getFinal();
 	}
 	catch (std::exception& e) {
+		if (e.what() == "incomplete")
+			return;
 		HTTPReponse error((std::string)e.what(), conf);
-		return (error.getFinal());
+		client.appendWriteBuffer(error.getFinal());
 	}
-	return (final);
+	client.appendWriteBuffer(final);
+	client.clearReadBuffer();
 }

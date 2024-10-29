@@ -3,7 +3,7 @@
 #define HTTPREPONSE_HPP_
 
 #include "HTTPRequest.hpp"
-#include "../../includes/webserv.h"
+#include "../../includes/webserv.hpp"
 #include <iostream>
 
 class HTTPRequest;
@@ -12,19 +12,20 @@ class HTTPReponse {
  public:
   HTTPReponse();
   HTTPReponse(std::string errorMsg, ServerConfig& conf);
+  HTTPReponse(std::vector<unsigned char> body, HTTPRequest& request);
   HTTPReponse(std::string body, HTTPRequest& request);
   HTTPReponse(const HTTPReponse &other);
   HTTPReponse &operator=(const HTTPReponse &rhs);
-  std::string const getFinal() const;
+  std::vector<unsigned char> const getFinal() const;
   ~HTTPReponse();
 
  private:
   void	formResponse();
   std::string headerLineFormat(std::string val, std::string content);
-  std::string	_final;
+  std::vector<unsigned char>	_final;
   std::string	_statusLine;
   std::string	_header;
-  std::string	_body;
+  std::vector<unsigned char>	_body;
 };
 
 #endif // HTTPREPONSE_HPP_

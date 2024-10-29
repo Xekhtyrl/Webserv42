@@ -1,4 +1,4 @@
-#include "../../includes/webserv.h"
+#include "../../includes/webserv.hpp"
 
 void	executeGET(HTTPRequest& request, std::string& response, ServerConfig& conf) {
 	if (isBinaryFile(request.getContent(), request.getHeader()["Content-Type"])){

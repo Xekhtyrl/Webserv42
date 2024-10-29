@@ -1,4 +1,4 @@
-#include "../../includes/webserv.h"
+#include "../../includes/webserv.hpp"
 #include <ctime>
 
 std::string strTrim(std::string str, std::string set) {

@@ -14,6 +14,7 @@
 #include "../srcs/Network/ConnectSocket.hpp"
 #include "../srcs/Network/ListenSocket.hpp"
 #include "../srcs/Network/Server.hpp"
+#include "../srcs/Network/Client.hpp"
 #include "../srcs/Configuration/config.hpp"
 #include "../srcs/Configuration/RouteConfig.hpp"
 #include "../srcs/Configuration/ServerConfig.hpp"
@@ -24,7 +25,7 @@ class HTTPRequest;
 
 std::string					strTrim(std::string str, std::string set);
 std::string					getTimeStamp();
-std::string					requestToResponseProcess(std::string req, ServerConfig& conf);
+void						requestToResponseProcess(Client& client, ServerConfig& conf);
 std::string					fileToStr(std::string filename);
 std::vector<unsigned char>	binaryFileToVector(std::string filename);
 bool						isBinaryFile(std::string filename, std::string& type);

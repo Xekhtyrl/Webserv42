@@ -1,4 +1,4 @@
-#include "../../includes/webserv.h"
+#include "../../includes/webserv.hpp"
 
 void	uploadFile(std::string boundary, HTTPRequest& request, std::string& response, std::string& body, ServerConfig& conf){
 	std::string filename;

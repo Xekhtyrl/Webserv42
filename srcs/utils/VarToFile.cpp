@@ -1,13 +1,4 @@
-#include "../../includes/webserv.h"
-
-bool	findWithIter(std::string::iterator pos, std::string::iterator end, int size, std::string toFind) {
-	int i = 0;
-	for (std::string::iterator it = pos; it != end && i < size; it++) {
-		if (*it != toFind[i++])
-			return false;
-	}
-	return true;
-}
+#include "../../includes/webserv.hpp"
 
 void	StrToBinaryFile(std::string filename, std::string& body, std::string boundary) {
 	std::string::iterator it1 = body.begin();
