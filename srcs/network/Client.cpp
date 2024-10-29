@@ -10,6 +10,9 @@ int Client::getSock(void) const {
 time_t Client::getLastActiveTime(void) const {
 	return _lastActiveTime;
 }
+std::vector<char> getReadBuffer(void) const {
+	return _readBuffer;
+}
 char * Client::getWriteBuffer(void) const {
 	return _writeBuffer.data();
 }
