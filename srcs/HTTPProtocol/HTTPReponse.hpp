@@ -16,16 +16,19 @@ class HTTPReponse {
   HTTPReponse(std::string body, HTTPRequest& request);
   HTTPReponse(const HTTPReponse &other);
   HTTPReponse &operator=(const HTTPReponse &rhs);
-  std::vector<unsigned char> const getFinal() const;
   ~HTTPReponse();
+  
+  std::vector<unsigned char> const getFinal() const;
+  void updateHTML(std::vector<unsigned char> body, std::string errorMsg);
 
  private:
   void	formResponse();
   std::string headerLineFormat(std::string val, std::string content);
-  std::vector<unsigned char>	_final;
-  std::string	_statusLine;
-  std::string	_header;
+
+  std::string					_statusLine;
+  std::string					_header;
   std::vector<unsigned char>	_body;
+  std::vector<unsigned char>	_final;
 };
 
 #endif // HTTPREPONSE_HPP_

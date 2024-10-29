@@ -11,6 +11,10 @@ HTTPReponse::HTTPReponse(std::string errorMsg, ServerConfig& conf) {
 	// _body = conf.getErrorPage(atoi((errorMsg.substr(0, 3)).c_str()));	//update with Alexis part >> need precision on method
 	_header += headerLineFormat("Content-Length", ftToString(_body.size()));
 	formResponse();
+	if (errorMsg.find(':') < errorMsg.size()){
+		std::string message = errorMsg.substr(errorMsg.find(':')); // check if size tot needed;
+		updateHTML(_body, message);
+	}
 }
 HTTPReponse::HTTPReponse(std::vector<unsigned char> body, HTTPRequest& request) {
 	std::string tmp;
@@ -54,4 +58,13 @@ void	HTTPReponse::formResponse() {
 
 std::string HTTPReponse::headerLineFormat(std::string val, std::string content){
 	return val + ": " + content + "\r\n";
+}
+
+void HTTPReponse::updateHTML(std::vector<unsigned char> body, std::string errorMsg){
+	std::vector<unsigned char>::iterator it = body.end();
+	for (int i = 0; i < 26; i++)
+		body.pop_back();
+	appendToVector(body, "\t\t<p>");
+	appendToVector(body, errorMsg);
+	appendToVector(body, "</p>\r\n\t</div>\r\n</body>\r\n</html>\r\n");
 }
