@@ -6,9 +6,11 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 17:21:09 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/28 19:45:38 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/29 17:47:37 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+# include <iostream>
 
 # include "Config.hpp"
 # include "ServerConfig.hpp"
@@ -28,7 +30,7 @@ Config::Config(int ac, char **av) {
 	
 	directives.insert("listen");
 	directives.insert("server_name");
-	directives.insert("error");
+	directives.insert("error_page");
 	directives.insert("client_max_body_size");
 	
 	rules.insert("allow");
@@ -45,9 +47,9 @@ Config::Config(int ac, char **av) {
 
 	while (std::getline(configFile, line)) {
 
-		if (line[0] == '\n' || isCommentLine(line) || line.empty())
+		if (line[0] == '\n' || isCommentLine(line) || line.empty()) // Doesn't handle all "empty" lines yet
 			continue;
-			
+		
 		std::istringstream			stream(line);
 		std::string					token;
 		std::vector <std::string>	tokens;
@@ -62,20 +64,21 @@ Config::Config(int ac, char **av) {
 			continue;
 		}
 		else if (indentLevel(1) && inSrv && !inRoute && tokens[0] == "listen" && tokens.size() == 2) {
-			std::istringstream	stream(line);
+			std::istringstream	stream(tokens[1]);
 			stream >> port;
-			if (!stream.eof())
-				exit(1); // Syntax error;
-			if (usedPorts.find(port) != usedPorts.end())
+			if (usedPorts.find(port) != usedPorts.end()) {
+				std::cout << "Port already used!\n";	
 				exit(1); // Trying to setup the same port multiple times
+			}
 			addPort(port);
+			serverConfigs[port].setPort(port);
 			continue;
 		}
 		else if (indentLevel(1) && inSrv && !inRoute && isDirective(tokens[0]) && port > 0) {
 			processDirective(port, tokens);
 			continue;
 		}
-		else if (indentLevel(1) && inSrv && !inRoute && tokens[0] == "location" && tokens.size() == 2 && port > 0) {
+		else if (indentLevel(1) && inSrv && tokens[0] == "location" && tokens.size() == 2 && port > 0) {
 			inRoute = true;
 			route = tokens[1];
 			continue;
@@ -84,11 +87,14 @@ Config::Config(int ac, char **av) {
 			processRule(port, route, tokens);
 			continue;
 		}
-		else
-			exit(1); // Syntax error
-	} 	
-	if (usedPorts.size() != serverConfigs.size())
+		else {
+			std::cout << "Stx error, exiting main parsing loop\n";
+			exit(1);
+		}
+	}
+	if (usedPorts.size() != serverConfigs.size()) {
 		exit(1); // bad port config
+	}
 }
 
 //	METHODS
@@ -98,39 +104,54 @@ void	Config::processDirective(int port, std::vector <std::string> tokens) {
 	std::string			directive = tokens[0];
 	std::istringstream	stream(tokens[1]);
 	
-	if (tokens.size() != 2 && (directive == "error_page" && tokens.size() != 3))
+	if (tokens.size() != 2 && (directive == "error_page" && tokens.size() != 3)) {
+		std::cout << "processDirective bad tokens nbr\n";
 		exit(1); // Bad directive stx
-
-	if (directive == "server_name")
+	}
+	if (directive == "server_name") {	
 		serverConfigs[port].setHost(tokens[1]);
+	}
 	else if (directive == "error_page") {
 		int	code;
-		if (stream >> code && stream.eof()) // Make isPath and isDir utils methods to check tokens[2] ?
+		if (stream >> code && stream.eof()) { // Make isPath and isDir utils methods to check tokens[2] ?
 			serverConfigs[port].addErrorPage(code, tokens[2]);
-		else
+		} else {
 			exit(1); // error with provided code
+		}
 	}
 	else if (directive == "client_max_body_size") {
-		size_t	size;
-		char	suffix;
-		if (stream >> size >> suffix && suffix == 'M' && stream.eof())
+		size_t		size;
+		std::string	suffix;
+		if (stream >> size >> suffix && suffix == "M" && stream.eof())
 			serverConfigs[port].setClientMaxBodySize(size * 1024);
-		else
+		else {
+			std::cout << "Issue with client max body size\n";
 			exit(1); // throw error
+		}
 	}
-	else
+	else {
+		std::cout << "processDirective bad stx\n";
 		exit(1); // throw error bad directive syntax
+	}
 }
 
 void	Config::processRule(int port, std::string route, std::vector <std::string> tokens) {
 	std::string	rule = tokens[0];
 	
-	if (tokens.size() != 2)
+	if (tokens.size() != 2) {
+		std::cout << "Bad size!\n";	
 		exit(1); // Bad rule syntax for given rule;
+	}
+
+	std::cout << rule << " called within " << route << " for " << port << "\n";
 
 	if (rule == "allow") {
-		if (tokens[1] == "GET")
+		if (tokens[1] == "GET") {
 			serverConfigs[port][route].allowMethod(GET);
+			std::cout << "Adding GET method in " << route << "\n";
+			if (serverConfigs[port][route][GET])
+				std::cout << "Should print if GET is allowed\n";	
+		}
 		else if (tokens[1] == "POST")
 			serverConfigs[port][route].allowMethod(POST);
 		else if (tokens[1] == "DELETE")
@@ -142,11 +163,11 @@ void	Config::processRule(int port, std::string route, std::vector <std::string> 
 		serverConfigs[port][route].setRedirect(tokens[1]);
 	else if (rule == "root")
 		serverConfigs[port][route].setRoot(tokens[1]);
-	else if (rule == "autodindex") {
+	else if (rule == "autoindex") {
 		if (tokens[1] == "on")
-			serverConfigs[port][route].setAutodindex(true);
+			serverConfigs[port][route].setAutoindex(true);
 		else if (tokens[1] == "off")
-			serverConfigs[port][route].setAutodindex(false);
+			serverConfigs[port][route].setAutoindex(false);
 		else
 			exit(1); // throw proper error
 	}

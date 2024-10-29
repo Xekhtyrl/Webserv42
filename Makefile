@@ -6,7 +6,7 @@
 #    By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/22 17:39:37 by alexphil          #+#    #+#              #
-#    Updated: 2024/10/28 13:13:07 by alexphil         ###   ########.fr        #
+#    Updated: 2024/10/29 14:34:42 by alexphil         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,10 +18,10 @@ CXX         =	c++
 
 # Compiler flags
 CXXFLAGS    =	-Wall -Wextra -Werror -pedantic -std=c++98 \
-				-Wno-unused-parameter -Wno-unused-variable
+#				-Wno-unused-parameter -Wno-unused-variable
 
-DXXFLAGS	=	-Wshadow -Wuninitialized -O0 -g3 \
-#				-Wconversion
+DXXFLAGS	=	-Wuninitialized -O0 -g \
+#				-Wconversion -Wshadow 
 
 # Include directories
 INCLUDES    =	-IConfiguration
