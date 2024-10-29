@@ -1,13 +1,15 @@
 #ifndef CLIENT_HPP
 # define CLIENT_HPP
 
+#include <vector>
 class Client {
 	public:
-		Client(int sock, &Server server);
+		Client(int sock, Server& server);
 
 		int getSock(void) const;
 		time_t getLastActiveTime(void) const;
 		char* getWriteBuffer(void);
+		std::vector<char> getReadBuffer(void);
 
 		void updateLastActiveTime(void);
 		void appendReadBuffer(char &readBuffer[BUFFER_SIZE], int received);
