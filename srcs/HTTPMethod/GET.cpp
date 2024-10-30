@@ -7,8 +7,11 @@ void	executeGET(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 	}
 	else
 		appendToVector(response, fileToStr(request.getContent()));
+
 	if (response.size() > conf.getClientMaxBodySize()){
 		response.clear();
-		throw std::runtime_error(E400);}
+		throw std::runtime_error(E400);
+	}
+
 	request.addToHeader("Content-Length", ftToString(response.size()));
 }
