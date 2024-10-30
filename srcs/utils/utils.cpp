@@ -31,6 +31,15 @@ std::string	getTimeStamp() {
 	return strTrim(timeStr, "\n");
 }
 
+std::string getRedirPath(ServerConfig& conf, std::string method, std::string url) {
+	if (method == "GET" && conf[url][REDIRECT])
+		return conf[url].getRedirect();
+	if (method == "GET" && conf[url][ROOT])
+		return conf[url].getRoot();
+	else if (method == "POST" || method == "DELETE")
+		return conf[url].getUpload(); // >>> Upload in rout why? Different depending on rout might be too complicated
+}
+
 bool	isBinaryFile(std::string filename, std::string& type) {
 	std::string image[] = {".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tiff", ".ico", ".svg", ""};
 	std::string audio[] = {".mp3", ".wav", ".flac", ".ogg", ".aac", ".wma", ""}; 

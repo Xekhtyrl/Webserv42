@@ -35,6 +35,7 @@ void						executeDELETE(HTTPRequest& request, std::vector<unsigned char>& respon
 void						executeGET(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf);
 void						StrToBinaryFile(std::string filename, std::string& body, std::string boundary);
 void						StrToTextFile(std::string filename, std::stringstream& s, std::string boundary);
+std::string					getRedirPath(ServerConfig& conf, std::string method, std::string url);
 
 // ces macro sont defini ici par facilité de code mais seront des valeurs recuperer du conf file
 #define EXTENSION_CGI ".py"

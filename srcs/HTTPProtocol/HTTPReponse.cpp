@@ -4,11 +4,14 @@
 // Default constructor
 HTTPReponse::HTTPReponse() { return; }
 HTTPReponse::HTTPReponse(std::string errorMsg, ServerConfig& conf) {
+	int code = atoi(errorMsg.substr(0, errorMsg.find(':')).c_str());
 	_statusLine = "HTTP/1.1 " + errorMsg.substr(0, errorMsg.find(':')) + "\r\n";
 	_header =	headerLineFormat("Date", getTimeStamp()) + \
 				headerLineFormat("Content-Type", "text/html");
-	appendToVector(_body, fileToStr("./error/" + errorMsg.substr(0, 3) + ".html"));
-	// _body = conf.getErrorPage(atoi((errorMsg.substr(0, 3)).c_str()));	//update with Alexis part >> need precision on method
+	if (conf[code])
+		appendToVector(_body, fileToStr(conf.getErrorPage(code)));
+	else
+		appendToVector(_body, fileToStr("./error/404.html"));
 	_header += headerLineFormat("Content-Length", ftToString(_body.size()));
 	formResponse();
 	if (errorMsg.find(':') < errorMsg.size()){
