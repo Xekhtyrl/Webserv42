@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/29 18:51:17 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/29 18:51:19 by alexphil         ###   ########.fr       */
+/*   Created: 2024/10/30 13:37:56 by alexphil          #+#    #+#             */
+/*   Updated: 2024/10/30 15:41:57 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,26 @@
 # include "Config.hpp"
 # include "ServerConfig.hpp"
 
-Config::Config(int ac, char **av) {
-
+void	Config::checkParameters(int ac, char **av) {
+	
 	if (ac > 2)
-		exit(1); // TODO: Throw proper error/exception
+		throw std::invalid_argument("Too many parameters");
 	else if (ac == 2) {
-		if (hasExtension(av[1], ".conf"))
+		if (hasExtension(av[1], ".conf")) {
 			configFile.open(av[1]);
-			// TODO: Catch open failure exception
-		// TODO: Not a .conf file exception
-	} else
-		configFile.open("webserv.conf"); // Open default config
-		// TODO: Catch failure exception
+			if (!configFile.is_open())
+				throw std::runtime_error(std::string("Failed to open ") + av[1]);
+		} else
+			throw std::invalid_argument("File must be of *.conf type");
+	}
+	else {
+		configFile.open("webserv.conf");
+		if (!configFile.is_open())
+				throw std::runtime_error("Failed to open default file");	
+	}
+}
+
+void	Config::parseConfigFile() {
 	
 	directives.insert("listen");
 	directives.insert("server_name");
@@ -40,10 +48,11 @@ Config::Config(int ac, char **av) {
 	rules.insert("index");
 	rules.insert("upload");
 	
-	int			port	= -1;
-	std::string	route	= "";
 	bool		inSrv	= false;
+	bool		hasPort	= false;
+	int			port;
 	bool		inRoute = false;
+	std::string	route	= "";
 
 	while (std::getline(configFile, line)) {
 
@@ -58,20 +67,19 @@ Config::Config(int ac, char **av) {
 			tokens.push_back(token);
 			
 		if (indentLevel(0) && tokens[0] == "server" && tokens.size() == 1) {
-			port	= -1;
 			inSrv	= true;
+			hasPort = false;
 			inRoute = false;
 			continue;
 		}
 		else if (indentLevel(1) && inSrv && !inRoute && tokens[0] == "listen" && tokens.size() == 2) {
+			if (hasPort)
+				throw std::invalid_argument("Defining multiple ports for the same server");
 			std::istringstream	stream(tokens[1]);
 			stream >> port;
-			if (usedPorts.find(port) != usedPorts.end()) {
-				std::cout << "Port already used!\n";	
-				exit(1); // Trying to setup the same port multiple times
-			}
 			addPort(port);
 			serverConfigs[port].setPort(port);
+			hasPort = true;
 			continue;
 		}
 		else if (indentLevel(1) && inSrv && !inRoute && isDirective(tokens[0]) && port > 0) {
@@ -87,77 +95,55 @@ Config::Config(int ac, char **av) {
 			processRule(port, route, tokens);
 			continue;
 		}
-		else {
-			std::cout << "Stx error, exiting main parsing loop\n";
-			exit(1);
-		}
-	}
-	if (usedPorts.size() != serverConfigs.size()) {
-		exit(1); // bad port config
+		else
+			throw std::invalid_argument(std::string("Syntax error with " + tokens[0]));
 	}
 }
-
-//	METHODS
 
 void	Config::processDirective(int port, std::vector <std::string> tokens) {
 	
 	std::string			directive = tokens[0];
-	std::istringstream	stream(tokens[1]);
 	
-	if (tokens.size() != 2 && (directive == "error_page" && tokens.size() != 3)) {
-		std::cout << "processDirective bad tokens nbr\n";
-		exit(1); // Bad directive stx
-	}
-	if (directive == "server_name") {	
+	if ((directive != "error_page" && tokens.size() != 2) 
+		|| (directive == "error_page" && tokens.size() != 3))
+		throw std::invalid_argument(std::string("Wrong number of args for ") + directive);
+	
+	std::istringstream	stream(tokens[1]);
+
+	if (directive == "server_name")
 		serverConfigs[port].setHost(tokens[1]);
-	}
 	else if (directive == "error_page") {
 		int	code;
-		if (stream >> code && stream.eof()) { // Make isPath and isDir utils methods to check tokens[2] ?
+		if (stream >> code && stream.eof()) // Make isPath and isDir utils methods to check tokens[2] ?
 			serverConfigs[port].addErrorPage(code, tokens[2]);
-		} else {
-			exit(1); // error with provided code
-		}
+		else
+			throw std::invalid_argument(std::string("Bad argument used with ") + directive);
 	}
 	else if (directive == "client_max_body_size") {
 		size_t		size;
 		std::string	suffix;
 		if (stream >> size >> suffix && suffix == "M" && stream.eof())
 			serverConfigs[port].setClientMaxBodySize(size * 1024);
-		else {
-			std::cout << "Issue with client max body size\n";
-			exit(1); // throw error
-		}
-	}
-	else {
-		std::cout << "processDirective bad stx\n";
-		exit(1); // throw error bad directive syntax
+		else
+			throw std::invalid_argument(std::string("Bad argument used with ") + directive);
 	}
 }
 
 void	Config::processRule(int port, std::string route, std::vector <std::string> tokens) {
 	std::string	rule = tokens[0];
 	
-	if (tokens.size() != 2) {
-		std::cout << "Bad size!\n";	
-		exit(1); // Bad rule syntax for given rule;
-	}
-
-	std::cout << rule << " called within " << route << " for " << port << "\n";
+	if (tokens.size() != 2)
+		throw std::invalid_argument(std::string("Wrong number of args for ") + rule);
 
 	if (rule == "allow") {
-		if (tokens[1] == "GET") {
+		if (tokens[1] == "GET")
 			serverConfigs[port][route].allowMethod(GET);
-			std::cout << "Adding GET method in " << route << "\n";
-			if (serverConfigs[port][route][GET])
-				std::cout << "Should print if GET is allowed\n";	
-		}
 		else if (tokens[1] == "POST")
 			serverConfigs[port][route].allowMethod(POST);
 		else if (tokens[1] == "DELETE")
 			serverConfigs[port][route].allowMethod(DELETE);
 		else
-			exit(1); // throw error
+			throw std::invalid_argument(std::string("Trying to allow unknown method " + tokens[1]));
 	}
 	else if (rule == "redirect")
 		serverConfigs[port][route].setRedirect(tokens[1]);
@@ -169,7 +155,7 @@ void	Config::processRule(int port, std::string route, std::vector <std::string> 
 		else if (tokens[1] == "off")
 			serverConfigs[port][route].setAutoindex(false);
 		else
-			exit(1); // throw proper error
+			throw std::invalid_argument(std::string("Bad argument for ") + rule);
 	}
 	else if (rule == "index")
 		serverConfigs[port][route].setIndex(tokens[1]);
@@ -188,7 +174,7 @@ bool	Config::isDirective(std::string token) {
 }
 
 bool	Config::isRule(std::string token) {
-	return (rules.find(token) != directives.end());
+	return (rules.find(token) != rules.end());
 }
 
 bool	Config::indentLevel(size_t level) {
@@ -208,8 +194,12 @@ bool	Config::isCommentLine(std::string line) {
 // SETTERS
 
 void							Config::addPort(int port) {
-	if (usedPorts.find(port) != usedPorts.end())
-		exit(1); // throw exception: Port Already Used
+	if (usedPorts.find(port) != usedPorts.end()) {
+		std::ostringstream oss;
+		oss << "Port " << port << " is already defined for "
+		<< serverConfigs[port].getHost() << ":" << port;
+		throw std::logic_error(oss.str());
+	}
 	usedPorts.insert(port);
 }
 

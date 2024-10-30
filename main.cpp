@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:39:55 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/30 13:24:38 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/30 15:50:40 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,15 @@
 
 int	main(int ac, char **av) {
 	
-	Config config(ac, av);
+	Config config;
+
+	try {
+		config.checkParameters(ac, av);
+		config.parseConfigFile();
+	} catch (std::exception &e) {
+		std::cerr << "Error: " << e.what() << '\n';
+		exit(1);
+	}
 	
 	std::map<int, ServerConfig> srvConfs = config.getServers();
 	

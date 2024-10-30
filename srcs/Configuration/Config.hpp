@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/29 18:51:42 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/29 18:51:45 by alexphil         ###   ########.fr       */
+/*   Created: 2024/10/30 13:38:01 by alexphil          #+#    #+#             */
+/*   Updated: 2024/10/30 14:03:20 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,12 @@
 
 class	Config {
 	public:
-		Config(int ac, char **av);
-		
+	
 		// Methods
 		
+		void		checkParameters(int ac, char** av);
+		void		parseConfigFile();
+
 		bool		hasExtension(std::string filename, std::string extension);
 		bool		isDirective(std::string token);
 		bool		isRule(std::string token);
