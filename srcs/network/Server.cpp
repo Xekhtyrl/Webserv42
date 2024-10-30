@@ -16,60 +16,47 @@ Server::~Server(void) {
 	delete _listenSocket;
 }
 
-void Server::listenNewConnections(void) {
-	if (FD_ISSET(_listenSocket->getSocket(), &_readFds)) {
-		struct sockaddr_in address = _listenSocket->getAddress();
-		socklen_t socketLength = static_cast<socklen_t>(sizeof(address));
-		int newClientSocket = accept(_listenSocket->getSocket(), (struct sockaddr *)&address, &socketLength);
-		if (newClientSocket < 0)
-			perror("error: select(): ");
-		else {
-			FD_SET(newClientSocket, &_readFds);
-			Client newClient(newClientSocket);
-			_activeConnections.push_back(newClient);
-			if (newClientSocket > _max_fd)
-				_max_fd = newClientSocket;
-			std::cout << "New socket on fd: " << newClientSocket << std::endl;
-		}
-	}
+ListenSocket* Server::getListenSocket(void) const {
+	return _listenSocket;
 }
 
-void Server::processWriteQueue(void) {
-	Client client;
-	int queueSize = _writeQueue.size();
-	for (int i=0; i < queueSize; ++i) {
-		client = _writeQueue.front();
-		_writeQueue.pop();
-		FD_SET(client.getSock(), &_writeFds);
-	 	checkSockets();
-		if (FD_ISSET(sock.first, &_writeFds)) { //always check the socket is ready for writing
-			writeSocket(sock.first, sock.second); //!
-			FD_CLR(sock.first, &_writeFds);
-		}
-		else
-			removeConnection(sock.first);
-			//_writeQueue.push(sock); //Socket not ready for writing, try again? Try counter?
+std::vector<int> Server::getActiveConnections(void) const {
+	return _activeConnections;
+}
+std::queue<int> Server::getClosedConnections(void) const {
+	return _closedConnections;
+}
+
+Client Server::listenNewConnections(void) {
+	struct sockaddr_in address = _listenSocket->getAddress();
+	socklen_t socketLength = static_cast<socklen_t>(sizeof(address));
+	int newClientSocket = accept(_listenSocket->getSocket(), (struct sockaddr *)&address, &socketLength);
+	if (newClientSocket < 0) {
+		perror("error: select(): ");
+		return NULL;
+	}
+	else {
+		Client newClient(newClientSocket);
+		_activeConnections.push_back(newClientSocket);
+		std::cout << "New socket on fd: " << newClientSocket << std::endl;
+		return newClient;
 	}
 }
 
 void Server::writeSocket(Client client) {
 	int written = write(client.getSock(), client.getWriteBuffer(), client.getWriteBufferSize());
 	if (written < 0) {
-		removeConnection(client);
+		closeConnection(client);
 		return ;
 	}
 	client.updateLastActiveTime();
 	client.clearWriteBuffer(written);
 }
 
-ListenSocket* Server::getListenSocket(void) const {
-	return _listenSocket;
-}
-
 void Server::checkIdleClient(Client client) {
 	time_t now = std::time(NULL);
 	if (it.getLastActiveTime() + IDLE_TIMEOUT < now) {
-		removeConnection(Client);
+		closeConnection(Client);
 		--it;
 	}
 }
@@ -79,57 +66,22 @@ void Server::readSocket(Client client) {
 	memset(_buffer, 0, BUFFER_SIZE);
 	received = read(sock, _buffer, BUFFER_SIZE);
 	if (received =< 0) {
-		removeConnection(sock);
+		closeConnection(sock);
 		return;
 	}
 	client.updateLastActiveTime();
 	client.append(_buffer, received);
 	//sendResponse(sock, requestToResponseProcess(_rawClientReq, _config));
-	requestToResponseProcess(client)
+	requestToResponseProcess(client);
 }
 
-void Server::removeConnection(int sock) {
-	int sock = client.getSock();
+void Server::closeConnection(Client &client) {
+	
+	int sock = Client.getSock();
 	close(sock);
-	FD_CLR(socket, &_writeFds);//
-	FD_CLR(socket, &_readFds);//
 	std::vector<Client>::iterator it_1 = std::find(_activeConnections.begin(), _activeConnections.end(), client);
     if (it_1 != _activeConnections.end()) {
         _activeConnections.erase(it_1);
     }
-	std::cout << "Removed connection on socket " << socket << std::endl;
+	std::cout << "closed connection on socket " << socket << std::endl;
 }
-
-void Server::sendResponse(int sock, std::string response) {
-	_writeQueue.push(std::pair<int, std::string>(sock, response));
-}
-
-
-refactoring:
-
-std::vector<char> instead of string when read()ing client data
-
-Since a client msg can be fragmented, every open connection should have its buffer char vector
-
-Select() does a snapshot of the fds state.
-
-Just a single queue is enough, std::queue<Operation>
-
-Operation:
-	Client
-	action_type: read or write
-
-if Client NULL, then it's the listenSocket (action_type == read);
-
-Operations manager:
-	std::queue<Operation> _queue;
-	Server server_0 = Server(ServerConfig, &queue)
-
-	every server has got the address of the queue. Every server can add an operation to the queue.
-	The queue rotates endlessly.
-	An operation contains:
-		&server
-		&client
-		int operation_type (read, write, listen)
-	
-	select will contain all sockets, allowing for a processing of all servers' sockets
