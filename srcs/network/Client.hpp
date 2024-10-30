@@ -12,7 +12,7 @@ class Client {
 		time_t getLastActiveTime(void) const; //done
 		char* getWriteBuffer(void); //done
 		int getWriteBufferSize(void) const; //done
-		std::vector<char> getReadBuffer(void);
+		std::vector<unsigned char> getReadBuffer(void);
 
 		void updateLastActiveTime(void); //done
 		void appendReadBuffer(char &readBuffer[BUFFER_SIZE], int received); //done

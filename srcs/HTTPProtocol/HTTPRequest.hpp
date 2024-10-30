@@ -36,10 +36,11 @@ class HTTPRequest {
   bool	incompleteBody(std::vector<unsigned char> buffer);
 
   bool	checkMethod(std::string method, ServerConfig& conf);
-  bool	checkLink(std::string& link);
-  void	checkHeaders();
+  bool	checkLink(std::string& link, ServerConfig& conf);
+  void	checkHeaders(ServerConfig& conf);
   
   void	setBody(std::vector<unsigned char> buffer);
+  void	changePathURL(ServerConfig& conf);
 
   std::string							_method;
   std::string							_status;

@@ -15,8 +15,8 @@ void	uploadFile(std::string boundary, HTTPRequest& request, std::vector<unsigned
 			getline(s, tmp, '\n');
 	}
 	if (filename.empty())
-		throw std::runtime_error("400 Bad Request");
-	filename = (POST_LOCATION + filename);
+		throw std::runtime_error(E400);
+	filename = (request.getContent() + filename);
 	if (access(filename.c_str(), F_OK))
 		request.setStatus("201");
 	if (isBinaryFile(request.getContent(), tmp))
@@ -43,11 +43,11 @@ void	executePOST(HTTPRequest& request, std::vector<unsigned char>& response, Ser
 		uploadFile(boundary, request, response, body, conf);
 	}
 	else if (Content.find("application/x-www-form-urlencoded") < Content.size())
-		throw std::runtime_error("501 Not Implemented: This POST option is not implemented");
+		throw std::runtime_error(E501 ": This POST option is not implemented");
 	else if (Content.find("application/json") < Content.size())
-		throw std::runtime_error("501 Not Implemented: This POST option is not implemented");
+		throw std::runtime_error(E501 ": This POST option is not implemented");
 	else if (Content.find("text/plain") < Content.size())
 		POSTsimpleContent(response, body);
 	else
-		throw std::runtime_error("400 Bad Request");
+		throw std::runtime_error(E400);
 }

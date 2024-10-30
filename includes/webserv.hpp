@@ -39,6 +39,14 @@ std::string					getRedirPath(ServerConfig& conf, std::string method, std::string
 
 // ces macro sont defini ici par facilité de code mais seront des valeurs recuperer du conf file
 #define EXTENSION_CGI ".py"
-#define GET_LOCATION "./webdata/"
-#define POST_LOCATION "./webdata/"
-#define MAX_CLIENT_SIZE 100000
+// #define GET_LOCATION "./webdata/"
+// #define POST_LOCATION "./webdata/"
+// #define MAX_CLIENT_SIZE 100000
+
+#define E400 "400 Bad Request"
+#define E404 "404 Not Found"
+#define E405 "405 Method Not Allowed"
+#define E411 "411 Length Required"
+#define E413 "413 Payload Too Large"
+#define E501 "501 Not Implemented"
+#define E505 "505 HTTP Version Not Supported"
