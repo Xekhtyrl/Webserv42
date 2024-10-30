@@ -18,7 +18,6 @@ class Manager {
 
 		fd_set					_readFds;
 		fd_set					_writeFds;
-		int						_maxFd
 		struct timeval			_selectTimeout;
 };
 

@@ -25,13 +25,14 @@ class Server {
 
 		ListenSocket * getListenSocket(void) const ;
 		std::vector<int> getActiveConnections(void) const;
+		std::queue<int> getClosedConnections(void) const;
 		
 		void loop(int n_loops);
 		void sendResponse(int sock, std::string response);
 	
 	private:
-		void listenNewConnections(void) ;
-		void removeConnection(in sock);
+		Client listenNewConnections(void) ;
+		void closeConnection(int sock);
 
 		void writeSocket(Client client, std::string msg);
 		void readSocket(Client client);
@@ -43,6 +44,7 @@ class Server {
 		ServerConfig 			_config;
 		ListenSocket *			_listenSocket;
 		std::vector<int>		_activeConnections;
+		std::queue<int>			_closedConnections;
 };
 
 #endif
