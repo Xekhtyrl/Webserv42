@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:16:46 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/25 19:27:22 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/30 15:23:42 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,16 +58,16 @@ size_t			ServerConfig::getClientMaxBodySize() {
 	return (clientMaxBodySize);
 }
 
-RouteConfig		ServerConfig::getRoute(std::string route) {
+RouteConfig		&ServerConfig::getRoute(std::string route) {
 	return (routes[route]);
 }
 
 // OVERLOADED OPERATOR
 
-bool		ServerConfig::operator[](int code) {
+bool			ServerConfig::operator[](int code) {
 	return (!getErrorPage(code).empty());
 }
 
-RouteConfig	ServerConfig::operator[](std::string route) {
+RouteConfig		&ServerConfig::operator[](std::string route) {
 	return (getRoute(route));
 }

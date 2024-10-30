@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:41:17 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/28 12:18:35 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/29 16:09:00 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,12 @@ class	ServerConfig {
 		int				getPort();
 		std::string		getErrorPage(int code);
 		size_t			getClientMaxBodySize();
-		RouteConfig		getRoute(std::string route);
+		RouteConfig		&getRoute(std::string route);
 
 		// Operators
 
 		bool			operator[](int code);
-		RouteConfig		operator[](std::string route);
+		RouteConfig		&operator[](std::string route);
 		
 	private:
 		int									port;

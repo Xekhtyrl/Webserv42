@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:41:23 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/28 17:34:45 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/30 13:29:00 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 # include <string>
 
-enum	Rules { GET, POST, DELETE, REDIRECT, ROOT, AUTOINDEX, INDEX, UPLOAD};
+enum	Rules { GET, POST, DELETE, REDIRECT, ROOT, AUTOINDEX, INDEX, UPLOAD };
 
 class	RouteConfig {
 	public:
@@ -25,7 +25,7 @@ class	RouteConfig {
 		void			allowMethod(int method);
 		void			setRedirect(std::string redirect);
 		void			setRoot(std::string root);
-		void			setAutodindex(bool state);
+		void			setAutoindex(bool state);
 		void			setIndex(std::string index);
 		void			setUpload(std::string upload);
 

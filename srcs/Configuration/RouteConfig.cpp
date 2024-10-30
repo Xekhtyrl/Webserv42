@@ -6,14 +6,14 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:17:11 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/28 17:35:11 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/29 16:11:15 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "RouteConfig.hpp"
 
 RouteConfig::RouteConfig() {
-	for (size_t i = 0; i < sizeof(methods)/sizeof(methods[0]); i++)
+	for (size_t i = 0; i < 3; i++)
 		methods[i] = false;
 	redirect = "";
 	root = "";
@@ -36,7 +36,7 @@ void	RouteConfig::setRoot(std::string root) {
 	this->root = root;
 }
 
-void	RouteConfig::setAutodindex(bool state) {
+void	RouteConfig::setAutoindex(bool state) {
 	autoindex = state;
 }
 
@@ -87,6 +87,6 @@ bool			RouteConfig::operator[](int RULE) {
 		case INDEX: 	return	(!getIndex().empty());
 		case UPLOAD:	return	(!getUpload().empty());
 		default:
-			throw std::invalid_argument("Invalid RULE");
+			throw std::invalid_argument("Invalid rule sent");
 	}
 }
