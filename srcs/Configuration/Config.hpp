@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 13:38:01 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/30 14:03:20 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/30 16:09:37 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ class	Config {
 		bool		isDirective(std::string token);
 		bool		isRule(std::string token);
 		bool		indentLevel(size_t level);
-		bool		isCommentLine(std::string line);
+		bool		isCommentLine();
+		bool		isEmptyLine();
 		
 		void		processDirective(int port, std::vector <std::string> tokens);
 		void		processRule(int port, std::string route, std::vector <std::string> tokens);	
