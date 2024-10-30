@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 13:37:56 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/30 16:19:01 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/30 17:18:21 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,9 @@ void	Config::parseConfigFile() {
 		while (stream >> token)
 			tokens.push_back(token);
 			
-		if (indentLevel(0) && tokens[0] == "server" && tokens.size() == 1) {
+		if (indentLevel(0) && tokens[0] == "server") {
+			if (tokens.size() != 1)
+				throw std::invalid_argument("Server bloc shouldn't have any argument");
 			inSrv	= true;
 			hasPort = false;
 			inRoute = false;
@@ -96,7 +98,7 @@ void	Config::parseConfigFile() {
 			continue;
 		}
 		else
-			throw std::invalid_argument(std::string("Syntax error with " + tokens[0]));
+			throw std::invalid_argument(std::string("Syntax error from " + tokens[0]));
 	}
 }
 
@@ -123,7 +125,7 @@ void	Config::processDirective(int port, std::vector <std::string> tokens) {
 		size_t		size;
 		std::string	suffix;
 		if (stream >> size >> suffix && suffix == "M" && stream.eof())
-			serverConfigs[port].setClientMaxBodySize(size * 1024);
+			serverConfigs[port].setClientMaxBodySize(1024 * 1024 * size);
 		else
 			throw std::invalid_argument(std::string("Bad argument used with ") + directive);
 	}
