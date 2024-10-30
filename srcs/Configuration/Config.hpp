@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 13:38:01 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/30 13:39:35 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/30 14:03:20 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,12 @@
 
 class	Config {
 	public:
-		Config(int ac, char **av);
-		
+	
 		// Methods
 		
+		void		checkParameters(int ac, char** av);
+		void		parseConfigFile();
+
 		bool		hasExtension(std::string filename, std::string extension);
 		bool		isDirective(std::string token);
 		bool		isRule(std::string token);

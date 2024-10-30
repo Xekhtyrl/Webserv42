@@ -6,7 +6,7 @@
 #    By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/22 17:39:37 by alexphil          #+#    #+#              #
-#    Updated: 2024/10/29 14:34:42 by alexphil         ###   ########.fr        #
+#    Updated: 2024/10/30 13:44:16 by alexphil         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,13 +24,13 @@ DXXFLAGS	=	-Wuninitialized -O0 -g \
 #				-Wconversion -Wshadow 
 
 # Include directories
-INCLUDES    =	-IConfiguration
+INCLUDES    =	-Isrcs/Configuration
 
 # Source files
 SRCS        =	main.cpp \
-				Configuration/Config.cpp \
-				Configuration/ServerConfig.cpp \
-				Configuration/RouteConfig.cpp
+				srcs/Configuration/Config.cpp \
+				srcs/Configuration/ServerConfig.cpp \
+				srcs/Configuration/RouteConfig.cpp
 				
 
 # Build directory
