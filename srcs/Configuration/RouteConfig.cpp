@@ -6,19 +6,20 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:17:11 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/24 18:13:45 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/30 13:25:11 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "RouteConfig.hpp"
 
 RouteConfig::RouteConfig() {
-	for (int i = 0; i < sizeof(methods)/sizeof(methods[0]); i++)
+	for (size_t i = 0; i < 3; i++)
 		methods[i] = false;
 	redirect = "";
 	root = "";
 	autoindex = false;
 	index = "";
+	upload = "";
 }
 
 // SETTERS
@@ -43,6 +44,10 @@ void	RouteConfig::setIndex(std::string index) {
 	this->index = index;
 }
 
+void	RouteConfig::setUpload(std::string upload) {
+	this->upload = upload;
+}
+
 // GETTERS
 
 bool			RouteConfig::isMethodAllowed(int method) {
@@ -65,16 +70,23 @@ std::string		RouteConfig::getIndex() {
 	return (index);
 }
 
+std::string		RouteConfig::getUpload() {
+	return (upload);
+}
+
 // Overloaded Operator
 
 bool			RouteConfig::operator[](int RULE) {
 	switch (RULE) {
 		case GET:
 		case POST:
-		case DELETE:	return (isMethodAllowed(RULE));
-		case REDIRECT: 	return (!getRedirect().empty());
-		case ROOT: 		return (!getRoot().empty());
-		case AUTOINDEX: return (hasAutoindex());
-		case INDEX: 	return (!getIndex().empty());
+		case DELETE:	return	(isMethodAllowed(RULE));
+		case REDIRECT: 	return	(!getRedirect().empty());
+		case ROOT: 		return	(!getRoot().empty());
+		case AUTOINDEX: return	(hasAutoindex());
+		case INDEX: 	return	(!getIndex().empty());
+		case UPLOAD:	return	(!getUpload().empty());
+		default:
+			throw std::invalid_argument("Invalid rule sent");
 	}
 }

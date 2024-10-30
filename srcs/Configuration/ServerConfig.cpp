@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:16:46 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/24 18:04:06 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/30 13:25:33 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	ServerConfig::setHost(std::string name) {
 }
 
 void	ServerConfig::setPort(int port) {
-	port = port;
+	this->port = port;
 }
 
 void	ServerConfig::addErrorPage(int code, std::string file) {
@@ -36,8 +36,8 @@ void	ServerConfig::setClientMaxBodySize(size_t size) {
 	clientMaxBodySize = size;
 }
 
-void	ServerConfig::addRoute(std::string route) {
-	routes[route] = RouteConfig();
+void	ServerConfig::addRoute(std::string route, RouteConfig routeConfig) {
+	routes[route] = routeConfig;
 }
 
 // GETTERS
@@ -58,16 +58,16 @@ size_t			ServerConfig::getClientMaxBodySize() {
 	return (clientMaxBodySize);
 }
 
-RouteConfig		ServerConfig::getRoute(std::string route) {
+RouteConfig		&ServerConfig::getRoute(std::string route) {
 	return (routes[route]);
 }
 
 // OVERLOADED OPERATOR
 
-bool		ServerConfig::operator[](int code) {
+bool			ServerConfig::operator[](int code) {
 	return (!getErrorPage(code).empty());
 }
 
-RouteConfig	ServerConfig::operator[](std::string route) {
+RouteConfig		&ServerConfig::operator[](std::string route) {
 	return (getRoute(route));
 }

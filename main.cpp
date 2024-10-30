@@ -3,12 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oladams <oladams@student.42.fr>            +#+  +:+       +#+        */
+/*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:39:55 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/25 14:00:20 by oladams          ###   ########.fr       */
+/*   Updated: 2024/10/30 13:24:38 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+# include <iostream>
 
 # include "Config.hpp"
 # include "ServerConfig.hpp"
@@ -20,12 +22,35 @@ int	main(int ac, char **av) {
 	
 	std::map<int, ServerConfig> srvConfs = config.getServers();
 	
-	ServerConfig srvConf = srvConf[42];
+	std::cout << std::boolalpha << "\n";
+	
+	std::cout << srvConfs[42].getHost() << ":";
+	std::cout << srvConfs[42].getPort() << "\n\n";
+	
+	std::cout << srvConfs[42].getErrorPage(403) << "\n";
+	std::cout << srvConfs[42].getErrorPage(404) << "\n";
+	
+	std::cout << srvConfs[42].getClientMaxBodySize() << "\n";
+	
+	std::cout << srvConfs[42]["/methods"].isMethodAllowed(GET) << "\n";
+	std::cout << srvConfs[42]["/methods"].isMethodAllowed(POST) << "\n";
+	std::cout << srvConfs[42]["/methods"].isMethodAllowed(DELETE) << "\n";
+	
+	std::cout << srvConfs[42]["/42"].getRedirect() << "\n";
+	
+	std::cout << srvConfs[42]["/pictures"].getRoot() << "\n";
 
-	if (srvConf["/campus"][INDEX])
-		std::string	indexFile = srvConf["/campus"].getIndex();
-	if (srvConf["/42"][REDIRECT])
-		std::string redirectAddr = srvConf["/42"].getRedirect();;
-	if (srvConf[404])
-		std::string notFoundFile = srvConf.getErrorPage(404);
+	std::cout << srvConfs[42]["/cloud"].hasAutoindex() << "\n";
+
+	std::cout << srvConfs[42]["/index"].getIndex() << "\n";
+
+	std::cout << srvConfs[42]["/sendfeetpics"].getUpload() << "\n\n";
+
+	std::cout << srvConfs[19].getHost() << ":";
+	std::cout << srvConfs[19].getPort() << "\n\n";
+
+	std::cout << srvConfs[80].getHost() << ":";
+	std::cout << srvConfs[80].getPort() << "\n\n";
+
+	return (0);
 }
