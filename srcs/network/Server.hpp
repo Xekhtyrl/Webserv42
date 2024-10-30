@@ -2,6 +2,7 @@
 # define SERVER_HPP
 
 # include "ListenSocket.hpp"
+# include "Client.hpp"
 # include <iostream>
 # include <ctime>
 # include <unistd.h>
@@ -13,7 +14,8 @@
 
 # define BUFFER_SIZE 1024
 # define IDLE_TIMEOUT 600 //disconnects client after 10 minutes of inactivity
-
+# define READ 1
+# define WRITE 0
 
 class Server {
 	public:
@@ -21,39 +23,26 @@ class Server {
 		Server(ServerConfig config);
 		~Server(void);
 
-		ListenSocket * getSocket(void) const ;
+		ListenSocket * getListenSocket(void) const ;
+		std::vector<int> getActiveConnections(void) const;
 		
 		void loop(int n_loops);
-		void sendFileContent(int sock, std::string path);
 		void sendResponse(int sock, std::string response);
 	
 	private:
 		void listenNewConnections(void) ;
-		void removeConnection(int socket);
-		void processReadQueue(void);
-		void processWriteQueue(void);
-		void writeSocket(int sock, std::string msg);
-		void readSocket(int sock);
+		void removeConnection(in sock);
+
+		void writeSocket(Client client, std::string msg);
+		void readSocket(Client client);
 		void checkSockets(void);
-		void checkIdleClients(void);
+
+		void checkIdleClient(Client client);
 		void updateLastActiveTime(int sock);
 
-		//tmp
-		void parsing_CGI_response(int sock, std::string& rawRequest);
-		
-		
-		
 		ServerConfig 			_config;
 		ListenSocket *			_listenSocket;
-		char 						_buffer[BUFFER_SIZE];
-		std::string					_rawClientReq;
-		std::vector<int>		_activeConnections; //vecteur des connections clients ouvertes
-		std::map<int, time_t>	_lastActiveTime;
-		std::queue<int>								_readQueue; //queue d'attente de lecture de sockets
-		std::queue<std::pair<int, std::string> >	_writeQueue; //int: numero socket. string: HTTP response
-		fd_set					_readFds;
-		fd_set					_writeFds;
-		int						_max_fd;
+		std::vector<int>		_activeConnections;
 };
 
 #endif
