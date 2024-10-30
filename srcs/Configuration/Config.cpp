@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 13:37:56 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/30 15:41:57 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/30 16:19:01 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,13 @@ void	Config::parseConfigFile() {
 	
 	bool		inSrv	= false;
 	bool		hasPort	= false;
-	int			port;
+	int			port	= -1;
 	bool		inRoute = false;
 	std::string	route	= "";
 
 	while (std::getline(configFile, line)) {
 
-		if (line[0] == '\n' || isCommentLine(line) || line.empty()) // Doesn't handle all "empty" lines yet
+		if (isEmptyLine() || isCommentLine())
 			continue;
 		
 		std::istringstream			stream(line);
@@ -184,7 +184,17 @@ bool	Config::indentLevel(size_t level) {
 	return (indent == level);
 }
 
-bool	Config::isCommentLine(std::string line) {
+bool	Config::isEmptyLine() {
+	size_t	it = 0;
+	while (it < line.length()) {
+		if (!isspace(line[it]))
+			return (false);
+		++it;	
+	}
+	return (true);
+}
+
+bool	Config::isCommentLine() {
 	size_t	it = 0;
 	while (it < line.length() && isspace(line[it]))
 		++it;
