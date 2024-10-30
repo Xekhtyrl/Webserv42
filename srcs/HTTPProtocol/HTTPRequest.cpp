@@ -16,7 +16,7 @@ HTTPRequest::HTTPRequest(Client& client, ServerConfig& conf) {
 		throw std::runtime_error("404 Not Found: Ressource Not found");
 	_protocolHTTP = tmp.substr(tmp.find_last_of(' ') + 1, tmp.length() - tmp.find_last_of(' ')); // needed to check?
 	if (_protocolHTTP.find("HTTP/1.1") > _protocolHTTP.size())
-		throw std::runtime_error("400 Bad Request: Wrong or Missing HTTP Protocol");
+		throw std::runtime_error("505 HTTP Version Not Supported");
 	_header = splitHeader(request);
 	if (incompleteBody(client.getReadBuffer()))
 		throw std::runtime_error("incomplete");
@@ -136,7 +136,7 @@ void	HTTPRequest::checkHeaders() {
 		if (_header["Content-Length"].empty())
 			throw std::runtime_error("411 Length Required");
 		if (_header["Content-Type"].empty() || (_header["Content-Length"].empty() && !_body.empty())
-			|| !_header["Range"].empty() || !_header["If-Modified-Since"].empty() || !_header["If-None-Matc"].empty())
+			|| !_header["Range"].empty() || !_header["If-Modified-Since"].empty() || !_header["If-None-Match"].empty())
 			throw std::runtime_error("400 Bad Request: Invalid POST Header");
 	}
 	if (_method == "DELETE")
