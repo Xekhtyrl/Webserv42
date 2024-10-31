@@ -21,7 +21,6 @@ class Server {
 
 		ListenSocket * getListenSocket(void) const ;
 		std::vector<int> getActiveConnections(void) const;
-		std::queue<int> getClosedConnections(void) const;
 	
 		Client listenNewConnections(void) ;
 		void readSocket(Client &client);

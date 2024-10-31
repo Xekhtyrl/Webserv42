@@ -13,11 +13,11 @@
 
 int main(int argc, char **argv) {
 	//get the configs from the conf file
-	std::vector<ServerConfig> configs;
+	std::vector<ServerConfig> configs; //= parse_confif_file();
 	
 	//initialize the servers vector, containing our running servers.
 	std::vector<Server> servers;
-	for (std::vector<ServerConfig>::iterator it = configs.begin(); it < confige.end(); ++it) {
+	for (std::vector<ServerConfig>::iterator it = configs.begin(); it < configs.end(); ++it) {
 		servers.push_back(Server(*it));
 	}
 

@@ -21,11 +21,6 @@ ListenSocket* Server::getListenSocket(void) const {
 std::vector<int> Server::getActiveConnections(void) const {
 	return _activeConnections;
 }
-std::queue<int> Server::getClosedConnections(void) const {
-	std::vector<int> tmp = _closedConnections;
-	_closedConnections.clear();
-	return tmp;
-}
 
 Client Server::listenNewConnections(void) {
 	struct sockaddr_in address = _listenSocket->getAddress();
@@ -71,7 +66,7 @@ void Server::readSocket(Client &client) {
 	}
 	client.updateLastActiveTime();
 	client.append(_buffer, received);
-	requestToResponseProcess(client);
+	requestToResponseProcess(client); //Leo's part
 }
 
 void Server::closeConnection(Client &client) {

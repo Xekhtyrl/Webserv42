@@ -1,8 +1,8 @@
 #include "Operation.hpp"
 
-Operation::Operation(Client &client, Server &server, char type): _server(server), _type(type) {
-	_client = client;
-	_sock = client->getSock();
+Operation::Operation(Client &client, int sock, Server &server, char type): _server(server), _type(type) {
+	_client = client; //can be null if listening socket
+	_sock = sock;
 }
 
 int Operation::getSock(void) const {
