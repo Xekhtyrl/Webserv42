@@ -1,7 +1,13 @@
 #ifndef CLIENT_HPP
 # define CLIENT_HPP
 
-#include <vector>
+
+# include <vector>
+# include <string>
+# include <iostream> //?
+# include <ctime>
+# include "Server.hpp"
+
 class Client {
 	public:
 		Client(int sock, Server& server);
@@ -27,7 +33,7 @@ class Client {
 		Server _server;
 		std::vector<char> _readBuffer;
 		std::vector<char> _writeBuffer;
-		time_t _lastActiveTime;
+		time_t	_lastActiveTime;
 		bool	_isAlive;
 
 };

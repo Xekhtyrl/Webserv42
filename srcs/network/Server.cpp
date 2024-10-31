@@ -2,12 +2,10 @@
 
 Server::Server(ServerConfig config, int domain, int service, int protocol, int port, u_long interface, int backlog) {
 	_listenSocket = new ListenSocket(domain, service, protocol, config.getPort(), interface, backlog);
-	//_max_fd = _listenSocket->getSocket();
 	std::cout << ServerConfig->getName() << " listening to new connections on port " << ntohs(_listenSocket->getAddress().sin_port) << std::endl;
 }
 Server::Server(ServerConfig config) {
 	_listenSocket = new ListenSocket(AF_INET, SOCK_STREAM, 0, config.getPort(), INADDR_ANY, 20);
-	//_max_fd = _listenSocket->getSocket();
 	std::cout << ServerConfig->getName() << " listening to new connections on port " << ntohs(_listenSocket->getAddress().sin_port) << std::endl;
 }
 

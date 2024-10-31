@@ -7,12 +7,11 @@
 # include <ctime>
 # include <unistd.h>
 # include <vector>
-# include <queue>
-# include <map>
 # include <sys/select.h>
 # include "../../includes/webserv.h"
+# include "SERVERCONFIG_PATH" //
 
-# define BUFFER_SIZE 1024
+
 
 class Server {
 	public:

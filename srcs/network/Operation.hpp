@@ -1,6 +1,10 @@
 #ifndef OPERATION_HPP
 # define OPERATION_HPP
 
+# include "Client.hpp"
+# include "Server.hpp"
+
+
 class Operation {
 	public:
 		Operation(int sock, Server& server, char type);

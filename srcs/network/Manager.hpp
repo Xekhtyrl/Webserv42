@@ -1,7 +1,12 @@
 #ifndef MANAGER_HPP
 # define MANAGER_HPP
 
-#include <iostream>
+# include <iostream>
+# include <queue>
+# include <vector>
+# include <ctime>
+# include "Client.hpp"
+# include "Server.hpp"
 
 class Manager {
 	public:
