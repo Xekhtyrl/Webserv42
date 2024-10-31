@@ -6,20 +6,21 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:17:11 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/30 13:25:11 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/31 20:58:34 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "RouteConfig.hpp"
 
 RouteConfig::RouteConfig() {
-	for (size_t i = 0; i < 3; i++)
-		methods[i] = false;
-	redirect = "";
-	root = "";
-	autoindex = false;
-	index = "";
-	upload = "";
+	methods[GET] 	= true;
+	methods[POST] 	= false;
+	methods[DELETE] = false;
+	redirect 		= "";
+	root 			= "";
+	autoindex 		= false;
+	index 			= "";
+	upload 			= "";
 }
 
 // SETTERS
