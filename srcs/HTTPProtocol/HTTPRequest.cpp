@@ -113,7 +113,8 @@ bool	HTTPRequest::checkMethod(std::string method, ServerConfig& conf) {
 		route = "/";
 	else if (_content.find_first_of("/", 1) < _content.size())
 			route = _content.substr(1, _content.find_first_of("/", 1) - 1);
-	
+	else
+		route = _content;
 	if ((method == "GET" && conf[route][GET]) || (method == "DELETE" && conf[route][DELETE])
 		|| (method == "POST" && conf[route][POST]))
 		return true;
@@ -193,6 +194,19 @@ void	HTTPRequest::setBody(std::vector<unsigned char> buffer){
 }
 
 void	HTTPRequest::changePathURL(ServerConfig& conf) {
-	std::string tmp = _content.substr(0, _content.find("/", 1) - 1);
-	tmp = getRedirPath(conf, _method, tmp);
+	std::string urlBeg;
+	std::string urlEnd = "";
+	
+	if (_content.find("/", 1) < _content.size())
+		urlBeg = _content.substr(0, _content.find("/", 1) - 1);
+	else
+		urlBeg = _content;
+	if (_content.find("/", 1) < _content.size())
+		urlEnd = _content.substr(_content.find("/", 1));
+	urlBeg = getRedirPath(conf, _method, urlBeg, urlEnd);
+	_content = urlBeg + urlEnd;
 }
+
+//tester redirection url
+//tester GET avec just enouvrant un dossier ex GET /webdata
+//autoindex how it work > how to GET

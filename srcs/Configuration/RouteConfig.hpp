@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RouteConfig.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
+/*   By: lvodak <lvodak@student.s19.be>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:41:23 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/30 13:29:00 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/10/31 19:40:28 by lvodak           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ class	RouteConfig {
 		
 	private:
 		bool			methods[3];
-		std::string		redirect;
-		std::string		root;
+		std::string		redirect; //exclusive >> GET
+		std::string		root; //non exclusif  >> GET
 		bool			autoindex;
-		std::string		index;
-		std::string		upload;
+		std::string		index; //non exclusif >> GET
+		std::string		upload; //non exclusif >> ALL aLLOWD?
 };
