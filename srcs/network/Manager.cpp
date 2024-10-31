@@ -1,17 +1,17 @@
 #include "Manager.hpp"
 
-Manager::Manager(std::vector<Server> servers): _servers(servers) {
+Manager::Manager(std::vector<Server> &servers): _servers(servers) {
 	_selectTimeout.tv_sec = 0; _selectTimeout.tv_usec = 50000; //0.05 second
 }
 
 Manager::~~Manager(void) {
-	delete servers;
+	delete _servers;
 }
 
 void Manager::loop(void) {
 	checkSockets();
 	processHeadOperation();
-	sanitize();
+	updateDeadOperations();
 }
 
 void Manager::checkSockets(void) { 
@@ -36,22 +36,18 @@ void Manager::checkSockets(void) {
 }
 
 void Manager::processHeadOperation(void) {
-	Operation operation;
-	while (true) { //can fuck up. Limit later
+	Operation op;
+	while (true) { //can infinite loop in theory. Limit later
 		op = _queue.front();
 		_queue.pop();
-		_queue.push(op);
-		if (FD_ISSET(op.getSock())) {
-			execute_op(); ////////
-			switch (op.getType()) {
-				case 'l':
-					handleNewConnection(op);
-				case 'r':
-					handleRead(op);
-				case 'w':
-					handleWrite(op);
-			}
-			break ;
+		if (op.getClient().getIsAlive()) {
+			_queue.push(op);
+			if (op.getType() == 'l' && FD_ISSET(op.getSock(), &_readFds))
+				handleNewConnection(op);
+			else if (op.getType() == 'r' && FD_ISSET(op.getSock(), &_readFds))
+				handleRead(op);
+			else if (op.getType() == 'w' && FD_ISSET(op.getSock(), &_writeFds))
+				handleWrite(op);
 		}
 	}
 }
@@ -62,27 +58,12 @@ void Manager::handleNewConnection(Operation op) {
 		//error
 		return;
 	}
-	_queue.push(Operation(newClient.getSock(), op.getServer(), 'r'));
-	_queue.push(Operation(newClient.getSock(), op.getServer(), 'w'));
+	_queue.push(Operation(newClient, op.getServer(), 'r'));
+	_queue.push(Operation(newClient, op.getServer(), 'w'));
 }
 void Manager::handleRead(Operation op) {
 	op.getServer().readSocket(op.getClient());
 }
 void Manager::handleWrite(Operation op) {
 	op.getServer().writeSocket(op.getClient());
-}
-
-void Manager::sanitize(void) {
-	for (std::vector<Server>::iterator server = _servers.begin(); server < _servers.end(); ++server) {
-		if (!it->getClosedConnections().empty())
-			removeClientOperations(it->getClosedConnections())
-	}
-	//need to remove operations from the queue when a client connection is Closed
-	//the issue being that Servers don't yet have the reference of the queue
-}
-
-void Manager::removeClientsOperations(std::queue<int> closedQueue) {
-	//loop through queue and remove clients
-
-	//maybe ineficient? Should I check in the checkSocket FD_ISSET false?
 }

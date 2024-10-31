@@ -2,6 +2,7 @@
 
 Client::Client(int sock, Server &server): _sock(sock), _server(server) {
 	updateLastActiveTime();
+	_isAlive = true;
 }
 
 int Client::getSock(void) const {
@@ -22,6 +23,9 @@ int Client::getWriteBufferSize(void) const {
 
 void Client::updateLastActiveTime(void) {
 	_lastActiveTime = std::time(NULL);
+}
+void Client::kill(void) {
+	_isAlive = false;
 }
 
 void Client::appendReadBuffer(char &readBuffer[BUFFER_SIZE], int received) {

@@ -13,6 +13,7 @@ class Client {
 		std::vector<char> getReadBuffer(void);
 
 		void updateLastActiveTime(void); //done
+		void kill(void); //done
 		void appendReadBuffer(char &readBuffer[BUFFER_SIZE], int received); //done
 		void appendWriteBuffer(std::string response);
 		void appendWriteBuffer(char *response);
@@ -27,6 +28,8 @@ class Client {
 		std::vector<char> _readBuffer;
 		std::vector<char> _writeBuffer;
 		time_t _lastActiveTime;
+		bool	_isAlive;
+
 };
 
 

@@ -24,7 +24,9 @@ std::vector<int> Server::getActiveConnections(void) const {
 	return _activeConnections;
 }
 std::queue<int> Server::getClosedConnections(void) const {
-	return _closedConnections;
+	std::vector<int> tmp = _closedConnections;
+	_closedConnections.clear();
+	return tmp;
 }
 
 Client Server::listenNewConnections(void) {
@@ -43,7 +45,7 @@ Client Server::listenNewConnections(void) {
 	}
 }
 
-void Server::writeSocket(Client client) {
+void Server::writeSocket(Client &client) {
 	int written = write(client.getSock(), client.getWriteBuffer(), client.getWriteBufferSize());
 	if (written < 0) {
 		closeConnection(client);
@@ -53,15 +55,15 @@ void Server::writeSocket(Client client) {
 	client.clearWriteBuffer(written);
 }
 
-void Server::checkIdleClient(Client client) {
-	time_t now = std::time(NULL);
-	if (it.getLastActiveTime() + IDLE_TIMEOUT < now) {
-		closeConnection(Client);
-		--it;
-	}
-}
+// void Server::checkIdleClient(Client &client) {
+// 	time_t now = std::time(NULL);
+// 	if (it.getLastActiveTime() + IDLE_TIMEOUT < now) {
+// 		closeConnection(Client);
+// 		--it;
+// 	}
+// }
 
-void Server::readSocket(Client client) {
+void Server::readSocket(Client &client) {
 	size_t received = BUFFER_SIZE;
 	memset(_buffer, 0, BUFFER_SIZE);
 	received = read(sock, _buffer, BUFFER_SIZE);
@@ -71,17 +73,15 @@ void Server::readSocket(Client client) {
 	}
 	client.updateLastActiveTime();
 	client.append(_buffer, received);
-	//sendResponse(sock, requestToResponseProcess(_rawClientReq, _config));
 	requestToResponseProcess(client);
 }
 
 void Server::closeConnection(Client &client) {
-	
+	client.kill();
 	int sock = Client.getSock();
 	close(sock);
 	std::vector<Client>::iterator it_1 = std::find(_activeConnections.begin(), _activeConnections.end(), client);
-    if (it_1 != _activeConnections.end()) {
+    if (it_1 != _activeConnections.end())
         _activeConnections.erase(it_1);
-    }
 	std::cout << "closed connection on socket " << socket << std::endl;
 }
