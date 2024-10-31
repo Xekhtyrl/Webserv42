@@ -1,8 +1,12 @@
 #ifndef CLIENT_HPP
 # define CLIENT_HPP
 
-#include <vector>
-#include "Server.hpp"
+
+# include <vector>
+# include <string>
+# include <iostream> //?
+# include <ctime>
+# include "Server.hpp"
 
 class Client {
 	public:
@@ -15,6 +19,7 @@ class Client {
 		std::vector<unsigned char> getReadBuffer(void);
 
 		void updateLastActiveTime(void); //done
+		void kill(void); //done
 		void appendReadBuffer(char &readBuffer[BUFFER_SIZE], int received); //done
 		void appendWriteBuffer(std::string response);
 		void appendWriteBuffer(std::vector<unsigned char> response);
@@ -29,7 +34,9 @@ class Client {
 		Server _server;
 		std::vector<unsigned char> _readBuffer;
 		std::vector<unsigned char> _writeBuffer;
-		time_t _lastActiveTime;
+		time_t	_lastActiveTime;
+		bool	_isAlive;
+
 };
 
 

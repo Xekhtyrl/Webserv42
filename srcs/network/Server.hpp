@@ -7,15 +7,11 @@
 # include <ctime>
 # include <unistd.h>
 # include <vector>
-# include <queue>
-# include <map>
 # include <sys/select.h>
 # include "../../includes/webserv.hpp"
+# include "SERVERCONFIG_PATH" //
 
-# define BUFFER_SIZE 1024
-# define IDLE_TIMEOUT 600 //disconnects client after 10 minutes of inactivity
-# define READ 1
-# define WRITE 0
+
 
 class Server {
 	public:
@@ -25,26 +21,18 @@ class Server {
 
 		ListenSocket * getListenSocket(void) const ;
 		std::vector<int> getActiveConnections(void) const;
-		std::queue<int> getClosedConnections(void) const;
-		
-		void loop(int n_loops);
-		void sendResponse(int sock, std::string response);
 	
-	private:
 		Client listenNewConnections(void) ;
-		void closeConnection(int sock);
+		void readSocket(Client &client);
+		void writeSocket(Client &client, std::string msg);
 
-		void writeSocket(Client client, std::string msg);
-		void readSocket(Client client);
-		void checkSockets(void);
-
-		void checkIdleClient(Client client);
-		void updateLastActiveTime(int sock);
+	private:
+		void closeConnection(Client &client);
+		// void checkIdleClient(Client &client);
 
 		ServerConfig 			_config;
 		ListenSocket *			_listenSocket;
 		std::vector<int>		_activeConnections;
-		std::queue<int>			_closedConnections;
 };
 
 #endif
