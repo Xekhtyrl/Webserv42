@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:41:17 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/30 13:25:45 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/11/01 18:21:24 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "RouteConfig.hpp"
 
 class	ServerConfig {
+
 	public:
 		ServerConfig();
 

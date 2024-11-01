@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 13:38:01 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/30 16:09:37 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/11/01 17:03:38 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 # include "RouteConfig.hpp"
 
 class	Config {
+
 	public:
-	
 		// Methods
 		
 		void		checkParameters(int ac, char** av);
