@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:39:55 by alexphil          #+#    #+#             */
-/*   Updated: 2024/11/01 18:42:43 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/11/01 19:02:21 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ int	main(int ac, char **av) {
 	
 	std::cout << std::boolalpha << "\n";
 	
-	std::cout << srvConfs[42].getHost() << ":";
-	std::cout << srvConfs[42].getPort() << "\n\n";
+	std::cout << '[' << srvConfs[42].getHost() << ":";
+	std::cout << srvConfs[42].getPort() << "]\n\n";
 	
 	std::cout << srvConfs[42].getErrorPage(403) << "\n";
 	std::cout << srvConfs[42].getErrorPage(404) << "\n";
@@ -52,14 +52,15 @@ int	main(int ac, char **av) {
 
 	std::cout << srvConfs[42]["/index"].getIndex() << "\n";
 
+	std::cout << srvConfs[42]["/cgi"].isMethodAllowed(GET) << "\n";
 	std::cout << srvConfs[42]["/cgi"].getPath() << "\n";
 	std::cout << srvConfs[42]["/cgi"].getExt() << "\n\n";
 
-	std::cout << srvConfs[19].getHost() << ":";
-	std::cout << srvConfs[19].getPort() << "\n\n";
+	std::cout << '[' << srvConfs[19].getHost() << ":";
+	std::cout << srvConfs[19].getPort() << "]\n\n";
 
-	std::cout << srvConfs[80].getHost() << ":";
-	std::cout << srvConfs[80].getPort() << "\n\n";
+	std::cout << '[' << srvConfs[80].getHost() << ":";
+	std::cout << srvConfs[80].getPort() << "]\n\n";
 
 	return (0);
 }
