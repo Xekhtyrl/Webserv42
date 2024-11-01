@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:16:46 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/30 15:23:42 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/11/01 17:02:31 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # include "RouteConfig.hpp"
 
 ServerConfig::ServerConfig() {
-	host = "localhost";
-	clientMaxBodySize = 1024 * 1024; // 1MB
+	host 				= "localhost";
+	clientMaxBodySize	= 1024 * 1024; // 1MB
 }
 
 // SETTERS
