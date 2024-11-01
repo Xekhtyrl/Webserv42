@@ -1,35 +1,39 @@
 #pragma once
 
-#include <iostream>
-#include <stdio.h>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <netinet/in.h>
-#include <string.h>
-#include "../srcs/HTTPProtocol/HTTPRequest.hpp"
-#include "../srcs/HTTPProtocol/HTTPReponse.hpp"
-#include "../srcs/Network/ASocket.hpp"
-#include "../srcs/Network/BindSocket.hpp"
-#include "../srcs/Network/ConnectSocket.hpp"
-#include "../srcs/Network/ListenSocket.hpp"
-#include "../srcs/Network/Server.hpp"
-#include "../srcs/Network/Client.hpp"
-#include "../srcs/Configuration/config.hpp"
-#include "../srcs/Configuration/RouteConfig.hpp"
-#include "../srcs/Configuration/ServerConfig.hpp"
-#include "template.hpp"
-#include <fstream>
-#include <vector>
-#include <dirent.h>
+# define BUFFER_SIZE 1024
+# define E400 "400 Bad Request"
+# define E404 "404 Not Found"
+# define E405 "405 Method Not Allowed"
+# define E411 "411 Length Required"
+# define E413 "413 Payload Too Large"
+# define E501 "501 Not Implemented"
+# define E505 "505 HTTP Version Not Supported"
 
-#define E400 "400 Bad Request"
-#define E404 "404 Not Found"
-#define E405 "405 Method Not Allowed"
-#define E411 "411 Length Required"
-#define E413 "413 Payload Too Large"
-#define E501 "501 Not Implemented"
-#define E505 "505 HTTP Version Not Supported"
+# include <iostream>
+# include <stdio.h>
+# include <sys/socket.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <netinet/in.h>
+# include <string>
+# include <fstream>
+# include <vector>
+# include <dirent.h>
+# include <exception>
+# include <map>
+# include <sstream>
+# include "../srcs/HTTPProtocol/HTTPRequest.hpp"
+# include "../srcs/HTTPProtocol/HTTPReponse.hpp"
+# include "../srcs/network/ASocket.hpp"
+# include "../srcs/network/BindSocket.hpp"
+# include "../srcs/network/ConnectSocket.hpp"
+# include "../srcs/network/ListenSocket.hpp"
+# include "../srcs/network/Server.hpp"
+# include "../srcs/network/Client.hpp"
+# include "../srcs/Configuration/Config.hpp"
+# include "../srcs/Configuration/RouteConfig.hpp"
+# include "../srcs/Configuration/ServerConfig.hpp"
+# include "template.hpp"
 
 class HTTPRequest;
 

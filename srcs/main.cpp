@@ -8,8 +8,7 @@
 # include "network/Operation.hpp"
 # include "network/Manager.hpp"
 # include "network/Client.hpp"
-
-# define BUFFER_SIZE 1024
+# include "../includes/webserv.hpp"
 
 int main(int argc, char **argv) {
 	//get the configs from the conf file
@@ -25,5 +24,5 @@ int main(int argc, char **argv) {
 	Manager serverManager = Manager(servers);
 
 	//run it all
-	server.Manager.loop();
+	serverManager.loop();
 }

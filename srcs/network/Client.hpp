@@ -2,11 +2,14 @@
 # define CLIENT_HPP
 
 
+# include "../../includes/webserv.hpp"
 # include <vector>
 # include <string>
 # include <iostream> //?
 # include <ctime>
 # include "Server.hpp"
+
+class Server;
 
 class Client {
 	public:
@@ -14,13 +17,13 @@ class Client {
 
 		int getSock(void) const; //done
 		time_t getLastActiveTime(void) const; //done
-		char* getWriteBuffer(void); //done
+		unsigned char* getWriteBuffer(void) const; //done
 		int getWriteBufferSize(void) const; //done
-		std::vector<unsigned char> getReadBuffer(void);
+		std::vector<unsigned char> getReadBuffer(void) const;
 
 		void updateLastActiveTime(void); //done
 		void kill(void); //done
-		void appendReadBuffer(char &readBuffer[BUFFER_SIZE], int received); //done
+		void appendReadBuffer(char *readBuffer[BUFFER_SIZE], int received); //done
 		void appendWriteBuffer(std::string response);
 		void appendWriteBuffer(std::vector<unsigned char> response);
 		void appendWriteBuffer(char *response);

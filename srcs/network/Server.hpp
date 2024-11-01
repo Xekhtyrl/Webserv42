@@ -11,12 +11,13 @@
 # include "../../includes/webserv.hpp"
 // # include "SERVERCONFIG_PATH" //
 
-
+class Client;
 
 class Server {
 	public:
 		Server(ServerConfig config, int domain, int service, int protocol, int port, u_long interface, int backlog);
 		Server(ServerConfig config);
+		Server(Server const& oth);
 		~Server(void);
 
 		ListenSocket * getListenSocket(void) const ;
