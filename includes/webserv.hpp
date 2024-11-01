@@ -21,6 +21,7 @@
 #include "template.hpp"
 #include <fstream>
 #include <vector>
+#include <dirent.h>
 
 #define E400 "400 Bad Request"
 #define E404 "404 Not Found"

@@ -32,7 +32,9 @@ std::string	getTimeStamp() {
 }
 
 std::string getRedirPath(ServerConfig& conf, std::string method, std::string url, std::string content) {
-	//check for autoindex also and what if url is directory (with access or not)? 
+	//check for autoindex also?
+	if (method == "GET" && conf[url][AUTOINDEX] && content.empty())
+			return url + "/autoindex"; 
 	if (method == "GET" && conf[url][REDIRECT])
 		return conf[url].getRedirect();
 	if (method == "GET" && conf[url][ROOT])
