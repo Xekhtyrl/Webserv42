@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:41:23 by alexphil          #+#    #+#             */
-/*   Updated: 2024/11/01 17:03:43 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/11/01 18:41:10 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 # include <string>
 
-enum	Rules { GET, POST, DELETE, REDIRECT, ROOT, AUTOINDEX, INDEX, UPLOAD };
+enum	Rules { GET, POST, DELETE, REDIRECT, ROOT, AUTOINDEX, INDEX, PATH, EXT, UPLOAD };
 
 class	RouteConfig {
 
@@ -28,6 +28,8 @@ class	RouteConfig {
 		void			setRoot(std::string root);
 		void			setAutoindex(bool state);
 		void			setIndex(std::string index);
+		void			setPath(std::string path);
+		void			setExt(std::string ext);
 		void			setUpload(std::string upload);
 
 		// Getters
@@ -37,6 +39,8 @@ class	RouteConfig {
 		std::string 	getRoot();
 		bool			hasAutoindex();
 		std::string		getIndex();
+		std::string		getPath();
+		std::string		getExt();
 		std::string		getUpload();
 		
 		// Operator
@@ -49,5 +53,7 @@ class	RouteConfig {
 		std::string		root;
 		bool			autoindex;
 		std::string		index;
+		std::string		path;
+		std::string		ext;
 		std::string		upload;
 };

@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:39:55 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/30 14:07:28 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/11/01 18:42:43 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ int	main(int ac, char **av) {
 
 	std::cout << srvConfs[42]["/index"].getIndex() << "\n";
 
-	std::cout << srvConfs[42]["/sendfeetpics"].getUpload() << "\n\n";
+	std::cout << srvConfs[42]["/cgi"].getPath() << "\n";
+	std::cout << srvConfs[42]["/cgi"].getExt() << "\n\n";
 
 	std::cout << srvConfs[19].getHost() << ":";
 	std::cout << srvConfs[19].getPort() << "\n\n";

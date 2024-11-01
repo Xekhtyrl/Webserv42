@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 13:37:56 by alexphil          #+#    #+#             */
-/*   Updated: 2024/11/01 17:51:40 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/11/01 18:43:18 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ void	Config::parseConfigFile() {
 	rules.insert("root");
 	rules.insert("autoindex");
 	rules.insert("index");
+	rules.insert("path");
+	rules.insert("ext");
 	rules.insert("upload");
 	
 	bool		inSrv	= false;
@@ -161,6 +163,10 @@ void	Config::processRule(int port, std::string route, std::vector <std::string> 
 	}
 	else if (rule == "index")
 		serverConfigs[port][route].setIndex(tokens[1]);
+	else if (rule == "path")
+		serverConfigs[port][route].setPath(tokens[1]);
+	else if (rule == "ext")
+		serverConfigs[port][route].setExt(tokens[1]);
 	else if (rule == "upload")
 		serverConfigs[port][route].setUpload(tokens[1]);
 }

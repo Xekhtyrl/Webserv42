@@ -6,7 +6,7 @@
 /*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:17:11 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/31 20:57:16 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/11/01 18:40:59 by alexphil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ RouteConfig::RouteConfig() {
 	root 			= "";
 	autoindex 		= false;
 	index 			= "";
+	path			= "";
+	ext				= "";
 	upload 			= "";
 }
 
@@ -43,6 +45,14 @@ void	RouteConfig::setAutoindex(bool state) {
 
 void	RouteConfig::setIndex(std::string index) {
 	this->index = index;
+}
+
+void	RouteConfig::setPath(std::string path) {
+	this->path = path;
+}
+
+void	RouteConfig::setExt(std::string ext) {
+	this->ext = ext;
 }
 
 void	RouteConfig::setUpload(std::string upload) {
@@ -71,6 +81,14 @@ std::string		RouteConfig::getIndex() {
 	return (index);
 }
 
+std::string		RouteConfig::getPath() {
+	return (path);
+}
+
+std::string		RouteConfig::getExt() {
+	return (ext);
+}
+
 std::string		RouteConfig::getUpload() {
 	return (upload);
 }
@@ -86,6 +104,8 @@ bool			RouteConfig::operator[](int RULE) {
 		case ROOT: 		return	(!getRoot().empty());
 		case AUTOINDEX: return	(hasAutoindex());
 		case INDEX: 	return	(!getIndex().empty());
+		case PATH:		return 	(!getPath().empty());
+		case EXT:		return 	(!getExt().empty());
 		case UPLOAD:	return	(!getUpload().empty());
 		default:
 			throw std::invalid_argument("Invalid rule sent");
