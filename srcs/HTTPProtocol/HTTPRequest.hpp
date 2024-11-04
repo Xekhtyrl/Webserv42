@@ -2,13 +2,15 @@
 #define HTTPREQUEST_HPP_
 
 #include <iostream>
-#include <map>
 #include "../../includes/webserv.hpp"
 #include <fstream>
 #include <sstream>
-#include <string>
-#include <exception>
 
+
+// #include <vector>
+
+class ServerConfig;
+class Client;
 // Class declaration
 class HTTPRequest {
  public:

@@ -1,22 +1,28 @@
 # include <sys/socket.h>
 # include <netinet/in.h>
 # include <unistd.h>
-#include <iostream>
+# include <iostream>
 # include "network/ConnectSocket.hpp"
 # include "network/ListenSocket.hpp"
 # include "network/Server.hpp"
+# include "network/Operation.hpp"
+# include "network/Manager.hpp"
+# include "network/Client.hpp"
+# include "../includes/webserv.hpp"
 
 int main(int argc, char **argv) {
-	if (argc > 2)
-		return 1;
+	//get the configs from the conf file
+	std::vector<ServerConfig> configs; //= parse_confif_file();
 	
-	int port = 8080;
-	if (argc == 2)
-		port = atoi(argv[1]);
+	//initialize the servers vector, containing our running servers.
+	std::vector<Server> servers;
+	for (std::vector<ServerConfig>::iterator it = configs.begin(); it < configs.end(); ++it) {
+		servers.push_back(Server(*it));
+	}
 
-	Server *server = new Server(AF_INET, SOCK_STREAM, 0, port, INADDR_ANY, 5, "serv");
-	
-	server->launch();
+	//initialize the server operations manager from the servers vector
+	Manager serverManager = Manager(servers);
 
-	delete server;
+	//run it all
+	serverManager.loop();
 }

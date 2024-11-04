@@ -1,7 +1,8 @@
 #include "Client.hpp"
 
-Client::Client(int sock, Server &server): _sock(sock), _server(server) {
+Client::Client(int sock, Server &server): _sock(sock), _server(server){
 	updateLastActiveTime();
+	_isAlive = true;
 }
 
 int Client::getSock(void) const {
@@ -10,11 +11,11 @@ int Client::getSock(void) const {
 time_t Client::getLastActiveTime(void) const {
 	return _lastActiveTime;
 }
-std::vector<char> getReadBuffer(void) const {
+std::vector<unsigned char> Client::getReadBuffer(void) const {
 	return _readBuffer;
 }
-char * Client::getWriteBuffer(void) const {
-	return _writeBuffer.data();
+unsigned char * Client::getWriteBuffer(void) const {
+	return (unsigned char *)_writeBuffer.data();
 }
 int Client::getWriteBufferSize(void) const {
 	return _writeBuffer.size();
@@ -23,9 +24,12 @@ int Client::getWriteBufferSize(void) const {
 void Client::updateLastActiveTime(void) {
 	_lastActiveTime = std::time(NULL);
 }
+void Client::kill(void) {
+	_isAlive = false;
+}
 
-void Client::appendReadBuffer(char &readBuffer[BUFFER_SIZE], int received) {
-	_buffer.insert(_buffer.end(), readBuffer, readBuffer + received);
+void Client::appendReadBuffer(char *readBuffer[BUFFER_SIZE], int received) {
+	_readBuffer.insert(_readBuffer.end(), *readBuffer, *readBuffer + received);
 }
 
 void Client::clearReadBuffer(void) {

@@ -31,13 +31,24 @@ std::string	getTimeStamp() {
 	return strTrim(timeStr, "\n");
 }
 
-std::string getRedirPath(ServerConfig& conf, std::string method, std::string url) {
+std::string getRedirPath(ServerConfig& conf, std::string method, std::string url, std::string content) {
+	//check for autoindex also?
+	if (method == "GET" && conf[url][AUTOINDEX] && content.empty())
+			return url + "/autoindex"; 
 	if (method == "GET" && conf[url][REDIRECT])
 		return conf[url].getRedirect();
 	if (method == "GET" && conf[url][ROOT])
-		return conf[url].getRoot();
-	else if (method == "POST" || method == "DELETE")
-		return conf[url].getUpload(); // >>> Upload in rout why? Different depending on rout might be too complicated
+		if (!access((conf[url].getRoot() + content).c_str(), F_OK))
+			return conf[url].getRoot();
+	if (method == "GET" && conf[url][INDEX])
+		if (!access((conf[url].getIndex() + content).c_str(), F_OK))
+			return conf[url].getIndex();
+	if (method == "GET" && conf[url][UPLOAD])
+		if (!access((conf[url].getUpload() + content).c_str(), F_OK))
+			return conf[url].getUpload();
+	if ((method == "POST" || method == "DELETE") && conf[url][UPLOAD])
+		return conf[url].getUpload();
+	throw std::runtime_error(E404);
 }
 
 bool	isBinaryFile(std::string filename, std::string& type) {

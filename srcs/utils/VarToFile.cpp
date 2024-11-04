@@ -14,9 +14,9 @@ void	StrToBinaryFile(std::string filename, std::string& body, std::string bounda
 		if (*it != '\r')
 			str.push_back(*it);
 	}
-	std::ofstream file(POST_LOCATION + filename, std::ios::out);
+	std::ofstream file(filename, std::ios::out); // POST LOCATION MACRO REMOVED
 	if (!file.is_open())
-		throw std::runtime_error(E400 +"");
+		throw std::runtime_error(E400);
 	file.write(str.data(), str.size());
 	file.close();
 }
@@ -27,7 +27,7 @@ void	StrToTextFile(std::string filename, std::stringstream& s, std::string bound
 	std::ofstream file(filename, std::ios::out);
 
 	if (!file.is_open())
-		throw std::runtime_error(E400 +"");
+		throw std::runtime_error(E400);
 	while(getline(s, tmp, '\n')){
 		if (!boundary.empty() && tmp.find(boundary) < tmp.size())
 			break;

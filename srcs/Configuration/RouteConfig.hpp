@@ -6,7 +6,7 @@
 /*   By: oladams <oladams@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:41:23 by alexphil          #+#    #+#             */
-/*   Updated: 2024/11/04 16:34:44 by oladams          ###   ########.fr       */
+/*   Updated: 2024/11/04 16:39:31 by oladams          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ class	RouteConfig {
 		
 	private:
 		bool			methods[3];
-		std::string		redirect;
-		std::string		root;
+		std::string		redirect; //exclusive >> GET
+		std::string		root; //non exclusif  >> GET
 		bool			autoindex;
-		std::string		index;
-		std::string		upload;
+		std::string		index; //non exclusif >> GET
+		std::string		upload; //non exclusif >> ALL aLLOWD?
 };
