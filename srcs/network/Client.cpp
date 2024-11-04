@@ -1,7 +1,9 @@
 #include "Client.hpp"
 
-Client::Client(int sock, Server &server): _sock(sock), _server(server) {
+Client::Client(int sock, Server &server) {
 	updateLastActiveTime();
+	_sock = sock;
+	_server = server;
 	_isAlive = true;
 }
 

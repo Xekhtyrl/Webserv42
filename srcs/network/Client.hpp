@@ -3,11 +3,11 @@
 
 
 # include "../../includes/webserv.hpp"
+# include "Server.hpp"
 # include <vector>
 # include <string>
 # include <iostream> //?
 # include <ctime>
-# include "Server.hpp"
 
 class Server;
 
@@ -34,7 +34,7 @@ class Client {
 
 	private:
 		int _sock;
-		Server _server;
+		Server& _server;
 		std::vector<unsigned char> _readBuffer;
 		std::vector<unsigned char> _writeBuffer;
 		time_t	_lastActiveTime;
