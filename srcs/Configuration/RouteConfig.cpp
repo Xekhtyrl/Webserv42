@@ -3,23 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   RouteConfig.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
+/*   By: oladams <oladams@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:17:11 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/29 16:11:15 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/11/04 16:34:13 by oladams          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "RouteConfig.hpp"
 
 RouteConfig::RouteConfig() {
-	for (size_t i = 0; i < 3; i++)
-		methods[i] = false;
-	redirect = "";
-	root = "";
-	autoindex = false;
-	index = "";
-	upload = "";
+	methods[GET] 	= true;
+	methods[POST] 	= false;
+	methods[DELETE] = false;
+	redirect 		= "";
+	root 			= "";
+	autoindex 		= false;
+	index 			= "";
+	upload 			= "";
 }
 
 // SETTERS

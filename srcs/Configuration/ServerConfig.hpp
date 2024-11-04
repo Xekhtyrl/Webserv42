@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerConfig.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
+/*   By: oladams <oladams@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:41:17 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/29 16:09:00 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/11/04 16:35:07 by oladams          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "RouteConfig.hpp"
 
 class	ServerConfig {
+
 	public:
 		ServerConfig();
 

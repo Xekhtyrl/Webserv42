@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvodak <lvodak@student.s19.be>             +#+  +:+       +#+        */
+/*   By: oladams <oladams@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 13:37:56 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/30 17:51:08 by lvodak           ###   ########.fr       */
+/*   Updated: 2024/11/04 16:33:20 by oladams          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	Config::parseConfigFile() {
 		std::string					token;
 		std::vector <std::string>	tokens;
 		
-		while (stream >> token)
+		while (stream >> token && token[0] != '#')
 			tokens.push_back(token);
 			
 		if (indentLevel(0) && tokens[0] == "server") {
@@ -187,12 +187,9 @@ bool	Config::indentLevel(size_t level) {
 }
 
 bool	Config::isEmptyLine() {
-	size_t	it = 0;
-	while (it < line.length()) {
+	for (size_t it = 0; it < line.length(); it++)
 		if (!isspace(line[it]))
 			return (false);
-		++it;	
-	}
 	return (true);
 }
 
