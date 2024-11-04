@@ -64,7 +64,6 @@ std::string HTTPReponse::headerLineFormat(std::string val, std::string content){
 }
 
 void HTTPReponse::updateHTML(std::vector<unsigned char> body, std::string errorMsg){
-	std::vector<unsigned char>::iterator it = body.end();
 	for (int i = 0; i < 26; i++)
 		body.pop_back();
 	appendToVector(body, "\t\t<p>");

@@ -15,7 +15,7 @@ HTTPRequest::HTTPRequest(Client& client, ServerConfig& conf) {
 		throw std::runtime_error(E405);
 
 	_content = tmp.substr(tmp.find_first_of(' ') + 1, tmp.find_last_of(' ') - tmp.find_first_of(' ') - 1);
-	if (!checkLink(_content, conf))
+	if (!checkLink(conf))
 		throw std::runtime_error(E404 ": Ressource Not found");
 
 	_protocolHTTP = tmp.substr(tmp.find_last_of(' ') + 1, tmp.length() - tmp.find_last_of(' ')); // needed to check?
@@ -120,7 +120,7 @@ bool	HTTPRequest::checkMethod(std::string method, ServerConfig& conf) {
 		return true;
 	return false;
 }
-bool	HTTPRequest::checkLink(std::string& link, ServerConfig& conf) {
+bool	HTTPRequest::checkLink(ServerConfig& conf) {
 	std::string path;
 
 	changePathURL(conf);
@@ -153,7 +153,7 @@ void	HTTPRequest::checkHeaders(ServerConfig& conf) {
 		throw std::runtime_error(E400 ": Bad Header");
 
 	if ((int)_body.size() > atoi(_header["Content-Length"].c_str())
-		|| atoi(_header["Content-Length"].c_str()) > conf.getClientMaxBodySize()
+		|| atoi(_header["Content-Length"].c_str()) > (int)conf.getClientMaxBodySize()
 		|| _body.size() > conf.getClientMaxBodySize())
 		throw std::runtime_error(E413);
 }
@@ -172,7 +172,8 @@ bool	HTTPRequest::incompleteBody(std::vector<unsigned char> buffer){
 	std::vector<unsigned char>::iterator it = buffer.begin();
 	int l = 0;
 
-	for (it; !findWithIter(it, buffer.end(), 4, "\r\n\r\n"); it++);
+	while (!findWithIter(it, buffer.end(), 4, "\r\n\r\n"))
+		it++;
 	for (int i = 0; i < 4; i++)
 		it++;
 	for (l = 0; l < atoi(getHeader()["Content-Length"].c_str()) && it != buffer.end(); l++)
@@ -184,13 +185,13 @@ bool	HTTPRequest::incompleteBody(std::vector<unsigned char> buffer){
 
 void	HTTPRequest::setBody(std::vector<unsigned char> buffer){
 	std::vector<unsigned char>::iterator it = buffer.begin();
-	int l = 0;
 
-	for (it; !findWithIter(it, buffer.end(), 4, "\r\n\r\n"); it++);
+	while (!findWithIter(it, buffer.end(), 4, "\r\n\r\n"))
+		it++;
 	for (int i = 0; i < 4; i++)
 		it++;
-	for (it; it != buffer.end(); it++)
-		_body.push_back(*it);
+	while (it != buffer.end())
+		_body.push_back(*it++);
 }
 
 void	HTTPRequest::changePathURL(ServerConfig& conf) {

@@ -209,3 +209,10 @@ bool	isBinaryFile(std::string filename, std::string& type) {
 		type = "text/plain";
 	return false;
 }
+
+void	appendToVector(std::vector<unsigned char>& vec, std::vector<unsigned char> container){
+	vec.insert(vec.end(), container.begin(), container.end());
+}
+void	appendToVector(std::vector<unsigned char>& vec, std::string container){
+	vec.insert(vec.end(), container.begin(), container.end());
+}

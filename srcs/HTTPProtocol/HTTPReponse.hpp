@@ -7,6 +7,7 @@
 #include <iostream>
 
 class HTTPRequest;
+class ServerConfig;
 // Class declaration
 class HTTPReponse {
  public:

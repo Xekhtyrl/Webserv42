@@ -20,11 +20,6 @@ bool	findWithIter(T& pos, T end, int size, std::string toFind) {
 	return true;
 }
 
-template <typename T>
-void	appendToVector(std::vector<unsigned char>& vec, T container){
-	vec.insert(vec.end(), container.begin(), container.end());
-}
-
 // template <typename T>
 // class Content {
 // 	public:

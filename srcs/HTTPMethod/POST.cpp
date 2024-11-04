@@ -1,6 +1,6 @@
 #include "../../includes/webserv.hpp"
 
-void	uploadFile(std::string boundary, HTTPRequest& request, std::vector<unsigned char>& response, std::vector<unsigned char>& body, ServerConfig& conf){
+void	uploadFile(std::string boundary, HTTPRequest& request, std::vector<unsigned char>& response, std::vector<unsigned char>& body){
 	std::string filename;
 	std::string tmp;
 	std::string bodyStr = vecToStr(body);
@@ -37,10 +37,11 @@ void	executePOST(HTTPRequest& request, std::vector<unsigned char>& response, Ser
 	std::string Content = request.getHeader()["Content-Type"];
 	std::string boundary;
 
+	(void)conf;
 	if (Content.find("multipart/form-data") < Content.size()) {
 		boundary = Content.substr(Content.find("boundary=") + 9);
 		boundary = strTrim(boundary, "\" \n");
-		uploadFile(boundary, request, response, body, conf);
+		uploadFile(boundary, request, response, body);
 	}
 	else if (Content.find("application/x-www-form-urlencoded") < Content.size())
 		throw std::runtime_error(E501 ": This POST option is not implemented");

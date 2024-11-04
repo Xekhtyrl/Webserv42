@@ -8,6 +8,7 @@
 void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf) {
 	(void)request;
 	(void)response;
+	(void)conf;
 }
 
 void	executeRequest(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf){
@@ -32,7 +33,7 @@ void	requestToResponseProcess(Client& client, ServerConfig& conf) {
 		final = response.getFinal();
 	}
 	catch (std::exception& e) {
-		if (e.what() == "incomplete")
+		if (e.what() == (std::string)"incomplete")
 			return;
 		HTTPReponse error((std::string)e.what(), conf);
 		client.appendWriteBuffer(error.getFinal());
