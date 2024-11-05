@@ -1,28 +1,30 @@
 #ifndef MANAGER_HPP
 # define MANAGER_HPP
 
-# include <iostream>
-# include <queue>
-# include <vector>
-# include <ctime>
-# include "Client.hpp"
+//# include "../network.hpp"
 # include "Server.hpp"
+# include "Operation.hpp"
+# include <vector>
+# include <queue>
+
+class Operation;
+class Server;
 
 class Manager {
 	public:
-		Manager(std::vector<Server> &servers);
+		Manager(std::vector<Server *> servers);
 		~Manager(void);
 		void loop(void);
 
 	private:
 		void checkSockets(void);
 		void processHeadOperation(void);
-		void handleNewConnection(void);
-		void handleRead(void);
-		void handleWrite(void);
+		void handleNewConnection(Operation op);
+		void handleRead(Operation op);
+		void handleWrite(Operation op);
 
 		std::queue<Operation>	_queue;
-		std::vector<Server>		&_servers;
+		std::vector<Server *>	_servers;
 		std::vector<int>		_activeConnections;
 		fd_set					_readFds;
 		fd_set					_writeFds;

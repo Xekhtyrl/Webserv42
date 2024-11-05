@@ -1,25 +1,23 @@
 #ifndef CLIENT_HPP
 # define CLIENT_HPP
 
-
-# include "Server.hpp"
-# include "../../includes/webserv.hpp"
+//# include "../../includes/webserv.hpp"
+//# include "../network.hpp"
+# define BUFFER_SIZE 1024
+# include <ctime>
 # include <vector>
 # include <string>
-# include <iostream> //?
-# include <ctime>
-
-class Server;
 
 class Client {
 	public:
-		Client(int sock, Server& server);
-
+		Client(int sock);
 		int getSock(void) const; //done
 		time_t getLastActiveTime(void) const; //done
 		unsigned char* getWriteBuffer(void) const; //done
 		int getWriteBufferSize(void) const; //done
 		std::vector<unsigned char> getReadBuffer(void) const;
+		bool getIsAlive(void) const;
+		bool getIsClient(void) const;
 
 		void updateLastActiveTime(void); //done
 		void kill(void); //done
@@ -34,11 +32,11 @@ class Client {
 
 	private:
 		int _sock;
-		Server& _server;
 		std::vector<unsigned char> _readBuffer;
 		std::vector<unsigned char> _writeBuffer;
 		time_t	_lastActiveTime;
 		bool	_isAlive;
+		bool	_isClient;
 
 };
 

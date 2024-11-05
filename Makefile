@@ -10,15 +10,15 @@ DIR_TEST	=	clientTest/
 DIR_CONF	=	Configuration/
 
 CONFIG		=	config.cpp	RouteConfig.cpp	ServerConfig.cpp
-NETWORK		=	ASocket.cpp BindSocket.cpp ConnectSocket.cpp ListenSocket.cpp Server.cpp Client.cpp Manager.cpp Operation.cpp
+NETWORK		=	ASocket.cpp BindSocket.cpp ConnectSocket.cpp ListenSocket.cpp Server.cpp Client.cpp Operation.cpp Manager.cpp 
 UTILS		=	utils.cpp FileToVar.cpp VarToFile.cpp
 METHOD		=	DELETE.cpp GET.cpp POST.cpp
 PROTOCOL	=	HTTPReponse.cpp HTTPRequest.cpp HTTPRequestHandler.cpp
 
-SRCS		=	$(addprefix $(DIR_UTI), $(UTILS))		\
+SRCS		=	$(addprefix $(DIR_NET), $(NETWORK))		\
+				$(addprefix $(DIR_UTI), $(UTILS))		\
 				$(addprefix $(DIR_REQ), $(PROTOCOL))	\
 				$(addprefix $(DIR_MET), $(METHOD))		\
-				$(addprefix $(DIR_NET), $(NETWORK))		\
 				$(addprefix $(DIR_CONF), $(CONFIG))		\
 				main.cpp
 PATH_SRCS	=	$(addprefix $(DIR_SRCS), $(SRCS))				
