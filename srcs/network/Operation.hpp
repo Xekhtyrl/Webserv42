@@ -1,8 +1,7 @@
-#ifndef OPERATION_HPP
-# define OPERATION_HPP
+#pragma once
 
-# include "Server.hpp"
-# include "Client.hpp"
+#include "Server.hpp"
+#include "Client.hpp"
 
 
 class Server;
@@ -10,7 +9,7 @@ class Client;
 
 class Operation {
 	public:
-		// Operation(void);
+		Operation(void);
 		Operation(Client *client, int sock, Server* server, char type); //Client read or write
 		Operation& operator=(const Operation &op);
 		~Operation(void);
@@ -25,5 +24,3 @@ class Operation {
 		Server	*_server;
 		char	_type;		//listen, read, or write
 };
-
-#endif

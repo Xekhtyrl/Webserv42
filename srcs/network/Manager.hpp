@@ -1,11 +1,10 @@
-#ifndef MANAGER_HPP
-# define MANAGER_HPP
+#pragma once
 
 //# include "../network.hpp"
-# include "Server.hpp"
-# include "Operation.hpp"
-# include <vector>
-# include <queue>
+#include "Server.hpp"
+#include "Operation.hpp"
+#include <vector>
+#include <queue>
 
 class Operation;
 class Server;
@@ -30,5 +29,3 @@ class Manager {
 		fd_set					_writeFds;
 		struct timeval			_selectTimeout;
 };
-
-#endif

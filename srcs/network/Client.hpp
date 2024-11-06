@@ -1,12 +1,11 @@
-#ifndef CLIENT_HPP
-# define CLIENT_HPP
+#pragma once
 
 //# include "../../includes/webserv.hpp"
-//# include "../network.hpp"
-# define BUFFER_SIZE 1024
-# include <ctime>
-# include <vector>
-# include <string>
+//#include "../network.hpp"
+#define BUFFER_SIZE 1024
+#include <ctime>
+#include <vector>
+#include <string>
 
 class Client {
 	public:
@@ -37,6 +36,3 @@ class Client {
 		time_t	_lastActiveTime;
 		bool	_isAlive;
 };
-
-
-#endif

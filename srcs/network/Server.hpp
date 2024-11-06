@@ -1,10 +1,9 @@
-#ifndef SERVER_HPP
-# define SERVER_HPP
+#pragma once
 
-# include "ListenSocket.hpp"
-# include "Client.hpp"
-# include "../../includes/webserv.hpp"
-# include "../Configuration/ServerConfig.hpp"
+#include "ListenSocket.hpp"
+#include "Client.hpp"
+#include "../../includes/webserv.hpp"
+#include "../Configuration/ServerConfig.hpp"
 // # include "SERVERCONFIG_PATH" //
 
 class Client;
@@ -36,5 +35,3 @@ class Server {
 		std::vector<int>		_activeConnections;
 		char *					_buffer;
 };
-
-#endif

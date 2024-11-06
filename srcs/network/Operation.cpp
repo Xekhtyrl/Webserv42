@@ -1,12 +1,12 @@
 #include "Operation.hpp"
 
-// Operation::Operation(void) {
-// 	_client = NULL;
-// 	_server = NULL;
-// }
+Operation::Operation(void) {
+	_client = NULL;
+	_server = NULL;
+}
 
 Operation::Operation(Client *client, int sock, Server *server, char type): 
-	_server(server), _type(type), _client(client), _sock(sock) {}
+	_sock(sock), _client(client), _server(server), _type(type) {}
 
 Operation& Operation::operator=(const Operation &op) {
 	_sock = op.getSock();

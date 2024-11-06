@@ -1,5 +1,4 @@
-#ifndef LISTENSOCKET_HPP
-# define LISTENSOCKET_HPP
+#pragma once
 
 #include "BindSocket.hpp"
 
@@ -14,5 +13,3 @@ class ListenSocket : public BindSocket {
 		int _backlog;
 		int _listen;
 };
-
-#endif

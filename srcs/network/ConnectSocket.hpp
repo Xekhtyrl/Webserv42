@@ -1,5 +1,4 @@
-#ifndef CONNECTSOCKET_HPP
-# define CONNECTSOCKET_HPP
+#pragma once
 
 #include "ASocket.hpp"
 
@@ -11,5 +10,3 @@ class ConnectSocket : public ASocket {
 		int connectToNetwork(int socket, struct sockaddr_in address) ;
 		~ConnectSocket(void);
 };
-
-#endif

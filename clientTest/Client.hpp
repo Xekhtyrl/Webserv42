@@ -1,12 +1,11 @@
-#ifndef CLIENT_HPP
-# define CLIENT_HPP
+#pragma once
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1024
-# endif
+#ifndef BUFFER_SIZE
+# define BUFFER_SIZE 1024
+#endif
 
-# include "../srcs/network/ConnectSocket.hpp"
-# include <iostream>
+#include "../srcs/network/ConnectSocket.hpp"
+#include <iostream>
 
 class Client {
 	public:
@@ -28,5 +27,3 @@ class Client {
 		int _msgCount;
 		
 };
-
-#endif
