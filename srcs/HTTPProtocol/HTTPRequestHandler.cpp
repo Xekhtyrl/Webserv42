@@ -5,17 +5,55 @@
 #include "../../includes/webserv.hpp"
 
 //NEED TO BE DONE :|
+
+char **setEnvCGI(HTTPRequest& request) {
+	char **env;
+	std::string	tmp;
+	int size;
+	
+	if (request.getMethod() == "GET")
+		size = 3;
+	else
+		size = 4;
+	env = new char*[size];
+	env[size - 1] = 0;
+	env[0] = (char *)tmp.append("METHOD: " + request.getMethod()).c_str();
+	if (request.getMethod() != "GET") {
+		env[1] = (char *)tmp.append("CONTENT-TYPE: " + request.getHeader()["Content-Type"]).c_str();
+		env[2] = (char *)tmp.append("CONTENT-LENGTH: " + request.getHeader()["Content-Type"]).c_str();
+	}
+	else
+		env[1] = (char *)tmp.append("QUERY_STRING: " + request.getQuery()).c_str();
+	return env;
+}
 void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf) {
-	(void)request;
-	(void)response;
-	(void)conf;
+	char **env;
+	std::string retVal;
+	// int pip[2];
+
+	// pipe(pip);
+	if (access(request.getContent().c_str(), X_OK))
+		throw std::runtime_error(/*ERROR ACCESS DENIED*/"");
+	env = setEnvCGI(request);
+	if (fork() == 0){
+		execve("/usr/bin/python3", (char*[3]){"/usr/bin/python3", (char*)request.getContent().c_str(), 0}, env);
+	}
+	if (request.getMethod() == "POST"){
+		std::cout<<vecToStr(request.getBody())<<std::endl;
+	}
+	wait(0);
+	std::cin>>retVal;
+	//see RFC CGI
+	//execve with cmd to execute extension, the name of the file to execute, env?
+	//send the body to the program and then get the result at the end and send it as a response
+	//file has to exist to be excuted, so need to implement a program for it to be testable and prooved 
 }
 
 void	executeRequest(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf){
-	if (request.getMethod() == "GET")
-		executeGET(request, response, conf);
-	else if (request.getMethod() == "POST" && request.getContent().find(EXTENSION_CGI) < request.getContent().size())
+	if (request.getMethod() != "DELETE" && request.getContent().find(EXTENSION_CGI) < request.getContent().size())
 		executeCGI(request, response, conf);
+	else if (request.getMethod() == "GET")
+		executeGET(request, response, conf);
 	else if (request.getMethod() == "POST")
 		executePOST(request, response, conf);
 	else if (request.getMethod() == "DELETE")

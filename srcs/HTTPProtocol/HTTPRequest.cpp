@@ -14,7 +14,8 @@ HTTPRequest::HTTPRequest(Client& client, ServerConfig& conf) {
 	if (!checkMethod(_method, conf))
 		throw std::runtime_error(E405);
 
-	_content = tmp.substr(tmp.find_first_of(' ') + 1, tmp.find_last_of(' ') - tmp.find_first_of(' ') - 1);
+	divideUrlQuery(tmp);
+	
 	if (!checkLink(conf))
 		throw std::runtime_error(E404 ": Ressource Not found");
 
@@ -79,6 +80,9 @@ std::string	HTTPRequest::getMethod() const {
 }
 std::string	HTTPRequest::getContent() const {
 	return _content;
+}
+std::string	HTTPRequest::getQuery() const {
+	return _query;
 }
 std::string	HTTPRequest::getProtocolHTTP() const {
 	return _protocolHTTP;
@@ -206,6 +210,17 @@ void	HTTPRequest::changePathURL(ServerConfig& conf) {
 		urlEnd = _content.substr(_content.find("/", 1));
 	urlBeg = getRedirPath(conf, _method, urlBeg, urlEnd);
 	_content = urlBeg + urlEnd;
+}
+
+void	HTTPRequest::divideUrlQuery(std::string statusLine){
+	if (statusLine.find('?') >= statusLine.size()){
+		_content = statusLine.substr(statusLine.find_first_of(' ') + 1, statusLine.find_last_of(' ') - statusLine.find_first_of(' ') - 1);
+		_query = "";
+	}
+	else {
+		_content = statusLine.substr(statusLine.find_first_of(' ') + 1, statusLine.find('?') - statusLine.find_first_of(' ') - 1);
+		_query = statusLine.substr(statusLine.find('?') + 1, statusLine.find_last_of(' ') - statusLine.find('?') - 1);
+	}
 }
 
 //tester redirection url

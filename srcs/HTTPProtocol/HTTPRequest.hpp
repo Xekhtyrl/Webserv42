@@ -22,8 +22,9 @@ class HTTPRequest {
   ~HTTPRequest();
 
   std::string					getMethod() const;
-  std::string					getStatus() const;
   std::string					getContent() const;
+  std::string					getQuery() const;
+  std::string					getStatus() const;
   std::string					getProtocolHTTP() const;
   std::vector<unsigned char>&	getBody();
   std::map<std::string, std::string>	getHeader() const;
@@ -33,6 +34,7 @@ class HTTPRequest {
 
  private:
   std::map<std::string, std::string> splitHeader(std::string request);
+  void	divideUrlQuery(std::string statusLine);
 
   bool	incompleteHeader(std::vector<unsigned char> buffer);
   bool	incompleteBody(std::vector<unsigned char> buffer);
@@ -45,8 +47,9 @@ class HTTPRequest {
   void	changePathURL(ServerConfig& conf);
 
   std::string							_method;
-  std::string							_status;
+  std::string							_query;
   std::string							_content;
+  std::string							_status;
   std::string							_protocolHTTP;
   std::vector<unsigned char>			_body;
   std::map<std::string, std::string>	_header;

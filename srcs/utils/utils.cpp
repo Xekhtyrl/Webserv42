@@ -62,7 +62,6 @@ bool	isBinaryFile(std::string filename, std::string& type) {
 
 	for (int i = 0; !image[i].empty(); i++){
 		if (filename.find(image[i]) < filename.size()) {
-			std::cout<<i<<filename<<"<<<<<<<<<<<<<<<"<<std::endl;
 			switch (i){
 				case 6:
 					type = "image/x-icon";
