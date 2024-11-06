@@ -10,9 +10,8 @@ class Client;
 
 class Operation {
 	public:
-		Operation(void);
+		// Operation(void);
 		Operation(Client *client, int sock, Server* server, char type); //Client read or write
-		Operation(int sock, Server* server, char type); //ListenSocket read
 		Operation& operator=(const Operation &op);
 		~Operation(void);
 		int getSock(void) const;

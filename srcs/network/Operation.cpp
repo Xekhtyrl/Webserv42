@@ -1,19 +1,12 @@
 #include "Operation.hpp"
 
-Operation::Operation(void) {
-	_client = NULL;
-	_server = NULL;
-}
+// Operation::Operation(void) {
+// 	_client = NULL;
+// 	_server = NULL;
+// }
 
-Operation::Operation(Client *client, int sock, Server *server, char type): _server(server), _type(type) {
-	_client = client;
-	_sock = sock;
-}
-
-Operation::Operation(int sock, Server *server, char type): _server(server), _type(type) {
-	_client = NULL;
-	_sock = sock;
-}
+Operation::Operation(Client *client, int sock, Server *server, char type): 
+	_server(server), _type(type), _client(client), _sock(sock) {}
 
 Operation& Operation::operator=(const Operation &op) {
 	_sock = op.getSock();
@@ -24,7 +17,12 @@ Operation& Operation::operator=(const Operation &op) {
 }
 
 Operation::~Operation(void) {
-	//deal with delete
+	//_client is dynamically allocated, with 2 pointers kept in 2 Operations.
+	//Only when the first Operation is destroyed can the second Operation delete _client
+	if (_client->_delete == true)
+		delete _client;
+	else
+		_client->_delete = true;
 }
 
 int Operation::getSock(void) const {

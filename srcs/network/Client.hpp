@@ -17,7 +17,6 @@ class Client {
 		int getWriteBufferSize(void) const; //done
 		std::vector<unsigned char> getReadBuffer(void) const;
 		bool getIsAlive(void) const;
-		bool getIsClient(void) const;
 
 		void updateLastActiveTime(void); //done
 		void kill(void); //done
@@ -29,6 +28,7 @@ class Client {
 		void clearReadBuffer(void); //done
 		void clearWriteBuffer(void); //done
 		void clearWriteBuffer(int size); //done
+		bool	_delete;
 
 	private:
 		int _sock;
@@ -36,8 +36,6 @@ class Client {
 		std::vector<unsigned char> _writeBuffer;
 		time_t	_lastActiveTime;
 		bool	_isAlive;
-		bool	_isClient;
-
 };
 
 

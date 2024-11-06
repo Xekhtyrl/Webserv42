@@ -4,7 +4,7 @@ Manager::Manager(std::vector<Server *> servers): _servers(servers) {
 	_selectTimeout.tv_sec = 0; _selectTimeout.tv_usec = 50000; //0.05 second
 	//initialize the queue with listening sockets for new connections
 	for (std::vector<Server *>::iterator server = _servers.begin(); server < _servers.end(); ++server) {
-		_queue.push(Operation((*server)->getListenSocket()->getSocket(), *server, 'l'));
+		_queue.push(Operation(NULL, (*server)->getListenSocket()->getSocket(), *server, 'l'));
 	}
 }
 

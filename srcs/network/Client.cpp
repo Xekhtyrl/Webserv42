@@ -2,8 +2,8 @@
 
 Client::Client(int sock): _sock(sock) {
 	updateLastActiveTime();
-	_isClient = true;
 	_isAlive = true;
+	_delete = false;
 }
 
 int Client::getSock(void) const {
@@ -24,10 +24,6 @@ int Client::getWriteBufferSize(void) const {
 bool Client::getIsAlive(void) const {
 	return _isAlive;
 }
-bool Client::getIsClient(void) const {
-	return _isClient;
-}
-
 
 void Client::updateLastActiveTime(void) {
 	_lastActiveTime = std::time(NULL);

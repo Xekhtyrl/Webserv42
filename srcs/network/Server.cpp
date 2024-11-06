@@ -1,6 +1,5 @@
 #include "Server.hpp"
 
-// Server::Server(){}
 Server::Server(ServerConfig config, int domain, int service, int protocol, u_long interface, int backlog) {
 	_listenSocket = new ListenSocket(domain, service, protocol, config.getPort(), interface, backlog);
 	std::cout << config.getPort()<< " listening to new connections on port " << ntohs(_listenSocket->getAddress().sin_port) << std::endl;
@@ -10,13 +9,6 @@ Server::Server(ServerConfig config) {
 	std::cout << config.getPort()<< " listening to new connections on port " << ntohs(_listenSocket->getAddress().sin_port) << std::endl;
 }
 
-// Server::Server(const Server &other){
-// 	*this = other;
-// }
-// Server &Server::operator=(const Server &rhs){
-// 	*this = rhs;
-// 	return *this;
-// }
 Server::~Server(void) {
 	close(_listenSocket->getSocket());
 	delete _listenSocket;
