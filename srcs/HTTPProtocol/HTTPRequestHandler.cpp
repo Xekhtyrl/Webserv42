@@ -29,20 +29,39 @@ char **setEnvCGI(HTTPRequest& request) {
 void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf) {
 	char **env;
 	std::string retVal;
-	// int pip[2];
+	int fd[2];
+	int input[2];
 
-	// pipe(pip);
+	if (pipe(fd) || pipe(input)) //the fd pipe is for retrieving the content of the executed file, the input pipe is for sending the body to the CGI file
+		throw std::runtime_error("serveur error: pipe"); // don't know how to process this kind of error
 	if (access(request.getContent().c_str(), X_OK))
-		throw std::runtime_error(/*ERROR ACCESS DENIED*/"");
-	env = setEnvCGI(request);
+		throw std::runtime_error(/*ERROR ACCESS DENIED*/"ERROR ACCESS DENIED");
+	env = setEnvCGI(request); //needed to send the data to create the response body int the .py file... still don't know if necessary
 	if (fork() == 0){
-		execve("/usr/bin/python3", (char*[3]){"/usr/bin/python3", (char*)request.getContent().c_str(), 0}, env);
+		dup2(fd[1], STDOUT_FILENO); //get the ouput
+		close(fd[1]);
+		close(fd[0]);
+		dup2(input[0], STDIN_FILENO); //send the input
+		close(input[1]);
+		close(input[0]);
+		execve("/usr/bin/python3", (char*[3]){"python3", (char*)request.getContent().c_str(), 0}, env);
 	}
-	if (request.getMethod() == "POST"){
-		std::cout<<vecToStr(request.getBody())<<std::endl;
+	close(fd[1]);
+	if (request.getMethod() == "POST"){ //send the input
+		close(input[0]);
+		write(input[1], vecToStr(request.getBody()).c_str(), request.getBody().size());
+		close(input[1]);
 	}
+	int r;
+	char tmp[1024];
+	while ((r = read(fd[0], tmp, 1023)) > 0){ //get the ouput
+		tmp[r] = 0;
+		retVal += tmp;
+	}
+	close(fd[0]);
+	wait(nullptr);
 	wait(0);
-	std::cin>>retVal;
+	appendToVector(response, retVal); //return the response to be send
 	//see RFC CGI
 	//execve with cmd to execute extension, the name of the file to execute, env?
 	//send the body to the program and then get the result at the end and send it as a response
