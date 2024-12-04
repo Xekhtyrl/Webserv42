@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerConfig.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alexphil <alexphil@student.s19.be>         +#+  +:+       +#+        */
+/*   By: oladams <oladams@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:16:46 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/30 15:23:42 by alexphil         ###   ########.fr       */
+/*   Updated: 2024/11/04 16:34:54 by oladams          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # include "RouteConfig.hpp"
 
 ServerConfig::ServerConfig() {
-	host = "localhost";
-	clientMaxBodySize = 1024 * 1024; // 1MB
+	host 				= "localhost";
+	clientMaxBodySize	= 1024 * 1024; // 1MB
 }
 
 // SETTERS

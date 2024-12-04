@@ -1,12 +1,11 @@
-#ifndef ASOCKET_HPP
-# define ASOCKET_HPP
+#pragma once
 
-# include <iostream>
-# include <sys/socket.h>
-# include <netinet/in.h>
-# include <unistd.h>
-# include <stdio.h>
-# include <stdlib.h>
+#include <iostream>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 class ASocket {
 	public:
@@ -22,6 +21,3 @@ class ASocket {
 		int _socket;
 		int _connection;
 };
-
-
-#endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvodak <lvodak@student.s19.be>             +#+  +:+       +#+        */
+/*   By: oladams <oladams@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 13:38:01 by alexphil          #+#    #+#             */
-/*   Updated: 2024/10/30 17:37:14 by lvodak           ###   ########.fr       */
+/*   Updated: 2024/11/04 16:34:33 by oladams          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 # include "RouteConfig.hpp"
 
 class	Config {
+
 	public:
-	
 		// Methods
 		
 		void		checkParameters(int ac, char** av);

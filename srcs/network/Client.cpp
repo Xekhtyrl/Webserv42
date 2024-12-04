@@ -1,8 +1,9 @@
 #include "Client.hpp"
 
-Client::Client(int sock, Server &server): _sock(sock), _server(server){
+Client::Client(int sock): _sock(sock) {
 	updateLastActiveTime();
 	_isAlive = true;
+	_delete = false;
 }
 
 int Client::getSock(void) const {
@@ -19,6 +20,9 @@ unsigned char * Client::getWriteBuffer(void) const {
 }
 int Client::getWriteBufferSize(void) const {
 	return _writeBuffer.size();
+}
+bool Client::getIsAlive(void) const {
+	return _isAlive;
 }
 
 void Client::updateLastActiveTime(void) {
