@@ -5,15 +5,19 @@
 HTTPReponse::HTTPReponse() { return; }
 HTTPReponse::HTTPReponse(std::string errorMsg, ServerConfig& conf) {
 	int code = atoi(errorMsg.substr(0, errorMsg.find(':')).c_str());
+
 	_statusLine = "HTTP/1.1 " + errorMsg.substr(0, errorMsg.find(':')) + "\r\n";
 	_header =	headerLineFormat("Date", getTimeStamp()) + \
 				headerLineFormat("Content-Type", "text/html");
+	
 	if (conf[code])
 		appendToVector(_body, fileToStr(conf.getErrorPage(code)));
 	else
 		appendToVector(_body, fileToStr("./error/404.html"));
+	
 	_header += headerLineFormat("Content-Length", ftToString(_body.size()));
-	formResponse();
+	formResponse(0);
+
 	if (errorMsg.find(':') < errorMsg.size()){
 		std::string message = errorMsg.substr(errorMsg.find(':')); // check if size tot needed;
 		updateHTML(_body, message);
@@ -26,12 +30,14 @@ HTTPReponse::HTTPReponse(std::vector<unsigned char> body, HTTPRequest& request) 
 	_header =	headerLineFormat("Date", getTimeStamp()) + \
 				headerLineFormat("Connection", "close");
 	_body = body;
-	if (!body.empty()) {
+	
+	if (!body.empty() && request.getContent().find(".py") > request.getContent().size()) { //check for body or if CGI (.py)
 		isBinaryFile(request.getContent(), tmp);
 		_header += headerLineFormat("Content-Type", tmp);
 		_header += headerLineFormat("Content-Length", ftToString(_body.size()));
 	}
-	formResponse();
+
+	formResponse(request.getContent().find(".py") < request.getContent().size());
 }
 // Copy constructor
 HTTPReponse::HTTPReponse(const HTTPReponse &other) {
@@ -51,10 +57,11 @@ HTTPReponse::~HTTPReponse() { return; }
 std::vector<unsigned char> const	HTTPReponse::getFinal() const {
 	return _final;
 }
-void	HTTPReponse::formResponse() {
+void	HTTPReponse::formResponse(int CGI) {
 	appendToVector(_final, _statusLine);
 	appendToVector(_final, _header);
-	appendToVector(_final, "\r\n");
+	if (!CGI)
+		appendToVector(_final, "\r\n");
 	if (!_body.empty())
 		appendToVector(_final,_body);
 }
@@ -66,6 +73,7 @@ std::string HTTPReponse::headerLineFormat(std::string val, std::string content){
 void HTTPReponse::updateHTML(std::vector<unsigned char> body, std::string errorMsg){
 	for (int i = 0; i < 26; i++)
 		body.pop_back();
+	
 	appendToVector(body, "\t\t<p>");
 	appendToVector(body, errorMsg);
 	appendToVector(body, "</p>\r\n\t</div>\r\n</body>\r\n</html>\r\n");

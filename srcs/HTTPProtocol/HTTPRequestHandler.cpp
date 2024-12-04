@@ -4,8 +4,6 @@
 #include <unistd.h>
 #include "../../includes/webserv.hpp"
 
-//NEED TO BE DONE :|
-
 char **setEnvCGI(HTTPRequest& request) {
 	char **env;
 	std::string	tmp;
@@ -65,7 +63,7 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 	//see RFC CGI
 	//execve with cmd to execute extension, the name of the file to execute, env?
 	//send the body to the program and then get the result at the end and send it as a response
-	//file has to exist to be excuted, so need to implement a program for it to be testable and prooved 
+	//file has to exist to be excuted, so need to implement a program (.py) for it to be testable and prooved 
 }
 
 void	executeRequest(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf){
