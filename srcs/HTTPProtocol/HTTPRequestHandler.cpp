@@ -29,6 +29,7 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 	std::string retVal;
 	int fd[2];
 	int input[2];
+	(void)conf;
 
 	if (pipe(fd) || pipe(input)) //the fd pipe is for retrieving the content of the executed file, the input pipe is for sending the body to the CGI file
 		throw std::runtime_error("serveur error: pipe"); // don't know how to process this kind of error
@@ -42,7 +43,7 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 		dup2(input[0], STDIN_FILENO); //send the input
 		close(input[1]);
 		close(input[0]);
-		execve("/usr/bin/python3", (char*[3]){"python3", (char*)request.getContent().c_str(), 0}, env);
+		execve("/usr/bin/python3", (char*[3]){(char*)"python3", (char*)request.getContent().c_str(), 0}, env);
 	}
 	close(fd[1]);
 	if (request.getMethod() == "POST"){ //send the input
@@ -91,7 +92,7 @@ void	requestToResponseProcess(Client& client, ServerConfig& conf) {
 		if (e.what() == (std::string)"incomplete")
 			return;
 		HTTPReponse error((std::string)e.what(), conf);
-		client.appendWriteBuffer(error.getFinal());
+		client.appendWriteBuffer((std::vector<unsigned char>)error.getFinal());
 	}
 	client.appendWriteBuffer(final);
 	client.clearReadBuffer();

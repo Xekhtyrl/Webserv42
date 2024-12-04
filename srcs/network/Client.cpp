@@ -36,6 +36,16 @@ void Client::appendReadBuffer(char *readBuffer[BUFFER_SIZE], int received) {
 	_readBuffer.insert(_readBuffer.end(), *readBuffer, *readBuffer + received);
 }
 
+void Client::appendWriteBuffer(std::string response){
+	appendToVector(_writeBuffer, response);
+}
+void Client::appendWriteBuffer(std::vector<unsigned char> response){
+	appendToVector(_writeBuffer, response);
+}
+void Client::appendWriteBuffer(char *response){
+	appendToVector(_writeBuffer, response);
+}
+
 void Client::clearReadBuffer(void) {
 	_readBuffer.clear();
 }

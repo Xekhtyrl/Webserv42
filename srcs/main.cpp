@@ -12,16 +12,17 @@
 
 int main(int argc, char **argv) {
 	//get the configs from the conf file
+	(void)argc;(void)argv;
 	std::vector<ServerConfig> configs; //= parse_confif_file();
 	
 	//initialize the servers vector, containing our running servers.
-	std::vector<Server> servers;
+	std::vector<Server*> servers;
 	for (std::vector<ServerConfig>::iterator it = configs.begin(); it < configs.end(); ++it) {
-		servers.push_back(Server(*it));
+		servers.push_back(new Server(*it));
 	}
 
 	//initialize the server operations manager from the servers vector
-	Manager serverManager = Manager(servers);
+	Manager serverManager(servers);
 
 	//run it all
 	serverManager.loop();

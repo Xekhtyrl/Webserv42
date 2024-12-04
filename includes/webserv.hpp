@@ -30,6 +30,8 @@
 # include "../srcs/network/ListenSocket.hpp"
 # include "../srcs/network/Server.hpp"
 # include "../srcs/network/Client.hpp"
+// # include "../srcs/network/Manager.hpp"
+// # include "../srcs/network/Operation.hpp"
 # include "../srcs/Configuration/Config.hpp"
 # include "../srcs/Configuration/RouteConfig.hpp"
 # include "../srcs/Configuration/ServerConfig.hpp"

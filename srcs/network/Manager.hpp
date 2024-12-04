@@ -6,8 +6,8 @@
 #include <vector>
 #include <queue>
 
-class Operation;
 class Server;
+class Operation;
 
 class Manager {
 	public:

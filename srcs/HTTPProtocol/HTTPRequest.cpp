@@ -78,6 +78,9 @@ HTTPRequest::~HTTPRequest() {
 std::string	HTTPRequest::getMethod() const {
 	return _method;
 }
+std::string	HTTPRequest::getStatus() const {
+	return _status;
+}
 std::string	HTTPRequest::getContent() const {
 	return _content;
 }
@@ -92,6 +95,9 @@ std::vector<unsigned char>&	HTTPRequest::getBody() {
 }
 std::map<std::string, std::string>	HTTPRequest::getHeader() const {
 	return _header;
+}
+void	HTTPRequest::setStatus(std::string status){
+	_status = status;
 }
 
 std::map<std::string, std::string> HTTPRequest::splitHeader(std::string request) {

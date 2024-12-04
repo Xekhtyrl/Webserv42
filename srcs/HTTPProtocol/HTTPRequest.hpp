@@ -29,8 +29,8 @@ class HTTPRequest {
   std::vector<unsigned char>&	getBody();
   std::map<std::string, std::string>	getHeader() const;
 
-  void									addToHeader(std::string, std::string);
-  void							setStatus(std::string) const;
+  void							addToHeader(std::string, std::string);
+  void							setStatus(std::string);
 
  private:
   std::map<std::string, std::string> splitHeader(std::string request);
