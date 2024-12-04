@@ -15,8 +15,8 @@ class Server {
 		// Server();
 		Server(ServerConfig config, int domain, int service, int protocol, u_long interface, int backlog);
 		Server(ServerConfig config);
-		Server(const Server &other);
-		Server &operator=(const Server &rhs);
+		// Server(const Server &other); //can't have two servers on the same port
+		// Server &operator=(const Server &rhs); //idem. Sorry Orthodox
 		~Server(void);
 
 		ListenSocket * getListenSocket(void) const ;
