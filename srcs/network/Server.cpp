@@ -67,7 +67,7 @@ void Server::readSocket(Client *client) {
 	}
 	client->updateLastActiveTime();
 	client->appendReadBuffer(&_buffer, received);
-	//requestToResponseProcess(client, _config); //Leo's part
+	requestToResponseProcess(client, _config); //Leo's part
 }
 
 void Server::closeConnection(Client *client) {

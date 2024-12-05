@@ -1,7 +1,7 @@
 #include "Client.hpp"
 
 Client::Client(int sock): _sock(sock) {
-	updateLastActiveTime();
+	// updateLastActiveTime();
 	_isAlive = true;
 	_delete = false;
 }
@@ -9,9 +9,9 @@ Client::Client(int sock): _sock(sock) {
 int Client::getSock(void) const {
 	return _sock;
 }
-time_t Client::getLastActiveTime(void) const {
-	return _lastActiveTime;
-}
+// time_t Client::getLastActiveTime(void) const {
+// 	return _lastActiveTime;
+// }
 std::vector<unsigned char> Client::getReadBuffer(void) const {
 	return _readBuffer;
 }
@@ -25,9 +25,9 @@ bool Client::getIsAlive(void) const {
 	return _isAlive;
 }
 
-void Client::updateLastActiveTime(void) {
-	_lastActiveTime = std::time(NULL);
-}
+// void Client::updateLastActiveTime(void) {
+// 	_lastActiveTime = std::time(NULL);
+// }
 void Client::kill(void) {
 	_isAlive = false;
 }
