@@ -12,8 +12,22 @@
 
 int main(int argc, char **argv) {
 	//get the configs from the conf file
-	(void)argc;(void)argv;
-	std::vector<ServerConfig> configs; //= parse_confif_file();
+
+	Config config;
+
+	try {
+		config.checkParameters(argc, argv);
+		config.parseConfigFile();
+	} catch (std::exception &e) {
+		std::cerr << "Error: " << e.what() << '\n';
+		exit(1);
+	}
+
+	std::vector<ServerConfig> configs;
+	std::map<int, ServerConfig>::iterator it;
+	for (std::set<int>::iterator it = config.getPorts().begin(); it != config.getPorts().end(); it++) {
+		configs.push_back(config.getServers()[*it]);
+	}
 	
 	//initialize the servers vector, containing our running servers.
 	std::vector<Server*> servers;
