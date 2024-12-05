@@ -3,9 +3,9 @@
 // Default constructor
 HTTPRequest::HTTPRequest() { return; }
 
-HTTPRequest::HTTPRequest(Client& client, ServerConfig& conf) { 
-	std::string request(client.getReadBuffer().begin(), client.getReadBuffer().end());
-	if (incompleteHeader(client.getReadBuffer()))
+HTTPRequest::HTTPRequest(Client *client, ServerConfig& conf) { 
+	std::string request(client->getReadBuffer().begin(), client->getReadBuffer().end());
+	if (incompleteHeader(client->getReadBuffer()))
 		throw std::runtime_error("incomplete");
 
 	std::string tmp = request.substr(0, request.find_first_of('\r'));
@@ -24,10 +24,10 @@ HTTPRequest::HTTPRequest(Client& client, ServerConfig& conf) {
 		throw std::runtime_error(E505);
 
 	_header = splitHeader(request);
-	if (incompleteBody(client.getReadBuffer()))
+	if (incompleteBody(client->getReadBuffer()))
 		throw std::runtime_error("incomplete");
 	if (_header["Content-Length"].empty() == 0)
-		setBody(client.getReadBuffer());
+		setBody(client->getReadBuffer());
 	else
 		_body.push_back('\0');
 

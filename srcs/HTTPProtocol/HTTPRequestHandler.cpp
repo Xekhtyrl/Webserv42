@@ -79,7 +79,7 @@ void	executeRequest(HTTPRequest& request, std::vector<unsigned char>& response, 
 		executeDELETE(request, response, conf);
 }
 // PROTECT BODY SIZE LIMIT!!!
-void	requestToResponseProcess(Client& client, ServerConfig& conf) {
+void	requestToResponseProcess(Client *client, ServerConfig& conf) {
 	std::vector<unsigned char> final;
 	std::vector<unsigned char> repBody;
 
@@ -93,8 +93,8 @@ void	requestToResponseProcess(Client& client, ServerConfig& conf) {
 		if (e.what() == (std::string)"incomplete")
 			return;
 		HTTPReponse error((std::string)e.what(), conf);
-		client.appendWriteBuffer((std::vector<unsigned char>)error.getFinal());
+		client->appendWriteBuffer((std::vector<unsigned char>)error.getFinal());
 	}
-	client.appendWriteBuffer(final);
-	client.clearReadBuffer();
+	client->appendWriteBuffer(final);
+	client->clearReadBuffer();
 }

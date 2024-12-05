@@ -15,7 +15,7 @@ class Client;
 class HTTPRequest {
  public:
   HTTPRequest();
-  HTTPRequest(Client& client, ServerConfig& conf);
+  HTTPRequest(Client *client, ServerConfig& conf);
   //HTTPRequest(std::string request, ServerConfig& conf); //old constructor
   HTTPRequest(const HTTPRequest &other);
   HTTPRequest &operator=(const HTTPRequest &rhs);
