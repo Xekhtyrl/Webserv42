@@ -80,7 +80,7 @@ def createHTMLformat(name1, name2, value):
             left: 0;\r\n\
             width: 100%;\r\n\
             height: 100vh;\r\n\
-            background: url('Heartpng.png') no-repeat center center;\r\n\
+            background: url('CGIScript/Heartpng.png') no-repeat center center;\r\n\
             background-size: contain;\r\n\
             background-color: black;\r\n\
         }\r\n\

@@ -3,11 +3,13 @@
 Server::Server(ServerConfig config, int domain, int service, int protocol, u_long interface, int backlog) {
 	_listenSocket = new ListenSocket(domain, service, protocol, config.getPort(), interface, backlog);
 	_buffer = (char*)calloc(BUFFER_SIZE, 1);
+	_config = config;
 	std::cout << config.getPort()<< " listening to new connections on port " << ntohs(_listenSocket->getAddress().sin_port) << std::endl;
 }
 Server::Server(ServerConfig config) {
 	_listenSocket = new ListenSocket(AF_INET, SOCK_STREAM, 0, config.getPort(), INADDR_ANY, 20);
 	_buffer = (char*)calloc(BUFFER_SIZE, 1);
+	_config = config;
 	std::cout << config.getPort()<< " listening to new connections on port " << ntohs(_listenSocket->getAddress().sin_port) << std::endl;
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerConfig.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oladams <oladams@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lvodak <lvodak@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:16:46 by alexphil          #+#    #+#             */
-/*   Updated: 2024/11/04 16:34:54 by oladams          ###   ########.fr       */
+/*   Updated: 2024/12/05 21:14:56 by lvodak           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@ void	ServerConfig::setHost(std::string name) {
 
 void	ServerConfig::setPort(int port) {
 	this->port = port;
+}
+
+std::map<std::string, RouteConfig> ServerConfig::getRoute(){
+	return routes;
 }
 
 void	ServerConfig::addErrorPage(int code, std::string file) {

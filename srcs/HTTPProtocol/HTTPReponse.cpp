@@ -27,6 +27,7 @@ HTTPReponse::HTTPReponse(std::string errorMsg, ServerConfig& conf) {
 HTTPReponse::HTTPReponse(std::vector<unsigned char> body, HTTPRequest& request) {
 	std::string tmp;
 	
+	std::cout<<request.getStatus()<<std::endl;
 	_statusLine = "HTTP/1.1 " + request.getStatus() + " OK\r\n";
 	_header =	headerLineFormat("Date", getTimeStamp()) + \
 				headerLineFormat("Connection", "close");

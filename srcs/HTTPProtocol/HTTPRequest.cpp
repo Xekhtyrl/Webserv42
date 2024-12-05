@@ -4,10 +4,10 @@
 HTTPRequest::HTTPRequest() { return; }
 
 HTTPRequest::HTTPRequest(Client *client, ServerConfig& conf) { 
-	std::string request(client->getReadBuffer().begin(), client->getReadBuffer().end());
+	std::string request(vecToStr(client->getReadBuffer()));
 	if (incompleteHeader(client->getReadBuffer()))
 		throw std::runtime_error("incomplete");
-
+	
 	std::string tmp = request.substr(0, request.find_first_of('\r'));
 
 	_method = tmp.substr(0, tmp.find_first_of(32));
@@ -15,14 +15,20 @@ HTTPRequest::HTTPRequest(Client *client, ServerConfig& conf) {
 		throw std::runtime_error(E405);
 
 	divideUrlQuery(tmp);
-	
-	if (!checkLink(conf))
-		throw std::runtime_error(E404 ": Ressource Not found");
-
+	std::cout<<"test = "<<_content<<std::endl;	
+	try {
+		if (checkLink(conf))
+			throw std::runtime_error(E404 ": Ressource Not found");
+		}
+	catch (std::exception& e){
+		std::cout<<e.what()<<"    uweofewigfoweihfoweihf"<<std::endl;
+		throw e;
+	}
+	std::cout<<"InRequest"<<std::endl;
 	_protocolHTTP = tmp.substr(tmp.find_last_of(' ') + 1, tmp.length() - tmp.find_last_of(' ')); // needed to check?
 	if (_protocolHTTP.find("HTTP/1.1") > _protocolHTTP.size())
 		throw std::runtime_error(E505);
-
+	std::cout<<"InRequest"<<std::endl;
 	_header = splitHeader(request);
 	if (incompleteBody(client->getReadBuffer()))
 		throw std::runtime_error("incomplete");
@@ -30,32 +36,12 @@ HTTPRequest::HTTPRequest(Client *client, ServerConfig& conf) {
 		setBody(client->getReadBuffer());
 	else
 		_body.push_back('\0');
-
+	_status = "200";
+	std::cout<<"InRequest"<<std::endl;
 	checkHeaders(conf);
-	setStatus("200");
+	std::cout<<"InRequest"<<std::endl;
 	return;
 }
-
-/* HTTPRequest::HTTPRequest(std::string request, ServerConfig& conf) {
-	std::string tmp = request.substr(0, request.find_first_of('\r'));
-	_method = tmp.substr(0, tmp.find_first_of(32));
-	if (!checkMethod(_method, conf))
-		std::runtime_error(E405);
-	_content = tmp.substr(tmp.find_first_of(' ') + 1, tmp.find_last_of(' ') - tmp.find_first_of(' ') - 1);
-	if (!checkLink(_content))
-		std::runtime_error(E404 +": Ressource Not found");
-	_protocolHTTP = tmp.substr(tmp.find_last_of(' ') + 1, tmp.length() - tmp.find_last_of(' ')); // needed to check?
-	if (_protocolHTTP.find("HTTP/1.1") > _protocolHTTP.size())
-		throw std::runtime_error(E400 +": Wrong or Missing HTTP Protocol");
-	_header = splitHeader(request);
-	if (_header["Content-Length"].empty() == 0)
-		_body = request.substr(request.find("\r\n\r\n") + 4, request.size() - request.find("\r\n\r\n") - 4);
-	else
-		_body = "";
-	checkHeaders();
-	_message = "200";
-	return;
-} */
 
 // Copy constructor
 HTTPRequest::HTTPRequest(const HTTPRequest &other) {
@@ -134,7 +120,9 @@ bool	HTTPRequest::checkLink(ServerConfig& conf) {
 	std::string path;
 
 	changePathURL(conf);
-	if (path.find(".."))
+	path = _content;
+	std::cout<<path<<std::endl;
+	if (path.find("..") < path.size())
 		throw std::runtime_error("403 Forbidden: Unauthorized Path");
 	if (!access(path.c_str(), F_OK))
 		return false;
@@ -156,13 +144,15 @@ void	HTTPRequest::checkHeaders(ServerConfig& conf) {
 	if (_method == "DELETE")
 		if ((_body.empty() && (!_header["Content-Type"].empty() || !_header["Content-Length"].empty())))
 			throw std::runtime_error(E400 ": No Content Found");
-
-	if (!_body.empty() && (_header["Content-Type"].empty() || _method == "GET"))
+	std::cout<<">>>>>>>>>>>"<<!_body.size()<<std::endl;
+	if (_body.size() > 2 && (_header["Content-Type"].empty() || _method == "GET"))
 		throw std::runtime_error(E400 ": Body Not Allowed");
-	if (!_body.empty() && _header["Content-Length"].empty())
+	if (_body.size() > 2 && _header["Content-Length"].empty())
 		throw std::runtime_error(E400 ": Bad Header");
 
-	if ((int)_body.size() > atoi(_header["Content-Length"].c_str())
+	std::cout<<_body.size() <<" "<< _header["Content-Length"].c_str() <<" "<< atoi(_header["Content-Length"].c_str())
+			<<" "<<(int)conf.getClientMaxBodySize()<<std::endl;
+	if ((int)_body.size() - 1 > atoi(_header["Content-Length"].c_str())
 		|| atoi(_header["Content-Length"].c_str()) > (int)conf.getClientMaxBodySize()
 		|| _body.size() > conf.getClientMaxBodySize())
 		throw std::runtime_error(E413);
@@ -208,13 +198,16 @@ void	HTTPRequest::changePathURL(ServerConfig& conf) {
 	std::string urlBeg;
 	std::string urlEnd = "";
 	
-	if (_content.find("/", 1) < _content.size())
-		urlBeg = _content.substr(0, _content.find("/", 1) - 1);
+	if (_content.find("/", 1) <= _content.size())
+		urlBeg = _content.substr(0, _content.find("/", 1));
 	else
 		urlBeg = _content;
-	if (_content.find("/", 1) < _content.size())
+	std::cout<<urlBeg<<std::endl;
+	if (_content.find("/", 1) <= _content.size())
 		urlEnd = _content.substr(_content.find("/", 1));
+	std::cout<<urlBeg<<urlEnd<<std::endl;
 	urlBeg = getRedirPath(conf, _method, urlBeg, urlEnd);
+	std::cout<<urlBeg<<urlEnd<<std::endl;
 	_content = urlBeg + urlEnd;
 }
 

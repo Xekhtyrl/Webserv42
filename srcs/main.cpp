@@ -28,7 +28,12 @@ int main(int argc, char **argv) {
 	for (std::set<int>::iterator it = ports.begin(); it != ports.end(); it++) {
 		std::cout<<(int)*it<<std::endl;
 		configs.push_back(config.getServers()[*it]);
+		std::map<std::string, RouteConfig> configf = config.getServers()[*it].getRoute();
+		for (std::map<std::string, RouteConfig>::iterator it = configf.begin(); it != configf.end(); it++)
+			std::cout<<it->first<<" : "<<it->second.getExt()<<it->second.getIndex()<<it->second.getPath()
+				<<it->second.getRedirect()<<it->second.getRoot()<<it->second.getUpload()<<std::endl;
 	}
+	
 	
 	//initialize the servers vector, containing our running servers.
 	std::vector<Server*> servers;

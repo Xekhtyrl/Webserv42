@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerConfig.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oladams <oladams@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lvodak <lvodak@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:41:17 by alexphil          #+#    #+#             */
-/*   Updated: 2024/11/04 16:35:07 by oladams          ###   ########.fr       */
+/*   Updated: 2024/12/05 21:13:53 by lvodak           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ class	ServerConfig {
 		std::string		getErrorPage(int code);
 		size_t			getClientMaxBodySize();
 		RouteConfig		&getRoute(std::string route);
+		std::map <std::string, RouteConfig> getRoute();
 
 		// Operators
 
