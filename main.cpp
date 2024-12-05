@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oladams <oladams@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lvodak <lvodak@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:39:55 by alexphil          #+#    #+#             */
-/*   Updated: 2024/11/04 16:35:18 by oladams          ###   ########.fr       */
+/*   Updated: 2024/12/05 17:20:50 by lvodak           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,15 @@ int	main(int ac, char **av) {
 		config.parseConfigFile();
 	} catch (std::exception &e) {
 		std::cerr << "Error: " << e.what() << '\n';
-		exit(1);
+		return (0);
 	}
 	
 	std::map<int, ServerConfig> srvConfs = config.getServers();
 	
 	std::cout << std::boolalpha << "\n";
 	
-	std::cout << srvConfs[42].getHost() << ":";
-	std::cout << srvConfs[42].getPort() << "\n\n";
+	std::cout << '[' << srvConfs[42].getHost() << ":";
+	std::cout << srvConfs[42].getPort() << "]\n\n";
 	
 	std::cout << srvConfs[42].getErrorPage(403) << "\n";
 	std::cout << srvConfs[42].getErrorPage(404) << "\n";
@@ -52,13 +52,15 @@ int	main(int ac, char **av) {
 
 	std::cout << srvConfs[42]["/index"].getIndex() << "\n";
 
-	std::cout << srvConfs[42]["/sendfeetpics"].getUpload() << "\n\n";
+	std::cout << srvConfs[42]["/cgi"].isMethodAllowed(GET) << "\n";
+	std::cout << srvConfs[42]["/cgi"].getPath() << "\n";
+	std::cout << srvConfs[42]["/cgi"].getExt() << "\n\n";
 
-	std::cout << srvConfs[19].getHost() << ":";
-	std::cout << srvConfs[19].getPort() << "\n\n";
+	std::cout << '[' << srvConfs[19].getHost() << ":";
+	std::cout << srvConfs[19].getPort() << "]\n\n";
 
-	std::cout << srvConfs[80].getHost() << ":";
-	std::cout << srvConfs[80].getPort() << "\n\n";
+	std::cout << '[' << srvConfs[80].getHost() << ":";
+	std::cout << srvConfs[80].getPort() << "]\n\n";
 
 	return (0);
 }

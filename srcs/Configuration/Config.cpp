@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oladams <oladams@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lvodak <lvodak@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 13:37:56 by alexphil          #+#    #+#             */
-/*   Updated: 2024/11/04 16:33:20 by oladams          ###   ########.fr       */
+/*   Updated: 2024/12/05 17:22:14 by lvodak           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ void	Config::parseConfigFile() {
 	rules.insert("root");
 	rules.insert("autoindex");
 	rules.insert("index");
+	rules.insert("path");
+	rules.insert("ext");
 	rules.insert("upload");
 	
 	bool		inSrv	= false;
@@ -161,6 +163,10 @@ void	Config::processRule(int port, std::string route, std::vector <std::string> 
 	}
 	else if (rule == "index")
 		serverConfigs[port][route].setIndex(tokens[1]);
+	else if (rule == "path")
+		serverConfigs[port][route].setPath(tokens[1]);
+	else if (rule == "ext")
+		serverConfigs[port][route].setExt(tokens[1]);
 	else if (rule == "upload")
 		serverConfigs[port][route].setUpload(tokens[1]);
 }

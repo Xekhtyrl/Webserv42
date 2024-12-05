@@ -24,8 +24,8 @@ int main(int argc, char **argv) {
 	}
 
 	std::vector<ServerConfig> configs;
-	std::map<int, ServerConfig>::iterator it;
 	for (std::set<int>::iterator it = config.getPorts().begin(); it != config.getPorts().end(); it++) {
+		std::cout<<(int)*it<<std::endl;
 		configs.push_back(config.getServers()[*it]);
 	}
 	
