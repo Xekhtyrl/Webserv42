@@ -54,6 +54,75 @@ def compareCharNames(c, names):
                 returnVal += 1
     return returnVal
 
+def createHTMLformat(name1, name2, value):
+	body = "<!DOCTYPE html>\r\n\
+<html lang=\"en\">\r\n\
+<head>\r\n\
+    <meta charset=\"UTF-8\">\r\n\
+    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n\
+    <title>Send Love to 118 218</title>\r\n\
+    \r\n\
+    <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css?family=Lemon\" type=\"text/css\">\r\n\
+\r\n\
+    <style>\r\n\
+        body {\r\n\
+            margin: 0;\r\n\
+            padding: 0;\r\n\
+            display: flex;\r\n\
+            justify-content: center;\r\n\
+            align-items: center;\r\n\
+            height: 100vh;\r\n\
+        }\r\n\
+\r\n\
+        .background {\r\n\
+            position: absolute;\r\n\
+            top: 0;\r\n\
+            left: 0;\r\n\
+            width: 100%;\r\n\
+            height: 100vh;\r\n\
+            background: url('Heartpng.png') no-repeat center center;\r\n\
+            background-size: contain;\r\n\
+            background-color: black;\r\n\
+        }\r\n\
+\r\n\
+        .background .text-container {\r\n\
+            position: absolute;\r\n\
+            top: 50%;\r\n\
+            left: 50%;\r\n\
+            transform: translate(-50%, -50%);\r\n\
+            text-align: center;\r\n\
+            color: white;\r\n\
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);\r\n\
+        }\r\n\
+\r\n\
+        .background .text-container p {\r\n\
+            margin: 0; \r\n\
+            font-size: 3rem;\r\n\
+            font-family: 'Lemon', sans-serif;\r\n\
+        }\r\n\
+\r\n\
+        .background .text-container p1 {\r\n\
+            margin: 0;\r\n\
+            color: #e859d2;\r\n\
+            font-size: 2rem;\r\n\
+            font-family: 'Lemon', sans-serif;\r\n\
+        }\r\n\
+    </style>\r\n\
+</head>\r\n\
+<body>\r\n\
+    <div class=\"background\">\r\n\
+        <div class=\"text-container\">\r\n\
+            <p>" + name1 + "'s Love for "+ name2 +"</p>\r\n\
+			<p>.</p>\r\n\
+			<p>.</p>\r\n\
+			<p>.</p>\r\n\
+			<p>.</p>\r\n\
+            <p1><i><b>" + str(value) + "%</b></i></p1>\r\n\
+        </div>\r\n\
+    </div>\r\n\
+</body>\r\n\
+</html>"
+	return body
 
 def main():
 	data = input("Insert first and second name: ")
@@ -61,7 +130,10 @@ def main():
 	value = compareNames(tab[0], tab[1])
 	if (tab[0] == "Leo" and tab[1] == "Julie") or (tab[1] == "Leo" and tab[0] == "Julie"):
 		value = "miiiiiiiiille"
-	print(tab[0], "loves", tab[1], "=", value, "%")
+	# print(tab[0], "loves", tab[1], "=", value, "%")
+	with open("test.html", 'w') as file:
+		file.write(createHTMLformat(tab[0], tab[1], value))
+	print(createHTMLformat(tab[0], tab[1], value))
 
 
 if __name__ == "__main__":
