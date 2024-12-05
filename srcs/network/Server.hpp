@@ -4,6 +4,8 @@
 #include "Client.hpp"
 #include "../../includes/webserv.hpp"
 #include "../Configuration/ServerConfig.hpp"
+#include <cstring>
+#include <algorithm>
 // # include "SERVERCONFIG_PATH" //
 
 class Client;
