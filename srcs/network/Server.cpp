@@ -75,7 +75,8 @@ void Server::closeConnection(Client *client) {
 	int sock = client->getSock();
 	close(sock);
 	std::vector<int>::iterator it_1 = find(_activeConnections.begin(), _activeConnections.end(), sock);
-    if (it_1 != _activeConnections.end())
+    if (it_1 != _activeConnections.end()) {
         _activeConnections.erase(it_1);
+	}
 	std::cout << "closed connection on socket " << sock << std::endl;
 }

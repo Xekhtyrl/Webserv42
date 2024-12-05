@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   RouteConfig.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oladams <oladams@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lvodak <lvodak@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:41:23 by alexphil          #+#    #+#             */
-/*   Updated: 2024/11/04 16:39:31 by oladams          ###   ########.fr       */
+/*   Updated: 2024/12/05 16:32:54 by lvodak           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # pragma once
 
 # include <string>
+# include <stdexcept>
 
 enum	Rules { GET, POST, DELETE, REDIRECT, ROOT, AUTOINDEX, INDEX, UPLOAD };
 

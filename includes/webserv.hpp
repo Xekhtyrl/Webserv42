@@ -16,12 +16,15 @@
 # include <stdlib.h>
 # include <netinet/in.h>
 # include <string>
+# include <cstring>
+# include <algorithm>
 # include <fstream>
 # include <vector>
 # include <dirent.h>
 # include <exception>
 # include <map>
 # include <sstream>
+# include <stdexcept>
 # include "../srcs/HTTPProtocol/HTTPRequest.hpp"
 # include "../srcs/HTTPProtocol/HTTPReponse.hpp"
 # include "../srcs/network/ASocket.hpp"

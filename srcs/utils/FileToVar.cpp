@@ -5,7 +5,7 @@ std::string fileToStr(std::string filename) {
 	std::string tmp;
 	std::ifstream file;
 	
-	file.open(filename, std::ios::in);
+	file.open(filename.c_str(), std::ios::in);
 	if (!file)
 		throw std::runtime_error(E404);
 	while(getline(file, tmp)){
@@ -17,7 +17,7 @@ std::string fileToStr(std::string filename) {
 }
 
 std::vector<unsigned char>	binaryFileToVector(std::string filename) {
-	std::ifstream file(filename, std::ios::in | std::ios::binary);
+	std::ifstream file(filename.c_str(), std::ios::in | std::ios::binary);
 	if (!file)
 		throw std::runtime_error(E404);
 	std::vector<unsigned char>str((std::istreambuf_iterator<char>(file)),std::istreambuf_iterator<char>());

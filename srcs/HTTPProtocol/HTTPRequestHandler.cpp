@@ -2,6 +2,7 @@
 #include "HTTPRequest.hpp"
 #include <cstdio>
 #include <unistd.h>
+#include <sys/wait.h>
 #include "../../includes/webserv.hpp"
 
 char **setEnvCGI(HTTPRequest& request) {
@@ -43,7 +44,8 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 		dup2(input[0], STDIN_FILENO); //send the input
 		close(input[1]);
 		close(input[0]);
-		execve("/usr/bin/python3", (char*[3]){(char*)"python3", (char*)request.getContent().c_str(), 0}, env);
+		char *argv[] = {(char*)"python3", (char*)request.getContent().c_str(), 0};
+		execve("/usr/bin/python3", argv, env);
 	}
 	close(fd[1]);
 	if (request.getMethod() == "POST"){ //send the input
@@ -58,7 +60,6 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 		retVal += tmp;
 	}
 	close(fd[0]);
-	wait(nullptr);
 	wait(0);
 	appendToVector(response, retVal); //return the response to be send
 	//see RFC CGI
