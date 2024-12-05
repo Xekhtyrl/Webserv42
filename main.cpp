@@ -25,7 +25,7 @@ int	main(int ac, char **av) {
 		config.parseConfigFile();
 	} catch (std::exception &e) {
 		std::cerr << "Error: " << e.what() << '\n';
-		exit(1);
+		return (0);
 	}
 	
 	std::map<int, ServerConfig> srvConfs = config.getServers();

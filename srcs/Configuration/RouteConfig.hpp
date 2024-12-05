@@ -13,6 +13,7 @@
 # pragma once
 
 # include <string>
+# include <stdexcept>
 
 enum	Rules { GET, POST, DELETE, REDIRECT, ROOT, AUTOINDEX, INDEX, PATH, EXT, UPLOAD };
 
