@@ -7,6 +7,7 @@ HTTPReponse::HTTPReponse(std::string errorMsg, ServerConfig& conf) {
 	int code = atoi(errorMsg.substr(0, errorMsg.find(':')).c_str());
 
 	_statusLine = "HTTP/1.1 " + errorMsg.substr(0, errorMsg.find(':')) + "\r\n";
+	std::cout<<errorMsg<<std::endl;
 	_header =	headerLineFormat("Date", getTimeStamp()) + \
 				headerLineFormat("Content-Type", "text/html");
 	

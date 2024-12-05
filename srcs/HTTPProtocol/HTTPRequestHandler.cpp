@@ -82,11 +82,15 @@ void	executeRequest(HTTPRequest& request, std::vector<unsigned char>& response, 
 void	requestToResponseProcess(Client *client, ServerConfig& conf) {
 	std::vector<unsigned char> final;
 	std::vector<unsigned char> repBody;
-
+	std::cout << "coucou" <<std::endl;
 	try {
+		std::cout<<"coucou1"<<std::endl;
 		HTTPRequest request(client, conf);
+		std::cout<<"coucou2"<<std::endl;
 		executeRequest(request, repBody, conf); //CGI???
+		std::cout<<"coucou3"<<std::endl;
 		HTTPReponse response(repBody, request);
+		std::cout<<"coucou4"<<std::endl;
 		final = response.getFinal();
 	}
 	catch (std::exception& e) {
@@ -95,6 +99,7 @@ void	requestToResponseProcess(Client *client, ServerConfig& conf) {
 		HTTPReponse error((std::string)e.what(), conf);
 		client->appendWriteBuffer((std::vector<unsigned char>)error.getFinal());
 	}
+	// std::cout<<vecToStr(repBody)<<std::endl;
 	client->appendWriteBuffer(final);
 	client->clearReadBuffer();
 }

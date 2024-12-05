@@ -48,7 +48,7 @@ void						requestToResponseProcess(Client *client, ServerConfig& conf);
 std::string					fileToStr(std::string filename);
 std::vector<unsigned char>	binaryFileToVector(std::string filename);
 bool						isBinaryFile(std::string filename, std::string& type);
-std::string					vecToStr(std::vector<unsigned char>& vec);
+std::string					vecToStr(std::vector<unsigned char> vec);
 void						executePOST(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf);
 void						executeDELETE(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf);
 void						executeGET(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf);

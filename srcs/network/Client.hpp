@@ -10,10 +10,12 @@
 class Client {
 	public:
 		Client(int sock);
+		Client& operator=(const Client &c);
 		int getSock(void) const; //done
 		time_t getLastActiveTime(void) const; //done
-		unsigned char* getWriteBuffer(void) const; //done
 		int getWriteBufferSize(void) const; //done
+		unsigned char* getWriteBuffer(void) const; //done
+		std::vector<unsigned char> getWriteBufferVect(void) const;
 		std::vector<unsigned char> getReadBuffer(void) const;
 		bool getIsAlive(void) const;
 

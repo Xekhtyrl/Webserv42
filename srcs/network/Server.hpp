@@ -33,5 +33,5 @@ class Server {
 		ServerConfig 			_config;
 		ListenSocket *			_listenSocket;
 		std::vector<int>		_activeConnections;
-		char *					_buffer;
+		char*					_buffer;
 };

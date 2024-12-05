@@ -6,6 +6,15 @@ Client::Client(int sock): _sock(sock) {
 	_delete = false;
 }
 
+Client& Client::operator=(const Client &c) {
+	_sock = c.getSock();
+	_readBuffer = c.getReadBuffer();
+	_writeBuffer = c.getWriteBufferVect();
+	_lastActiveTime = c.getLastActiveTime();
+	_isAlive = c.getIsAlive();
+	return *this;
+}
+
 int Client::getSock(void) const {
 	return _sock;
 }
@@ -14,6 +23,9 @@ time_t Client::getLastActiveTime(void) const {
 }
 std::vector<unsigned char> Client::getReadBuffer(void) const {
 	return _readBuffer;
+}
+std::vector<unsigned char> Client::getWriteBufferVect(void) const {
+	return _writeBuffer;
 }
 unsigned char * Client::getWriteBuffer(void) const {
 	return (unsigned char *)_writeBuffer.data();

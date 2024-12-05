@@ -41,4 +41,8 @@ int main(int argc, char **argv) {
 
 	//run it all
 	serverManager.loop();
+
+	for (std::vector<Server*>::iterator it = servers.begin(); it < servers.end(); ++it) {
+		delete *it;
+	}
 }

@@ -25,7 +25,7 @@ std::vector<unsigned char>	binaryFileToVector(std::string filename) {
 	return str;
 }
 
-std::string	vecToStr(std::vector<unsigned char>& vec) {
+std::string	vecToStr(std::vector<unsigned char> vec) {
 	std::string str;
 	str.resize(vec.size());
 

@@ -11,8 +11,10 @@ Manager::Manager(std::vector<Server *> servers): _servers(servers) {
 Manager::~Manager(void) {}
 
 void Manager::loop(void) {
-	checkSockets();
-	processHeadOperation();
+	while (true) {
+		checkSockets();
+		processHeadOperation();
+	}
 }
 
 void Manager::checkSockets(void) { 
@@ -43,6 +45,7 @@ void Manager::processHeadOperation(void) {
 	Operation	op;
 	bool		nothingExecuted = true;
 	int			queueSize = _queue.size();
+	Client*		client;
 	//execute the first operation in the queue.
 	//if the operation's socket isn't ready for the writing or reading,
 	//put it at the back of the queue and try the next operation.
@@ -50,7 +53,8 @@ void Manager::processHeadOperation(void) {
 	while (nothingExecuted && queueSize--) {
 		op = _queue.front();
 		_queue.pop();
-		if (op.getClient()->getIsAlive()) {
+		client = op.getClient();
+		if (client == NULL || client->getIsAlive()) {
 			_queue.push(op);
 			nothingExecuted = false;
 			if (op.getType() == 'l' && FD_ISSET(op.getSock(), &_readFds))
@@ -61,6 +65,12 @@ void Manager::processHeadOperation(void) {
 				handleWrite(op);			//write operation execution
 			else
 				nothingExecuted = true;
+		}
+		else if (client != NULL) {
+			if (client->_delete == true)
+				delete 	client;
+			else
+				client->_delete = true;
 		}
 	}
 }

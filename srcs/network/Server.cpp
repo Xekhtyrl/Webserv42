@@ -2,16 +2,19 @@
 
 Server::Server(ServerConfig config, int domain, int service, int protocol, u_long interface, int backlog) {
 	_listenSocket = new ListenSocket(domain, service, protocol, config.getPort(), interface, backlog);
+	_buffer = (char*)calloc(BUFFER_SIZE, 1);
 	std::cout << config.getPort()<< " listening to new connections on port " << ntohs(_listenSocket->getAddress().sin_port) << std::endl;
 }
 Server::Server(ServerConfig config) {
 	_listenSocket = new ListenSocket(AF_INET, SOCK_STREAM, 0, config.getPort(), INADDR_ANY, 20);
+	_buffer = (char*)calloc(BUFFER_SIZE, 1);
 	std::cout << config.getPort()<< " listening to new connections on port " << ntohs(_listenSocket->getAddress().sin_port) << std::endl;
 }
 
 Server::~Server(void) {
 	close(_listenSocket->getSocket());
 	delete _listenSocket;
+	delete _buffer;
 }
 
 ListenSocket* Server::getListenSocket(void) const {
@@ -39,7 +42,9 @@ Client* Server::listenNewConnections(void) {
 }
 
 void Server::writeSocket(Client *client) {
-	int written = write(client->getSock(), client->getWriteBuffer(), client->getWriteBufferSize());
+	// std::cout << "Trying to write:" << std::endl << vecToStr(client->getWriteBufferVect()) << std::endl;
+	int written = write(client->getSock(), vecToStr(client->getWriteBufferVect()).c_str(), client->getWriteBufferSize());
+	// std::cout << "Number of written characters: " << written << std::endl;
 	if (written < 0) {
 		closeConnection(client);
 		return ;
@@ -58,16 +63,22 @@ void Server::writeSocket(Client *client) {
 
 void Server::readSocket(Client *client) {
 	int sock = client->getSock();
-	size_t received = BUFFER_SIZE;
+	int received = BUFFER_SIZE;
 	memset(_buffer, 0, BUFFER_SIZE);
 	received = read(sock, _buffer, BUFFER_SIZE);
 	if (received <= 0) {
+		// std::cout << "failed to read on socket: "<<client->getSock() << std::endl;
 		closeConnection(client);
 		return;
+	}
+	else {
+	// std::cout << "managed to read on socket: "<<client->getSock() << std::endl;
+	// std::cout << _buffer << std::endl;
 	}
 	client->updateLastActiveTime();
 	client->appendReadBuffer(&_buffer, received);
 	requestToResponseProcess(client, _config); //Leo's part
+	std::cout<<vecToStr((std::vector<unsigned char>)client->getWriteBufferVect())<<std::endl;
 }
 
 void Server::closeConnection(Client *client) {
