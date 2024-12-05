@@ -19,6 +19,8 @@ Operation& Operation::operator=(const Operation &op) {
 Operation::~Operation(void) {
 	//_client is dynamically allocated, with 2 pointers kept in 2 Operations.
 	//Only when the first Operation is destroyed can the second Operation delete _client
+	if (_client == NULL)
+		return;
 	if (_client->_delete == true)
 		delete _client;
 	else
