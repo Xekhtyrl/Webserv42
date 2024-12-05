@@ -61,7 +61,7 @@ void Manager::processHeadOperation(void) {
 				handleNewConnection(op);	//2 operations creation: read socket and write socket
 			else if (op.getType() == 'r' && FD_ISSET(op.getSock(), &_readFds))
 				handleRead(op);				//read operation execution
-			else if (op.getType() == 'w' && FD_ISSET(op.getSock(), &_writeFds))
+			else if (op.getType() == 'w' && FD_ISSET(op.getSock(), &_writeFds) && client.getWriteBufferSize())
 				handleWrite(op);			//write operation execution
 			else
 				nothingExecuted = true;
