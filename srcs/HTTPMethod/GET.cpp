@@ -60,13 +60,17 @@ void	executeGET(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 		std::vector<unsigned char> vec = binaryFileToVector(request.getContent());
 		response = vec;
 	}
-	else
+	else if (!access(request.getContent().c_str(), F_OK))
 		appendToVector(response, fileToStr(request.getContent()));
+	else if (request.getContent().find("http") < request.getContent().size()){
+		request.setStatus("302");
+		request.addToHeader("Location", request.getContent());
+	}
 
 	if (response.size() > conf.getClientMaxBodySize()){
 		response.clear();
 		throw std::runtime_error(E400);
 	}
-
-	request.addToHeader("Content-Length", ftToString(response.size()));
+	if (response.size())
+		request.addToHeader("Content-Length", ftToString(response.size()));
 }

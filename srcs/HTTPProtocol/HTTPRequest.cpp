@@ -22,21 +22,25 @@ HTTPRequest::HTTPRequest(Client *client, ServerConfig& conf) {
 		std::cerr<<"error === "<<e.what()<<std::endl;
 		throw std::runtime_error(e.what());
 	}
-
+	std::cout<<"coucou"<<std::endl;
 	_protocolHTTP = tmp.substr(tmp.find_last_of(' ') + 1, tmp.length() - tmp.find_last_of(' ')); // needed to check?
 	if (_protocolHTTP.find("HTTP/1.1") > _protocolHTTP.size())
 		throw std::runtime_error(E505);
 
+	std::cout<<"coucou"<<std::endl;
 	_header = splitHeader(request);
 	if (incompleteBody(client->getReadBuffer()))
 		throw std::runtime_error("incomplete");
+	std::cout<<"coucou"<<std::endl;
 	if (_header["Content-Length"].empty() == 0)
 		setBody(client->getReadBuffer());
 	else
 		_body.push_back('\0');
+	std::cout<<"coucou"<<std::endl;
 
 	_status = "200";
 	checkHeaders(conf);
+	std::cout<<"coucou"<<std::endl;
 	return;
 }
 
@@ -121,7 +125,7 @@ void	HTTPRequest::checkLink(ServerConfig& conf) {
 	std::cout<<path<<std::endl;
 	if (path.find("..") < path.size())
 		throw std::runtime_error("403 Forbidden: Unauthorized Path");
-	if (!access(path.c_str(), F_OK))
+	if (!access(path.c_str(), F_OK) || path.find("http") < path.size())
 		return;
 	throw std::runtime_error(E404 ": Ressource Not found");
 }
@@ -140,6 +144,7 @@ void	HTTPRequest::changePathURL(ServerConfig& conf) {
 	std::cout<<urlBeg<<urlEnd<<std::endl;
 	urlBeg = getRedirPath(conf, _method, urlBeg, urlEnd);
 	if (!urlBeg.size())
+		return;
 	std::cout<<urlBeg<<urlEnd<<std::endl;
 	_content = urlBeg + urlEnd;
 }

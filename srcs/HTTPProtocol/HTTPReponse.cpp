@@ -24,12 +24,20 @@ HTTPReponse::HTTPReponse(std::string errorMsg, ServerConfig& conf) {
 }
 HTTPReponse::HTTPReponse(std::vector<unsigned char> body, HTTPRequest& request) {
 	std::string tmp;
+	std::string statusStr;
 	
 	std::cout<<request.getStatus()<<std::endl;
-	_statusLine = "HTTP/1.1 " + request.getStatus() + " OK\r\n";
-	_header =	headerLineFormat("Date", getTimeStamp()) + \
+	if (request.getStatus() == "200"){
+		statusStr = "OK";
+		_header =	headerLineFormat("Date", getTimeStamp()) + \
 				headerLineFormat("Connection", "close");
-	_body = body;
+		_body = body;
+	}
+	else if (request.getStatus() == "302"){
+		statusStr = "Found";
+		_header += headerLineFormat("Location", request.getHeader()["Location"]);
+	}
+	_statusLine = "HTTP/1.1 " + request.getStatus() + " OK\r\n";
 	
 	if (!body.empty() && request.getContent().find(".py") > request.getContent().size()) { //check for body or if CGI (.py)
 		isBinaryFile(request.getContent(), tmp);

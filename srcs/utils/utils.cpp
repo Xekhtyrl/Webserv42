@@ -55,15 +55,17 @@ std::string getRedirPath(ServerConfig& conf, std::string method, std::string url
 	if ((method == "POST" || method == "DELETE") && conf[url][UPLOAD])
 		final = conf[url].getUpload();
 	std::cout<<"final? = "<<final<<conf[url][ROOT]<<std::endl;
-	if (!access(("." + url).c_str(), F_OK))
+	if (!access(("." + url).c_str(), F_OK) || url.find("http") < url.size())
 		final = url;
 	if (!final.size() && url != "/")
 	{
 		std::cout<<"url =="<<url<<std::endl;
-		final = getRedirPath(conf, method, "/", url.substr(1));
+		final = getRedirPath(conf, method, "/", url);
+		final += url;
+		std::cout<<"final? = "<<final<<conf[url][ROOT]<<std::endl;
 		url = "/";
 	}
-	if (final.size())
+	if (final.size() && final[0] == '/')
 		final = final.substr(1);
 	return final;
 }

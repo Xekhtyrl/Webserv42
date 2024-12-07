@@ -86,6 +86,7 @@ void	requestToResponseProcess(Client *client, ServerConfig& conf) {
 	try {
 		HTTPRequest request(client, conf);
 		executeRequest(request, repBody, conf); //CGI???
+		std::cout<<"after exec"<<std::endl;
 		HTTPReponse response(repBody, request);
 		final = response.getFinal();
 	}
