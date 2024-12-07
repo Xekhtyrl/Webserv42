@@ -15,20 +15,18 @@ HTTPRequest::HTTPRequest(Client *client, ServerConfig& conf) {
 		throw std::runtime_error(E405);
 
 	divideUrlQuery(tmp);
-	std::cout<<"test = "<<_content<<std::endl;	
+	std::cout<<"test = "<<_content<<std::endl;
 	try {
-		if (checkLink(conf))
-			throw std::runtime_error(E404 ": Ressource Not found");
-		}
+		checkLink(conf);}
 	catch (std::exception& e){
-		std::cout<<e.what()<<"    uweofewigfoweihfoweihf"<<std::endl;
-		throw e;
+		std::cerr<<"error === "<<e.what()<<std::endl;
+		throw std::runtime_error(e.what());
 	}
-	std::cout<<"InRequest"<<std::endl;
+
 	_protocolHTTP = tmp.substr(tmp.find_last_of(' ') + 1, tmp.length() - tmp.find_last_of(' ')); // needed to check?
 	if (_protocolHTTP.find("HTTP/1.1") > _protocolHTTP.size())
 		throw std::runtime_error(E505);
-	std::cout<<"InRequest"<<std::endl;
+
 	_header = splitHeader(request);
 	if (incompleteBody(client->getReadBuffer()))
 		throw std::runtime_error("incomplete");
@@ -36,10 +34,9 @@ HTTPRequest::HTTPRequest(Client *client, ServerConfig& conf) {
 		setBody(client->getReadBuffer());
 	else
 		_body.push_back('\0');
+
 	_status = "200";
-	std::cout<<"InRequest"<<std::endl;
 	checkHeaders(conf);
-	std::cout<<"InRequest"<<std::endl;
 	return;
 }
 
@@ -116,7 +113,7 @@ bool	HTTPRequest::checkMethod(std::string method, ServerConfig& conf) {
 		return true;
 	return false;
 }
-bool	HTTPRequest::checkLink(ServerConfig& conf) {
+void	HTTPRequest::checkLink(ServerConfig& conf) {
 	std::string path;
 
 	changePathURL(conf);
@@ -125,8 +122,26 @@ bool	HTTPRequest::checkLink(ServerConfig& conf) {
 	if (path.find("..") < path.size())
 		throw std::runtime_error("403 Forbidden: Unauthorized Path");
 	if (!access(path.c_str(), F_OK))
-		return false;
-	return true;
+		return;
+	throw std::runtime_error(E404 ": Ressource Not found");
+}
+
+void	HTTPRequest::changePathURL(ServerConfig& conf) {
+	std::string urlBeg;
+	std::string urlEnd = "";
+	
+	if (_content.find("/", 1) <= _content.size())
+		urlBeg = _content.substr(0, _content.find("/", 1));
+	else
+		urlBeg = _content;
+	std::cout<<urlBeg<<std::endl;
+	if (_content.find("/", 1) <= _content.size())
+		urlEnd = _content.substr(_content.find("/", 1));
+	std::cout<<urlBeg<<urlEnd<<std::endl;
+	urlBeg = getRedirPath(conf, _method, urlBeg, urlEnd);
+	if (!urlBeg.size())
+	std::cout<<urlBeg<<urlEnd<<std::endl;
+	_content = urlBeg + urlEnd;
 }
 
 void	HTTPRequest::checkHeaders(ServerConfig& conf) {
@@ -144,14 +159,12 @@ void	HTTPRequest::checkHeaders(ServerConfig& conf) {
 	if (_method == "DELETE")
 		if ((_body.empty() && (!_header["Content-Type"].empty() || !_header["Content-Length"].empty())))
 			throw std::runtime_error(E400 ": No Content Found");
-	std::cout<<">>>>>>>>>>>"<<!_body.size()<<std::endl;
+
 	if (_body.size() > 2 && (_header["Content-Type"].empty() || _method == "GET"))
 		throw std::runtime_error(E400 ": Body Not Allowed");
 	if (_body.size() > 2 && _header["Content-Length"].empty())
 		throw std::runtime_error(E400 ": Bad Header");
 
-	std::cout<<_body.size() <<" "<< _header["Content-Length"].c_str() <<" "<< atoi(_header["Content-Length"].c_str())
-			<<" "<<(int)conf.getClientMaxBodySize()<<std::endl;
 	if ((int)_body.size() - 1 > atoi(_header["Content-Length"].c_str())
 		|| atoi(_header["Content-Length"].c_str()) > (int)conf.getClientMaxBodySize()
 		|| _body.size() > conf.getClientMaxBodySize())
@@ -192,23 +205,6 @@ void	HTTPRequest::setBody(std::vector<unsigned char> buffer){
 		it++;
 	while (it != buffer.end())
 		_body.push_back(*it++);
-}
-
-void	HTTPRequest::changePathURL(ServerConfig& conf) {
-	std::string urlBeg;
-	std::string urlEnd = "";
-	
-	if (_content.find("/", 1) <= _content.size())
-		urlBeg = _content.substr(0, _content.find("/", 1));
-	else
-		urlBeg = _content;
-	std::cout<<urlBeg<<std::endl;
-	if (_content.find("/", 1) <= _content.size())
-		urlEnd = _content.substr(_content.find("/", 1));
-	std::cout<<urlBeg<<urlEnd<<std::endl;
-	urlBeg = getRedirPath(conf, _method, urlBeg, urlEnd);
-	std::cout<<urlBeg<<urlEnd<<std::endl;
-	_content = urlBeg + urlEnd;
 }
 
 void	HTTPRequest::divideUrlQuery(std::string statusLine){

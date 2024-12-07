@@ -7,15 +7,13 @@ HTTPReponse::HTTPReponse(std::string errorMsg, ServerConfig& conf) {
 	int code = atoi(errorMsg.substr(0, errorMsg.find(':')).c_str());
 
 	_statusLine = "HTTP/1.1 " + errorMsg.substr(0, errorMsg.find(':')) + "\r\n";
-	std::cout<<errorMsg<<std::endl;
+
 	_header =	headerLineFormat("Date", getTimeStamp()) + \
 				headerLineFormat("Content-Type", "text/html");
-	
-	if (conf[code])
-		appendToVector(_body, fileToStr(conf.getErrorPage(code)));
-	else
-		appendToVector(_body, fileToStr("./error/404.html"));
-	
+	if (conf[code]){
+		appendToVector(_body, fileToStr(conf.getErrorPage(code)));}
+	else{
+		appendToVector(_body, fileToStr("./error/404.html"));}
 	_header += headerLineFormat("Content-Length", ftToString(_body.size()));
 	formResponse(0);
 

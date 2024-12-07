@@ -2,13 +2,13 @@
 
 Server::Server(ServerConfig config, int domain, int service, int protocol, u_long interface, int backlog) {
 	_listenSocket = new ListenSocket(domain, service, protocol, config.getPort(), interface, backlog);
-	_buffer = (char*)calloc(BUFFER_SIZE, 1);
+	_buffer = (char*)calloc(BUFFER_SIZE + 1, 1);
 	_config = config;
 	std::cout << config.getPort()<< " listening to new connections on port " << ntohs(_listenSocket->getAddress().sin_port) << std::endl;
 }
 Server::Server(ServerConfig config) {
 	_listenSocket = new ListenSocket(AF_INET, SOCK_STREAM, 0, config.getPort(), INADDR_ANY, 20);
-	_buffer = (char*)calloc(BUFFER_SIZE, 1);
+	_buffer = (char*)calloc(BUFFER_SIZE + 1, 1);
 	_config = config;
 	std::cout << config.getPort()<< " listening to new connections on port " << ntohs(_listenSocket->getAddress().sin_port) << std::endl;
 }
@@ -66,8 +66,10 @@ void Server::writeSocket(Client *client) {
 void Server::readSocket(Client *client) {
 	int sock = client->getSock();
 	int received = BUFFER_SIZE;
-	memset(_buffer, 0, BUFFER_SIZE);
+	memset(_buffer, 0, BUFFER_SIZE + 1);
 	received = read(sock, _buffer, BUFFER_SIZE);
+	_buffer[received] = 0;
+	std::cout << _buffer << std::endl;
 	if (received <= 0) {
 		// std::cout << "failed to read on socket: "<<client->getSock() << std::endl;
 		closeConnection(client);
@@ -79,8 +81,8 @@ void Server::readSocket(Client *client) {
 	}
 	client->updateLastActiveTime();
 	client->appendReadBuffer(&_buffer, received);
+	std::cout<<vecToStr((std::vector<unsigned char>)client->getReadBuffer())<<std::endl;
 	requestToResponseProcess(client, _config); //Leo's part
-	std::cout<<vecToStr((std::vector<unsigned char>)client->getWriteBufferVect())<<std::endl;
 }
 
 void Server::closeConnection(Client *client) {

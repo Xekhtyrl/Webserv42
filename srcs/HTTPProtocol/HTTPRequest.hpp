@@ -40,7 +40,7 @@ class HTTPRequest {
   bool	incompleteBody(std::vector<unsigned char> buffer);
 
   bool	checkMethod(std::string method, ServerConfig& conf);
-  bool	checkLink(ServerConfig& conf);
+  void	checkLink(ServerConfig& conf);
   void	checkHeaders(ServerConfig& conf);
   
   void	setBody(std::vector<unsigned char> buffer);

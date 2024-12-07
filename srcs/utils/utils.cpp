@@ -33,26 +33,39 @@ std::string	getTimeStamp() {
 
 std::string getRedirPath(ServerConfig& conf, std::string method, std::string url, std::string content) {
 	//check for autoindex also?
+	std::string final;
 	if (method == "GET" && conf[url][AUTOINDEX] && content.empty())
-			return url + "/autoindex"; 
-	if (method == "GET" && conf[url][REDIRECT])
-		return conf[url].getRedirect();
+			final = url + "/autoindex"; 
+	if (method == "GET" && conf[url][REDIRECT]){
+		final = conf[url].getRedirect();
+		if (!content.size() && !access(final.substr(1).c_str(), F_OK))
+			return final.substr(1);
+	}
 	if (method == "GET" && conf[url][ROOT]){
-		//std::cout<<"OOOOOOKKKKKK "<<(conf[url].getRoot() + content).c_str()<<std::endl;
+		std::cout<<"OOOOOOKKKKKK "<<(conf[url].getRoot() + content).c_str()<<std::endl;
 		if (!access(("." + conf[url].getRoot() + content).c_str(), F_OK))
-			return conf[url].getRoot().substr(1);
+			final = conf[url].getRoot().substr(1);
 	}
 	if (method == "GET" && conf[url][INDEX])
-		if (!access((conf[url].getIndex() + content).c_str(), F_OK))
-			return conf[url].getIndex();
+		if (!access(("." + conf[url].getIndex() + content).c_str(), F_OK))
+			final = conf[url].getIndex();
 	if (method == "GET" && conf[url][UPLOAD])
-		if (!access((conf[url].getUpload() + content).c_str(), F_OK))
-			return conf[url].getUpload();
+		if (!access(("." + conf[url].getUpload() + content).c_str(), F_OK))
+			final = conf[url].getUpload();
 	if ((method == "POST" || method == "DELETE") && conf[url][UPLOAD])
-		return conf[url].getUpload();
+		final = conf[url].getUpload();
+	std::cout<<"final? = "<<final<<conf[url][ROOT]<<std::endl;
 	if (!access(("." + url).c_str(), F_OK))
-		return url.substr(1);
-	throw std::runtime_error(E404);
+		final = url;
+	if (!final.size() && url != "/")
+	{
+		std::cout<<"url =="<<url<<std::endl;
+		final = getRedirPath(conf, method, "/", url.substr(1));
+		url = "/";
+	}
+	if (final.size())
+		final = final.substr(1);
+	return final;
 }
 
 bool	isBinaryFile(std::string filename, std::string& type) {
