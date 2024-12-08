@@ -42,9 +42,9 @@ std::string getRedirPath(ServerConfig& conf, std::string method, std::string url
 			return final.substr(1);
 	}
 	if (method == "GET" && conf[url][ROOT]){
-		std::cout<<"OOOOOOKKKKKK "<<(conf[url].getRoot() + content).c_str()<<std::endl;
 		if (!access(("." + conf[url].getRoot() + content).c_str(), F_OK))
-			final = conf[url].getRoot().substr(1);
+			final = conf[url].getRoot();
+		std::cout<<"OOOOOOKKKKKK "<<(conf[url].getRoot() + content).c_str()<<std::endl;
 	}
 	if (method == "GET" && conf[url][INDEX])
 		if (!access(("." + conf[url].getIndex() + content).c_str(), F_OK))
@@ -55,12 +55,13 @@ std::string getRedirPath(ServerConfig& conf, std::string method, std::string url
 	if ((method == "POST" || method == "DELETE") && conf[url][UPLOAD])
 		final = conf[url].getUpload();
 	std::cout<<"final? = "<<final<<conf[url][ROOT]<<std::endl;
-	if (!access(("." + url).c_str(), F_OK) || url.find("http") < url.size())
-		final = url;
+	if ((!access(("." + url).c_str(), F_OK) && url != "/") || url.find("http") < url.size()){std::cout<<url<<"NOOOOOOOOO"<<std::endl;
+		final = url;}
 	if (!final.size() && url != "/")
 	{
 		std::cout<<"url =="<<url<<std::endl;
 		final = getRedirPath(conf, method, "/", url);
+		std::cout<<"final? = "<<final<<conf[url][ROOT]<<std::endl;
 		final += url;
 		std::cout<<"final? = "<<final<<conf[url][ROOT]<<std::endl;
 		url = "/";
