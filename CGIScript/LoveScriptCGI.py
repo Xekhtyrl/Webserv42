@@ -1,3 +1,6 @@
+from urllib.parse import parse_qs
+import os
+
 def compareNames(name1, name2):
 	words = [name1, "love", name2]
 	done = []
@@ -80,7 +83,7 @@ def createHTMLformat(name1, name2, value):
             left: 0;\r\n\
             width: 100%;\r\n\
             height: 100vh;\r\n\
-            background: url('CGIScript/Heartpng.png') no-repeat center center;\r\n\
+            background: url('Heartpng.png') no-repeat center center;\r\n\
             background-size: contain;\r\n\
             background-color: black;\r\n\
         }\r\n\
@@ -125,15 +128,16 @@ def createHTMLformat(name1, name2, value):
 	return body
 
 def main():
-	data = input("Insert first and second name: ")
-	tab = data.split(" ")
-	value = compareNames(tab[0], tab[1])
-	if (tab[0] == "Leo" and tab[1] == "Julie") or (tab[1] == "Leo" and tab[0] == "Julie"):
+	query = os.environ["QUERY_STRING"]
+	tab = parse_qs(query)
+	print(os.environ)
+	value = compareNames(str(tab["name1"][0]), str(tab["name2"][0]))
+	if (tab["name1"][0] == "Leo" and tab["name2"][0] == "Julie") or (tab["name2"][0] == "Leo" and tab["name1"][0] == "Julie"):
 		value = "miiiiiiiiille"
-	# print(tab[0], "loves", tab[1], "=", value, "%")
+	# print(tab["name1"][0], "loves", tab["name2"][0], "=", value, "%")
 	with open("test.html", 'w') as file:
-		file.write(createHTMLformat(tab[0], tab[1], value))
-	print(createHTMLformat(tab[0], tab[1], value))
+		file.write(createHTMLformat(tab["name1"][0], tab["name2"][0], value))
+	print(createHTMLformat(tab["name1"][0], tab["name2"][0], value))
 
 
 if __name__ == "__main__":

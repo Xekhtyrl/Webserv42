@@ -18,11 +18,15 @@ char **setEnvCGI(HTTPRequest& request) {
 	env[size - 1] = 0;
 	env[0] = (char *)tmp.append("METHOD: " + request.getMethod()).c_str();
 	if (request.getMethod() != "GET") {
-		env[1] = (char *)tmp.append("CONTENT-TYPE: " + request.getHeader()["Content-Type"]).c_str();
-		env[2] = (char *)tmp.append("CONTENT-LENGTH: " + request.getHeader()["Content-Type"]).c_str();
+		tmp = "CONTENT-TYPE=" + request.getHeader()["Content-Type"];
+		env[1] = strdup(tmp.c_str());
+		tmp = "CONTENT-LENGTH=" + request.getHeader()["Content-Type"];
+		env[2] = strdup(tmp.c_str());
 	}
-	else
-		env[1] = (char *)tmp.append("QUERY_STRING: " + request.getQuery()).c_str();
+	else{
+		tmp = "QUERY_STRING=" + request.getQuery();
+		env[1] = strdup(tmp.c_str());
+	}
 	return env;
 }
 void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf) {
@@ -32,9 +36,11 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 	int input[2];
 	(void)conf;
 
+	std::cout<<"inCGI"<<std::endl;
 	if (pipe(fd) || pipe(input)) //the fd pipe is for retrieving the content of the executed file, the input pipe is for sending the body to the CGI file
 		throw std::runtime_error("serveur error: pipe"); // don't know how to process this kind of error
-	if (access(request.getContent().c_str(), X_OK))
+	std::cout<<request.getContent().c_str()<<std::endl;
+	if (!access(request.getContent().c_str(), X_OK))
 		throw std::runtime_error(/*ERROR ACCESS DENIED*/"ERROR ACCESS DENIED");
 	env = setEnvCGI(request); //needed to send the data to create the response body int the .py file... still don't know if necessary
 	if (fork() == 0){
@@ -44,8 +50,11 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 		dup2(input[0], STDIN_FILENO); //send the input
 		close(input[1]);
 		close(input[0]);
-		char *argv[] = {(char*)"python3", (char*)request.getContent().c_str(), 0};
-		execve("/usr/bin/python3", argv, env);
+		std::string content = request.getContent();
+		char *tab[3] = {(char*)"python3", (char*)content.c_str(), 0};
+		for (int i = 0; env[i]; i++)
+			std::cout<<env[i]<<std::endl;
+		execve("/usr/bin/python3", tab, env);
 	}
 	close(fd[1]);
 	if (request.getMethod() == "POST"){ //send the input
@@ -69,6 +78,7 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 }
 
 void	executeRequest(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf){
+	std::cout<<"inExec"<<std::endl;
 	if (request.getMethod() != "DELETE" && request.getContent().find(EXTENSION_CGI) < request.getContent().size())
 		executeCGI(request, response, conf);
 	else if (request.getMethod() == "GET")
@@ -93,6 +103,7 @@ void	requestToResponseProcess(Client *client, ServerConfig& conf) {
 	catch (std::exception& e) {
 		if (e.what() == (std::string)"incomplete")
 			return;
+		std::cout<<e.what()<<std::endl;
 		HTTPReponse error((std::string)e.what(), conf);
 		client->appendWriteBuffer((std::vector<unsigned char>)error.getFinal());
 	}
