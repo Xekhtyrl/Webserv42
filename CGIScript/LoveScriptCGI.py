@@ -58,14 +58,13 @@ def compareCharNames(c, names):
     return returnVal
 
 def createHTMLformat(name1, name2, value):
+	
 	body = "<!DOCTYPE html>\r\n\
 <html lang=\"en\">\r\n\
 <head>\r\n\
     <meta charset=\"UTF-8\">\r\n\
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n\
     <title>Send Love to 118 218</title>\r\n\
-    \r\n\
-    <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css?family=Lemon\" type=\"text/css\">\r\n\
 \r\n\
     <style>\r\n\
         body {\r\n\
@@ -101,14 +100,14 @@ def createHTMLformat(name1, name2, value):
         .background .text-container p {\r\n\
             margin: 0; \r\n\
             font-size: 3rem;\r\n\
-            font-family: 'Lemon', sans-serif;\r\n\
+            font-family: 'Lemon', Arial, sans-serif;\r\n\
         }\r\n\
 \r\n\
         .background .text-container p1 {\r\n\
             margin: 0;\r\n\
             color: #e859d2;\r\n\
             font-size: 2rem;\r\n\
-            font-family: 'Lemon', sans-serif;\r\n\
+            font-family: 'Lemon', Arial, sans-serif;\r\n\
         }\r\n\
     </style>\r\n\
 </head>\r\n\
@@ -124,13 +123,12 @@ def createHTMLformat(name1, name2, value):
         </div>\r\n\
     </div>\r\n\
 </body>\r\n\
-</html>"
+</html>\r\n"
 	return body
 
 def main():
 	query = os.environ["QUERY_STRING"]
 	tab = parse_qs(query)
-	print(os.environ)
 	value = compareNames(str(tab["name1"][0]), str(tab["name2"][0]))
 	if (tab["name1"][0] == "Leo" and tab["name2"][0] == "Julie") or (tab["name2"][0] == "Leo" and tab["name1"][0] == "Julie"):
 		value = "miiiiiiiiille"

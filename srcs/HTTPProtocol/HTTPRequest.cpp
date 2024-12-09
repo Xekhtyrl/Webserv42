@@ -39,6 +39,8 @@ HTTPRequest::HTTPRequest(Client *client, ServerConfig& conf) {
 	std::cout<<"coucou"<<std::endl;
 
 	_status = "200";
+	_CGIPath = "/usr/bin/python3";
+	_CGIExt = ".py";
 	checkHeaders(conf);
 	std::cout<<"coucou"<<std::endl;
 	return;
@@ -73,6 +75,12 @@ std::string	HTTPRequest::getContent() const {
 }
 std::string	HTTPRequest::getQuery() const {
 	return _query;
+}
+std::string	HTTPRequest::getCGIPath() const {
+	return _CGIPath;
+}
+std::string	HTTPRequest::getCGIExt() const {
+	return _CGIExt;
 }
 std::string	HTTPRequest::getProtocolHTTP() const {
 	return _protocolHTTP;
@@ -139,6 +147,10 @@ void	HTTPRequest::changePathURL(ServerConfig& conf) {
 	else
 		urlBeg = _content;
 	std::cout<<urlBeg<<std::endl;
+	if (_content.find(conf.getRoute()[urlBeg].getExt())){
+		_CGIExt = conf.getRoute()[urlBeg].getExt();
+		_CGIPath = conf.getRoute()[urlBeg].getPath();
+	}
 	if (_content.find("/", 1) <= _content.size())
 		urlEnd = _content.substr(_content.find("/", 1));
 	std::cout<<urlBeg<<urlEnd<<std::endl;

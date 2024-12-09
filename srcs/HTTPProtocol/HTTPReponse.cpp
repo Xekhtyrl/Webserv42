@@ -16,6 +16,7 @@ HTTPReponse::HTTPReponse(std::string errorMsg, ServerConfig& conf) {
 		appendToVector(_body, fileToStr("./error/404.html"));}
 	_header += headerLineFormat("Content-Length", ftToString(_body.size()));
 	formResponse(0);
+	std::cout<<vecToStr(_final)<<std::endl;
 
 	if (errorMsg.find(':') < errorMsg.size()){
 		std::string message = errorMsg.substr(errorMsg.find(':')); // check if size tot needed;
@@ -30,7 +31,8 @@ HTTPReponse::HTTPReponse(std::vector<unsigned char> body, HTTPRequest& request) 
 	if (request.getStatus() == "200"){
 		statusStr = "OK";
 		_header =	headerLineFormat("Date", getTimeStamp()) + \
-				headerLineFormat("Connection", "close");
+				headerLineFormat("Cache-Control", "no-cache")\
+				+headerLineFormat("Connection", "close");
 		_body = body;
 	}
 	else if (request.getStatus() == "302"){
@@ -39,13 +41,19 @@ HTTPReponse::HTTPReponse(std::vector<unsigned char> body, HTTPRequest& request) 
 	}
 	_statusLine = "HTTP/1.1 " + request.getStatus() + " OK\r\n";
 	
-	if (!body.empty() && request.getContent().find(".py") > request.getContent().size()) { //check for body or if CGI (.py)
+	if (!body.empty() && request.getContent().find(request.getCGIExt()) > request.getContent().size()) { //check for body or if CGI request.getCGIExt()
 		isBinaryFile(request.getContent(), tmp);
 		_header += headerLineFormat("Content-Type", tmp);
 		_header += headerLineFormat("Content-Length", ftToString(_body.size()));
 	}
+	else if (request.getContent().find(request.getCGIExt()) <= request.getContent().size()) {
+		_header += headerLineFormat("Content-Type", "text/html; charset=UTF-8");
+		_header += headerLineFormat("Content-Length", ftToString(_body.size()));
+		// _header += headerLineFormat("Content-Security-Policy", "font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;");
+	}
 
-	formResponse(request.getContent().find(".py") < request.getContent().size());
+	formResponse(request.getContent().find(request.getCGIExt()) < request.getContent().size());
+	std::cout<<vecToStr(_final)<<std::endl;
 }
 // Copy constructor
 HTTPReponse::HTTPReponse(const HTTPReponse &other) {
@@ -72,6 +80,7 @@ void	HTTPReponse::formResponse(int CGI) {
 		appendToVector(_final, "\r\n");
 	if (!_body.empty())
 		appendToVector(_final,_body);
+	appendToVector(_final, "\0");
 }
 
 std::string HTTPReponse::headerLineFormat(std::string val, std::string content){

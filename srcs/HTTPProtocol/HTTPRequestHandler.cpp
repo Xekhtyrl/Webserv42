@@ -16,7 +16,7 @@ char **setEnvCGI(HTTPRequest& request) {
 		size = 4;
 	env = new char*[size];
 	env[size - 1] = 0;
-	env[0] = (char *)tmp.append("METHOD: " + request.getMethod()).c_str();
+	env[0] = strdup(tmp.append("METHOD=" + request.getMethod()).c_str());
 	if (request.getMethod() != "GET") {
 		tmp = "CONTENT-TYPE=" + request.getHeader()["Content-Type"];
 		env[1] = strdup(tmp.c_str());
@@ -42,7 +42,7 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 	std::cout<<request.getContent().c_str()<<std::endl;
 	if (!access(request.getContent().c_str(), X_OK))
 		throw std::runtime_error(/*ERROR ACCESS DENIED*/"ERROR ACCESS DENIED");
-	env = setEnvCGI(request); //needed to send the data to create the response body int the .py file... still don't know if necessary
+	env = setEnvCGI(request); //needed to send the data to create the response body int the request.getCGIExt() file... still don't know if necessary
 	if (fork() == 0){
 		dup2(fd[1], STDOUT_FILENO); //get the ouput
 		close(fd[1]);
@@ -51,11 +51,12 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 		close(input[1]);
 		close(input[0]);
 		std::string content = request.getContent();
-		char *tab[3] = {(char*)"python3", (char*)content.c_str(), 0};
-		for (int i = 0; env[i]; i++)
-			std::cout<<env[i]<<std::endl;
-		execve("/usr/bin/python3", tab, env);
+		std::string path = request.getCGIPath();
+		char *tab[3] = {(char *)path.c_str(), (char*)content.c_str(), 0};
+		execve(path.c_str(), tab, env);
 	}
+	for (int i = 0; env[i]; i++)
+		std::cout<<env[i]<<std::endl;
 	close(fd[1]);
 	if (request.getMethod() == "POST"){ //send the input
 		close(input[0]);
@@ -74,12 +75,12 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 	//see RFC CGI
 	//execve with cmd to execute extension, the name of the file to execute, env?
 	//send the body to the program and then get the result at the end and send it as a response
-	//file has to exist to be excuted, so need to implement a program (.py) for it to be testable and prooved 
+	//file has to exist to be excuted, so need to implement a program (request.getCGIExt()) for it to be testable and prooved 
 }
 
 void	executeRequest(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf){
 	std::cout<<"inExec"<<std::endl;
-	if (request.getMethod() != "DELETE" && request.getContent().find(EXTENSION_CGI) < request.getContent().size())
+	if (request.getMethod() != "DELETE" && request.getContent().find(request.getCGIExt()) < request.getContent().size())
 		executeCGI(request, response, conf);
 	else if (request.getMethod() == "GET")
 		executeGET(request, response, conf);
