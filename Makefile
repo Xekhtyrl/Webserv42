@@ -10,7 +10,7 @@ DIR_TEST	=	clientTest/
 DIR_CONF	=	Configuration/
 
 CONFIG		=	Config.cpp	RouteConfig.cpp	ServerConfig.cpp
-NETWORK		=	ASocket.cpp BindSocket.cpp ConnectSocket.cpp ListenSocket.cpp Server.cpp Client.cpp Operation.cpp Manager.cpp 
+NETWORK		=	ASocket.cpp BindSocket.cpp ConnectSocket.cpp ListenSocket.cpp Server.cpp Client.cpp Manager.cpp 
 UTILS		=	utils.cpp FileToVar.cpp VarToFile.cpp
 METHOD		=	DELETE.cpp GET.cpp POST.cpp
 PROTOCOL	=	HTTPReponse.cpp HTTPRequest.cpp HTTPRequestHandler.cpp
@@ -58,8 +58,6 @@ clean:
 
 fclean: clean
 	@rm -rf $(NAME)
-	bash ~/Cleaner_42.sh
-	@echo "$(C_RED)Update: Herobrine has been removed.$(C_END)"
 
 re: fclean all
 
