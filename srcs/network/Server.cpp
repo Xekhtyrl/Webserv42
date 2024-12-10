@@ -36,7 +36,7 @@ Client* Server::listenNewConnections(void) {
 		return NULL;
 	}
 	else {
-		Client* newClient = new Client(newClientSocket);
+		Client* newClient = new Client(newClientSocket, this);
 		_activeConnections.push_back(newClientSocket);
 		std::cout << "New socket on fd: " << newClientSocket << std::endl;
 		return newClient;
@@ -44,24 +44,13 @@ Client* Server::listenNewConnections(void) {
 }
 
 void Server::writeSocket(Client *client) {
-	// std::cout << "Trying to write:" << std::endl << vecToStr(client->getWriteBufferVect()) << std::endl;
 	int written = write(client->getSock(), vecToStr(client->getWriteBufferVect()).c_str(), client->getWriteBufferSize());
-	// std::cout << "Number of written characters: " << written << std::endl;
 	if (written < 0) {
 		closeConnection(client);
 		return ;
 	}
-	client->updateLastActiveTime();
 	client->clearWriteBuffer(written);
 }
-
-// void Server::checkIdleClient(Client &client) {
-// 	time_t now = std::time(NULL);
-// 	if (it.getLastActiveTime() + IDLE_TIMEOUT < now) {
-// 		closeConnection(Client);
-// 		--it;
-// 	}
-// }
 
 void Server::readSocket(Client *client) {
 	int sock = client->getSock();
@@ -71,15 +60,12 @@ void Server::readSocket(Client *client) {
 	_buffer[received] = 0;
 	std::cout << _buffer << std::endl;
 	if (received <= 0) {
-		// std::cout << "failed to read on socket: "<<client->getSock() << std::endl;
 		closeConnection(client);
 		return;
 	}
 	else {
-	// std::cout << "managed to read on socket: "<<client->getSock() << std::endl;
-	// std::cout << _buffer << std::endl;
+
 	}
-	client->updateLastActiveTime();
 	client->appendReadBuffer(&_buffer, received);
 	std::cout<<vecToStr((std::vector<unsigned char>)client->getReadBuffer())<<std::endl;
 	requestToResponseProcess(client, _config); //Leo's part

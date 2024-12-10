@@ -1,7 +1,6 @@
 #include "Client.hpp"
 
-Client::Client(int sock): _sock(sock) {
-	updateLastActiveTime();
+Client::Client(int sock, Server* server): _sock(sock), _server(server) {
 	_isAlive = true;
 	_delete = false;
 }
@@ -10,16 +9,13 @@ Client& Client::operator=(const Client &c) {
 	_sock = c.getSock();
 	_readBuffer = c.getReadBuffer();
 	_writeBuffer = c.getWriteBufferVect();
-	_lastActiveTime = c.getLastActiveTime();
 	_isAlive = c.getIsAlive();
+	_server = c.getServer();
 	return *this;
 }
 
 int Client::getSock(void) const {
 	return _sock;
-}
-time_t Client::getLastActiveTime(void) const {
-	return _lastActiveTime;
 }
 std::vector<unsigned char> Client::getReadBuffer(void) const {
 	return _readBuffer;
@@ -36,10 +32,10 @@ int Client::getWriteBufferSize(void) const {
 bool Client::getIsAlive(void) const {
 	return _isAlive;
 }
-
-void Client::updateLastActiveTime(void) {
-	_lastActiveTime = std::time(NULL);
+Server* Client::getServer(void) const {
+	return _server;
 }
+
 void Client::kill(void) {
 	_isAlive = false;
 }
