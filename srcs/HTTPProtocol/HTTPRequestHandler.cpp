@@ -64,14 +64,15 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 		close(input[1]);
 	}
 	int r;
-	char tmp[1024];
-	while ((r = read(fd[0], tmp, 1023)) > 0){ //get the ouput
-		tmp[r] = 0;
-		retVal += tmp;
+	char tmp[1];
+	response.clear();
+	while ((r = read(fd[0], tmp, 1)) > 0){ //get the ouput
+		// tmp[r] = 0;
+		response.push_back(tmp[0]);
 	}
 	close(fd[0]);
 	wait(0);
-	appendToVector(response, retVal); //return the response to be send
+	// appendToVector(response, retVal); //return the response to be send
 	//see RFC CGI
 	//execve with cmd to execute extension, the name of the file to execute, env?
 	//send the body to the program and then get the result at the end and send it as a response

@@ -223,7 +223,7 @@ bool	isBinaryFile(std::string filename, std::string& type) {
 		return true;
 	}}
 	if (filename.find(".html") < filename.size())
-		type = "text/html";
+		type = "text/html; charset=UTF-8";
 	else
 		type = "text/plain";
 	return false;

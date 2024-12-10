@@ -23,7 +23,7 @@ class HTTPReponse {
   void updateHTML(std::vector<unsigned char> body, std::string errorMsg);
 
  private:
-  void	formResponse(int CGI);
+  void	formResponse();
   std::string headerLineFormat(std::string val, std::string content);
 
   std::string					_statusLine;

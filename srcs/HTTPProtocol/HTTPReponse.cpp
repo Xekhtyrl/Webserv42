@@ -15,7 +15,7 @@ HTTPReponse::HTTPReponse(std::string errorMsg, ServerConfig& conf) {
 	else{
 		appendToVector(_body, fileToStr("./error/404.html"));}
 	_header += headerLineFormat("Content-Length", ftToString(_body.size()));
-	formResponse(0);
+	formResponse();
 	std::cout<<vecToStr(_final)<<std::endl;
 
 	if (errorMsg.find(':') < errorMsg.size()){
@@ -29,17 +29,18 @@ HTTPReponse::HTTPReponse(std::vector<unsigned char> body, HTTPRequest& request) 
 	
 	std::cout<<request.getStatus()<<std::endl;
 	if (request.getStatus() == "200"){
-		statusStr = "OK";
-		_header =	headerLineFormat("Date", getTimeStamp()) + \
-				headerLineFormat("Cache-Control", "no-cache")\
-				+headerLineFormat("Connection", "close");
+		statusStr = " OK\r\n";
+		_header =	headerLineFormat("Date", getTimeStamp()) \
+				+headerLineFormat("Cache-Control", "no-cache");
 		_body = body;
 	}
 	else if (request.getStatus() == "302"){
-		statusStr = "Found";
+		statusStr = " Found\r\n";
 		_header += headerLineFormat("Location", request.getHeader()["Location"]);
+		_header += headerLineFormat("Content-Length", "0");
+		_header += headerLineFormat("Connection", "close");
 	}
-	_statusLine = "HTTP/1.1 " + request.getStatus() + " OK\r\n";
+	_statusLine = "HTTP/1.1 " + request.getStatus() + statusStr;
 	
 	if (!body.empty() && request.getContent().find(request.getCGIExt()) > request.getContent().size()) { //check for body or if CGI request.getCGIExt()
 		isBinaryFile(request.getContent(), tmp);
@@ -52,7 +53,7 @@ HTTPReponse::HTTPReponse(std::vector<unsigned char> body, HTTPRequest& request) 
 		// _header += headerLineFormat("Content-Security-Policy", "font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;");
 	}
 
-	formResponse(request.getContent().find(request.getCGIExt()) < request.getContent().size());
+	formResponse();
 	std::cout<<vecToStr(_final)<<std::endl;
 }
 // Copy constructor
@@ -73,14 +74,12 @@ HTTPReponse::~HTTPReponse() { return; }
 std::vector<unsigned char> const	HTTPReponse::getFinal() const {
 	return _final;
 }
-void	HTTPReponse::formResponse(int CGI) {
+void	HTTPReponse::formResponse() {
 	appendToVector(_final, _statusLine);
 	appendToVector(_final, _header);
-	if (!CGI)
-		appendToVector(_final, "\r\n");
-	if (!_body.empty())
-		appendToVector(_final,_body);
-	appendToVector(_final, "\0");
+	appendToVector(_final, "\r\n");
+	if (!_body.empty()){std::cout<<"NOOOOOOOOOOOOOOOOOOOOO"<<std::endl;
+		appendToVector(_final,_body);}
 }
 
 std::string HTTPReponse::headerLineFormat(std::string val, std::string content){

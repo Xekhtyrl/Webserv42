@@ -114,7 +114,7 @@ std::map<std::string, std::string> HTTPRequest::splitHeader(std::string request)
 bool	HTTPRequest::checkMethod(std::string method, ServerConfig& conf) {
 	std::string	route;
 
-	if (_content == "/")
+	if (_content == "/" && !(conf["/"][REDIRECT] || conf["/"][ROOT]))
 		route = "/";
 	else if (_content.find_first_of("/", 1) < _content.size())
 			route = _content.substr(1, _content.find_first_of("/", 1) - 1);

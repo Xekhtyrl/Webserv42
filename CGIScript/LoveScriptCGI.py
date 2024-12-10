@@ -1,4 +1,5 @@
 from urllib.parse import parse_qs
+from html import escape
 import os
 
 def compareNames(name1, name2):
@@ -64,7 +65,9 @@ def createHTMLformat(name1, name2, value):
 <head>\r\n\
     <meta charset=\"UTF-8\">\r\n\
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n\
-    <title>Send Love to 118 218</title>\r\n\
+    <title>Send Love to 118 712</title>\r\n\
+\r\n\
+<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css?family=Lemon\" type=\"text/css\">\r\n\
 \r\n\
     <style>\r\n\
         body {\r\n\
@@ -114,7 +117,7 @@ def createHTMLformat(name1, name2, value):
 <body>\r\n\
     <div class=\"background\">\r\n\
         <div class=\"text-container\">\r\n\
-            <p>" + name1 + "'s Love for "+ name2 +"</p>\r\n\
+            <p>" + escape(name1) + "'s Love for "+ escape(name2) +"</p>\r\n\
 			<p>.</p>\r\n\
 			<p>.</p>\r\n\
 			<p>.</p>\r\n\
@@ -123,7 +126,8 @@ def createHTMLformat(name1, name2, value):
         </div>\r\n\
     </div>\r\n\
 </body>\r\n\
-</html>\r\n"
+</html>"
+	body.encode('utf-8')
 	return body
 
 def main():
