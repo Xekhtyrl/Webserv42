@@ -31,45 +31,94 @@ std::string	getTimeStamp() {
 	return strTrim(timeStr, "\n");
 }
 
-std::string getRedirPath(ServerConfig& conf, std::string method, std::string url, std::string content) {
-	//check for autoindex also?
+// std::string getRedirPath(ServerConfig& conf, std::string method, std::string url, std::string content) {
+// 	//check for autoindex also?
+// 	std::string final;
+// 	if (method == "GET" && conf[url][AUTOINDEX] && content.empty())
+// 			final = url + "/autoindex"; 
+// 	if (method == "GET" && conf[url][REDIRECT]){
+// 		final = conf[url].getRedirect();
+// 		if (!content.size() && !access(final.substr(1).c_str(), F_OK))
+// 			return final.substr(1);
+// 	}
+// 	if (method == "GET" && conf[url][ROOT]){
+// 		if (!access(("." + conf[url].getRoot() + content).c_str(), F_OK))
+// 			final = conf[url].getRoot();
+// 	}
+// 	if (method == "GET" && conf[url][INDEX])
+// 		if (!access(("." + conf[url].getIndex() + content).c_str(), F_OK))
+// 			final = conf[url].getIndex();
+// 	if (method == "GET" && conf[url][UPLOAD])
+// 		if (!access(("." + conf[url].getUpload() + content).c_str(), F_OK))
+// 			final = conf[url].getUpload();
+// 	if ((method == "POST" || method == "DELETE") && conf[url][UPLOAD])
+// 		final = conf[url].getUpload();
+// 	if ((!access(("." + url).c_str(), F_OK) && url != "/") || url.find("http") < url.size()){
+// 		final = url;}
+// 	if (!final.size() && url != "/")
+// 	{
+// 		final = getRedirPath(conf, method, "/", url);
+// 		final += url;
+// 		url = "/";
+// 	}
+// 	if (final.size() && final[0] == '/')
+// 		final = final.substr(1);
+// 	return final;
+// }
+#include <sys/stat.h>
+std::string getRedirPath(ServerConfig& conf, std::string method, std::string& url, std::string& content){
+	struct stat isDir;
 	std::string final;
-	if (method == "GET" && conf[url][AUTOINDEX] && content.empty())
-			final = url + "/autoindex"; 
-	if (method == "GET" && conf[url][REDIRECT]){
-		final = conf[url].getRedirect();
-		if (!content.size() && !access(final.substr(1).c_str(), F_OK))
-			return final.substr(1);
+
+	std::cout<<"url =="<<url<<std::endl;
+	std::cout<<"content =="<<content<<std::endl;
+	while (1){
+		stat((url + content).c_str(), &isDir);
+		if (url.find("http") < url.size())
+			return url;
+		if (S_ISDIR(isDir.st_mode) && url != "/"){
+			if (conf[url][INDEX] && content.empty())
+				return conf[url].getIndex().substr(1); //may need to pass by another var to be sent
+			if (conf[url][AUTOINDEX] && method == "GET" && content.empty())
+				return url + "/autoindex";
+			else
+				final = url + content;
+		}
+		else {
+			if (conf[url][UPLOAD] && method == "GET")
+				final = conf[url].getUpload();
+			else if (conf[url][UPLOAD] && method != "GET")
+				return conf[url].getUpload();
+			if (conf[url][REDIRECT] && method == "GET"){
+				final = conf[url].getRedirect();
+				std::cout<<"OOOOOK"<<final<<std::endl;
+				if (content.empty() && !access(final.substr(1).c_str(), F_OK))
+					return final.substr(1);
+			}
+			if (conf[url][ROOT] && method == "GET")
+				final = conf[url].getRoot();
+			if (final.empty())
+				final = url;
+		}
+		final = final.substr((final[0] == '/' && final.size()));
+		std::cout<<"1f + content =="<<final + content<<std::endl;
+		if (!access((final + content).c_str(), F_OK) || final.find("http") <=final.size())
+			return final;
+		else {
+			std::cout<<final<<std::endl;
+			std::cout<<"2f + content =="<<final + content<<std::endl;
+			if (url == "/")
+				break;
+			content = url.substr(url.find_last_of("/"));
+			url = url.substr(0, url.find_last_of("/"));
+			if (url.empty())
+				url = "/";
+		}
+		std::cout<<"3f + content =="<<final + content<<std::endl;
 	}
-	if (method == "GET" && conf[url][ROOT]){
-		if (!access(("." + conf[url].getRoot() + content).c_str(), F_OK))
-			final = conf[url].getRoot();
-		std::cout<<"OOOOOOKKKKKK "<<(conf[url].getRoot() + content).c_str()<<std::endl;
-	}
-	if (method == "GET" && conf[url][INDEX])
-		if (!access(("." + conf[url].getIndex() + content).c_str(), F_OK))
-			final = conf[url].getIndex();
-	if (method == "GET" && conf[url][UPLOAD])
-		if (!access(("." + conf[url].getUpload() + content).c_str(), F_OK))
-			final = conf[url].getUpload();
-	if ((method == "POST" || method == "DELETE") && conf[url][UPLOAD])
-		final = conf[url].getUpload();
-	std::cout<<"final? = "<<final<<conf[url][ROOT]<<std::endl;
-	if ((!access(("." + url).c_str(), F_OK) && url != "/") || url.find("http") < url.size()){std::cout<<url<<"NOOOOOOOOO"<<std::endl;
-		final = url;}
-	if (!final.size() && url != "/")
-	{
-		std::cout<<"url =="<<url<<std::endl;
-		final = getRedirPath(conf, method, "/", url);
-		std::cout<<"final? = "<<final<<conf[url][ROOT]<<std::endl;
-		final += url;
-		std::cout<<"final? = "<<final<<conf[url][ROOT]<<std::endl;
-		url = "/";
-	}
-	if (final.size() && final[0] == '/')
-		final = final.substr(1);
-	return final;
+	return "";
 }
+
 
 bool	isBinaryFile(std::string filename, std::string& type) {
 	std::string image[] = {".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tiff", ".ico", ".svg", ""};

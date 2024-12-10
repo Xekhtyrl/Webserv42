@@ -110,5 +110,6 @@ void	requestToResponseProcess(Client *client, ServerConfig& conf) {
 		client->appendWriteBuffer((std::vector<unsigned char>)error.getFinal());
 	}
 	client->appendWriteBuffer(final);
+	std::cout<<vecToStr(client->getWriteBufferVect())<<std::endl;
 	client->clearReadBuffer();
 }

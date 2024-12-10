@@ -15,34 +15,31 @@ HTTPRequest::HTTPRequest(Client *client, ServerConfig& conf) {
 		throw std::runtime_error(E405);
 
 	divideUrlQuery(tmp);
-	std::cout<<"test = "<<_content<<std::endl;
+
 	try {
 		checkLink(conf);}
 	catch (std::exception& e){
 		std::cerr<<"error === "<<e.what()<<std::endl;
 		throw std::runtime_error(e.what());
 	}
-	std::cout<<"coucou"<<std::endl;
+
 	_protocolHTTP = tmp.substr(tmp.find_last_of(' ') + 1, tmp.length() - tmp.find_last_of(' ')); // needed to check?
 	if (_protocolHTTP.find("HTTP/1.1") > _protocolHTTP.size())
 		throw std::runtime_error(E505);
 
-	std::cout<<"coucou"<<std::endl;
 	_header = splitHeader(request);
 	if (incompleteBody(client->getReadBuffer()))
 		throw std::runtime_error("incomplete");
-	std::cout<<"coucou"<<std::endl;
 	if (_header["Content-Length"].empty() == 0)
 		setBody(client->getReadBuffer());
 	else
 		_body.push_back('\0');
-	std::cout<<"coucou"<<std::endl;
 
 	_status = "200";
+	_route = "";
 	_CGIPath = "/usr/bin/python3";
 	_CGIExt = ".py";
 	checkHeaders(conf);
-	std::cout<<"coucou"<<std::endl;
 	return;
 }
 
@@ -81,6 +78,9 @@ std::string	HTTPRequest::getCGIPath() const {
 }
 std::string	HTTPRequest::getCGIExt() const {
 	return _CGIExt;
+}
+std::string	HTTPRequest::getRoute() const {
+	return _route;
 }
 std::string	HTTPRequest::getProtocolHTTP() const {
 	return _protocolHTTP;
@@ -130,7 +130,6 @@ void	HTTPRequest::checkLink(ServerConfig& conf) {
 
 	changePathURL(conf);
 	path = _content;
-	std::cout<<path<<std::endl;
 	if (path.find("..") < path.size())
 		throw std::runtime_error("403 Forbidden: Unauthorized Path");
 	if (!access(path.c_str(), F_OK) || path.find("http") < path.size())
@@ -139,26 +138,26 @@ void	HTTPRequest::checkLink(ServerConfig& conf) {
 }
 
 void	HTTPRequest::changePathURL(ServerConfig& conf) {
-	std::string urlBeg;
+	std::string urlBeg = _content;
 	std::string urlEnd = "";
 	
-	if (_content.find("/", 1) <= _content.size())
-		urlBeg = _content.substr(0, _content.find("/", 1));
-	else
-		urlBeg = _content;
-	std::cout<<urlBeg<<std::endl;
-	if (_content.find(conf.getRoute()[urlBeg].getExt())){
-		_CGIExt = conf.getRoute()[urlBeg].getExt();
-		_CGIPath = conf.getRoute()[urlBeg].getPath();
-	}
-	if (_content.find("/", 1) <= _content.size())
-		urlEnd = _content.substr(_content.find("/", 1));
-	std::cout<<urlBeg<<urlEnd<<std::endl;
+	// if (_content.find("/", 1) <= _content.size())
+	// 	urlBeg = _content.substr(0, _content.find("/", 1));
+	// else
+	// 	urlBeg = _content;
+	// if (_content.find("/", 1) <= _content.size())
+	// 	urlEnd = _content.substr(_content.find("/", 1));
 	urlBeg = getRedirPath(conf, _method, urlBeg, urlEnd);
 	if (!urlBeg.size())
 		return;
-	std::cout<<urlBeg<<urlEnd<<std::endl;
+	_route = urlBeg;
+	if (_content.find(conf.getRoute()[_route].getExt())){
+		_CGIExt = conf.getRoute()[urlBeg].getExt();
+		_CGIPath = conf.getRoute()[urlBeg].getPath();
+	}
+	std::cout<<_content<<std::endl;
 	_content = urlBeg + urlEnd;
+	std::cout<<_content<<std::endl;
 }
 
 void	HTTPRequest::checkHeaders(ServerConfig& conf) {

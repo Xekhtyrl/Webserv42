@@ -54,7 +54,7 @@ void						executeDELETE(HTTPRequest& request, std::vector<unsigned char>& respon
 void						executeGET(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf);
 void						StrToBinaryFile(std::string filename, std::string& body, std::string boundary);
 void						StrToTextFile(std::string filename, std::stringstream& s, std::string boundary);
-std::string					getRedirPath(ServerConfig& conf, std::string method, std::string url, std::string content);
+std::string					getRedirPath(ServerConfig& conf, std::string method, std::string& url, std::string& content);
 void						appendToVector(std::vector<unsigned char>& vec, std::vector<unsigned char> container);
 
 void						appendToVector(std::vector<unsigned char>& vec, std::string container);

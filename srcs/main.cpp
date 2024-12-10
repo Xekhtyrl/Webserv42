@@ -25,7 +25,6 @@ int main(int argc, char **argv) {
 	std::vector<ServerConfig> configs;
 	std::set<int> ports = config.getPorts();
 	for (std::set<int>::iterator it = ports.begin(); it != ports.end(); it++) {
-		std::cout<<(int)*it<<std::endl;
 		configs.push_back(config.getServers()[*it]);
 		std::map<std::string, RouteConfig> configf = config.getServers()[*it].getRoute();
 		for (std::map<std::string, RouteConfig>::iterator it = configf.begin(); it != configf.end(); it++)

@@ -57,7 +57,7 @@ void Server::readSocket(Client *client) {
 	int received = BUFFER_SIZE;
 	memset(_buffer, 0, BUFFER_SIZE + 1);
 	received = read(sock, _buffer, BUFFER_SIZE);
-	_buffer[received] = 0;
+	// _buffer[received] = 0;
 	std::cout << _buffer << std::endl;
 	if (received <= 0) {
 		closeConnection(client);
@@ -67,7 +67,6 @@ void Server::readSocket(Client *client) {
 
 	}
 	client->appendReadBuffer(&_buffer, received);
-	std::cout<<vecToStr((std::vector<unsigned char>)client->getReadBuffer())<<std::endl;
 	requestToResponseProcess(client, _config); //Leo's part
 }
 

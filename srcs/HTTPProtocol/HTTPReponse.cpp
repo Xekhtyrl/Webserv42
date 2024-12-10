@@ -16,7 +16,6 @@ HTTPReponse::HTTPReponse(std::string errorMsg, ServerConfig& conf) {
 		appendToVector(_body, fileToStr("./error/404.html"));}
 	_header += headerLineFormat("Content-Length", ftToString(_body.size()));
 	formResponse();
-	std::cout<<vecToStr(_final)<<std::endl;
 
 	if (errorMsg.find(':') < errorMsg.size()){
 		std::string message = errorMsg.substr(errorMsg.find(':')); // check if size tot needed;
@@ -27,7 +26,6 @@ HTTPReponse::HTTPReponse(std::vector<unsigned char> body, HTTPRequest& request) 
 	std::string tmp;
 	std::string statusStr;
 	
-	std::cout<<request.getStatus()<<std::endl;
 	if (request.getStatus() == "200"){
 		statusStr = " OK\r\n";
 		_header =	headerLineFormat("Date", getTimeStamp()) \
@@ -54,7 +52,6 @@ HTTPReponse::HTTPReponse(std::vector<unsigned char> body, HTTPRequest& request) 
 	}
 
 	formResponse();
-	std::cout<<vecToStr(_final)<<std::endl;
 }
 // Copy constructor
 HTTPReponse::HTTPReponse(const HTTPReponse &other) {
@@ -78,7 +75,7 @@ void	HTTPReponse::formResponse() {
 	appendToVector(_final, _statusLine);
 	appendToVector(_final, _header);
 	appendToVector(_final, "\r\n");
-	if (!_body.empty()){std::cout<<"NOOOOOOOOOOOOOOOOOOOOO"<<std::endl;
+	if (!_body.empty()){
 		appendToVector(_final,_body);}
 }
 

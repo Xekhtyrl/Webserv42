@@ -28,6 +28,7 @@ class HTTPRequest {
   std::string					getProtocolHTTP() const;
   std::string					getCGIPath() const;
   std::string					getCGIExt() const;
+  std::string					getRoute() const;
   std::vector<unsigned char>&	getBody();
   std::map<std::string, std::string>	getHeader() const;
 
@@ -57,6 +58,7 @@ class HTTPRequest {
   std::map<std::string, std::string>	_header;
   std::string							_CGIPath;
   std::string							_CGIExt;
+  std::string							_route;
 };
 
 #endif // HTTPREQUEST_HPP_
