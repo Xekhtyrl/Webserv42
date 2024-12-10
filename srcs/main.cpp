@@ -5,7 +5,6 @@
 # include "network/ConnectSocket.hpp"
 # include "network/ListenSocket.hpp"
 # include "network/Server.hpp"
-# include "network/Operation.hpp"
 # include "network/Manager.hpp"
 # include "network/Client.hpp"
 # include "../includes/webserv.hpp"
@@ -36,7 +35,7 @@ int main(int argc, char **argv) {
 	
 	
 	//initialize the servers vector, containing our running servers.
-	std::vector<Server*> servers;
+	std::deque<Server*> servers;
 	for (std::vector<ServerConfig>::iterator it = configs.begin(); it < configs.end(); ++it) {
 		servers.push_back(new Server(*it));
 	}
@@ -47,7 +46,7 @@ int main(int argc, char **argv) {
 	//run it all
 	serverManager.loop();
 
-	for (std::vector<Server*>::iterator it = servers.begin(); it < servers.end(); ++it) {
+	for (std::deque<Server*>::iterator it = servers.begin(); it < servers.end(); ++it) {
 		delete *it;
 	}
 }

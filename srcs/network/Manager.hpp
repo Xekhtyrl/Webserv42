@@ -2,29 +2,24 @@
 
 //# include "../network.hpp"
 #include "Server.hpp"
-#include "Operation.hpp"
-#include <vector>
-#include <queue>
+#include <deque>
 
 class Server;
-class Operation;
 
 class Manager {
 	public:
-		Manager(std::vector<Server *> servers);
+		Manager(std::deque<Server *> servers);
 		~Manager(void);
 		void loop(void);
 
 	private:
-		void checkSockets(void);
-		void processHeadOperation(void);
-		void handleNewConnection(Operation op);
-		void handleRead(Operation op);
-		void handleWrite(Operation op);
+		void	checkSockets(void);
+		int		processClientQueue(void);
+		void	processServerQueue(void);
+		void	handleNewConnection(Server *server);
 
-		std::queue<Operation>	_queue;
-		std::vector<Server *>	_servers;
-		std::vector<int>		_activeConnections;
+		std::deque<Client *>	_clientQueue;
+		std::deque<Server *>	_serverQueue;
 		fd_set					_readFds;
 		fd_set					_writeFds;
 		struct timeval			_selectTimeout;
