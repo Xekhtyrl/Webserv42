@@ -70,8 +70,6 @@ std::string getRedirPath(ServerConfig& conf, std::string method, std::string& ur
 	struct stat isDir;
 	std::string final;
 
-	std::cout<<"url =="<<url<<std::endl;
-	std::cout<<"content =="<<content<<std::endl;
 	while (1){
 		stat((url + content).c_str(), &isDir);
 		if (url.find("http") < url.size())
@@ -91,22 +89,18 @@ std::string getRedirPath(ServerConfig& conf, std::string method, std::string& ur
 				return conf[url].getUpload();
 			if (conf[url][REDIRECT] && method == "GET"){
 				final = conf[url].getRedirect();
-				std::cout<<"OOOOOK"<<final<<std::endl;
 				if (content.empty() && !access(final.substr(1).c_str(), F_OK))
 					return final.substr(1);
 			}
-			if (conf[url][ROOT] && method == "GET")
+			if (conf[url][ROOT] && method != "DELETE")
 				final = conf[url].getRoot();
 			if (final.empty())
 				final = url;
 		}
 		final = final.substr((final[0] == '/' && final.size()));
-		std::cout<<"1f + content =="<<final + content<<std::endl;
 		if (!access((final + content).c_str(), F_OK) || final.find("http") <=final.size())
 			return final;
 		else {
-			std::cout<<final<<std::endl;
-			std::cout<<"2f + content =="<<final + content<<std::endl;
 			if (url == "/")
 				break;
 			content = url.substr(url.find_last_of("/"));
@@ -114,7 +108,6 @@ std::string getRedirPath(ServerConfig& conf, std::string method, std::string& ur
 			if (url.empty())
 				url = "/";
 		}
-		std::cout<<"3f + content =="<<final + content<<std::endl;
 	}
 	return "";
 }

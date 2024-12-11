@@ -36,10 +36,8 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 	int input[2];
 	(void)conf;
 
-	std::cout<<"inCGI"<<std::endl;
 	if (pipe(fd) || pipe(input)) //the fd pipe is for retrieving the content of the executed file, the input pipe is for sending the body to the CGI file
 		throw std::runtime_error("serveur error: pipe"); // don't know how to process this kind of error
-	std::cout<<request.getContent().c_str()<<std::endl;
 	if (!access(request.getContent().c_str(), X_OK))
 		throw std::runtime_error(/*ERROR ACCESS DENIED*/"ERROR ACCESS DENIED");
 	env = setEnvCGI(request); //needed to send the data to create the response body int the request.getCGIExt() file... still don't know if necessary
@@ -55,8 +53,6 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 		char *tab[3] = {(char *)path.c_str(), (char*)content.c_str(), 0};
 		execve(path.c_str(), tab, env);
 	}
-	for (int i = 0; env[i]; i++)
-		std::cout<<env[i]<<std::endl;
 	close(fd[1]);
 	if (request.getMethod() == "POST"){ //send the input
 		close(input[0]);
@@ -80,7 +76,6 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 }
 
 void	executeRequest(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf){
-	std::cout<<"inExec"<<std::endl;
 	if (request.getMethod() != "DELETE" && request.getContent().find(request.getCGIExt()) < request.getContent().size())
 		executeCGI(request, response, conf);
 	else if (request.getMethod() == "GET")
@@ -98,18 +93,15 @@ void	requestToResponseProcess(Client *client, ServerConfig& conf) {
 	try {
 		HTTPRequest request(client, conf);
 		executeRequest(request, repBody, conf); //CGI???
-		std::cout<<"after exec"<<std::endl;
 		HTTPReponse response(repBody, request);
 		final = response.getFinal();
 	}
 	catch (std::exception& e) {
 		if (e.what() == (std::string)"incomplete")
 			return;
-		std::cout<<e.what()<<std::endl;
 		HTTPReponse error((std::string)e.what(), conf);
 		client->appendWriteBuffer((std::vector<unsigned char>)error.getFinal());
 	}
 	client->appendWriteBuffer(final);
-	std::cout<<vecToStr(client->getWriteBufferVect())<<std::endl;
 	client->clearReadBuffer();
 }

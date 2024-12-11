@@ -11,17 +11,17 @@ HTTPRequest::HTTPRequest(Client *client, ServerConfig& conf) {
 	std::string tmp = request.substr(0, request.find_first_of('\r'));
 
 	_method = tmp.substr(0, tmp.find_first_of(32));
-	if (!checkMethod(_method, conf))
-		throw std::runtime_error(E405);
 
 	divideUrlQuery(tmp);
 
 	try {
 		checkLink(conf);}
 	catch (std::exception& e){
-		std::cerr<<"error === "<<e.what()<<std::endl;
 		throw std::runtime_error(e.what());
 	}
+
+	if (!checkMethod(_method, conf))
+		throw std::runtime_error(E405);
 
 	_protocolHTTP = tmp.substr(tmp.find_last_of(' ') + 1, tmp.length() - tmp.find_last_of(' ')); // needed to check?
 	if (_protocolHTTP.find("HTTP/1.1") > _protocolHTTP.size())
@@ -40,6 +40,7 @@ HTTPRequest::HTTPRequest(Client *client, ServerConfig& conf) {
 	_CGIPath = "/usr/bin/python3";
 	_CGIExt = ".py";
 	checkHeaders(conf);
+	
 	return;
 }
 
@@ -114,14 +115,11 @@ std::map<std::string, std::string> HTTPRequest::splitHeader(std::string request)
 bool	HTTPRequest::checkMethod(std::string method, ServerConfig& conf) {
 	std::string	route;
 
-	if (_content == "/" && !(conf["/"][REDIRECT] || conf["/"][ROOT]))
-		route = "/";
-	else if (_content.find_first_of("/", 1) < _content.size())
-			route = _content.substr(1, _content.find_first_of("/", 1) - 1);
-	else
-		route = _content;
-	if ((method == "GET" && conf[route][GET]) || (method == "DELETE" && conf[route][DELETE])
-		|| (method == "POST" && conf[route][POST]))
+	if (method == "GET" && conf[_route][GET])
+		return true;
+	if (method == "POST" && conf[_route][POST])
+		return true;
+	if (method == "DELETE" && conf[_route][DELETE])
 		return true;
 	return false;
 }
@@ -134,30 +132,29 @@ void	HTTPRequest::checkLink(ServerConfig& conf) {
 		throw std::runtime_error("403 Forbidden: Unauthorized Path");
 	if (!access(path.c_str(), F_OK) || path.find("http") < path.size())
 		return;
+	path = _content; 
 	throw std::runtime_error(E404 ": Ressource Not found");
 }
 
 void	HTTPRequest::changePathURL(ServerConfig& conf) {
 	std::string urlBeg = _content;
+	std::string final;
 	std::string urlEnd = "";
-	
-	// if (_content.find("/", 1) <= _content.size())
-	// 	urlBeg = _content.substr(0, _content.find("/", 1));
-	// else
-	// 	urlBeg = _content;
-	// if (_content.find("/", 1) <= _content.size())
-	// 	urlEnd = _content.substr(_content.find("/", 1));
-	urlBeg = getRedirPath(conf, _method, urlBeg, urlEnd);
+
+	final = getRedirPath(conf, _method, urlBeg, urlEnd);
 	if (!urlBeg.size())
 		return;
-	_route = urlBeg;
+	if (urlBeg[0] == '/')
+		_route = urlBeg;
+	else
+		_route = "/" + urlBeg;
 	if (_content.find(conf.getRoute()[_route].getExt())){
 		_CGIExt = conf.getRoute()[urlBeg].getExt();
 		_CGIPath = conf.getRoute()[urlBeg].getPath();
 	}
-	std::cout<<_content<<std::endl;
-	_content = urlBeg + urlEnd;
-	std::cout<<_content<<std::endl;
+	_content = final + urlEnd;
+	if (_content[0] == '/')
+		_content = "." + _content;
 }
 
 void	HTTPRequest::checkHeaders(ServerConfig& conf) {

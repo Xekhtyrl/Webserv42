@@ -10,7 +10,7 @@ void	uploadFile(std::string boundary, HTTPRequest& request, std::vector<unsigned
 	if (!boundary.empty() && tmp.find(boundary) < tmp.size()){
 		getline(s, tmp, '\n');
 		if (tmp.find("filename=") < tmp.size())
-			filename = strTrim(tmp.substr(tmp.find("filename=") + 9), "\r\n\" ");
+			filename = "/" + strTrim(tmp.substr(tmp.find("filename=") + 9), "\r\n\" ");
 		for (int i = 0; i < 2; i++)
 			getline(s, tmp, '\n');
 	}
