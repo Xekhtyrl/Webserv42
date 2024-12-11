@@ -40,7 +40,6 @@ HTTPRequest::HTTPRequest(Client *client, ServerConfig& conf) {
 	_CGIPath = "/usr/bin/python3";
 	_CGIExt = ".py";
 	checkHeaders(conf);
-	
 	return;
 }
 
@@ -130,7 +129,7 @@ void	HTTPRequest::checkLink(ServerConfig& conf) {
 	path = _content;
 	if (path.find("..") < path.size())
 		throw std::runtime_error("403 Forbidden: Unauthorized Path");
-	if (!access(path.c_str(), F_OK) || path.find("http") < path.size())
+	if (!access(path.c_str(), F_OK) || path.find("http") < path.size() || path.find("autoindex") < path.size())
 		return;
 	path = _content; 
 	throw std::runtime_error(E404 ": Ressource Not found");

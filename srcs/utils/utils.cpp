@@ -70,15 +70,15 @@ std::string getRedirPath(ServerConfig& conf, std::string method, std::string& ur
 	struct stat isDir;
 	std::string final;
 
+	stat((url + content).c_str(), &isDir);
 	while (1){
-		stat((url + content).c_str(), &isDir);
 		if (url.find("http") < url.size())
 			return url;
 		if (S_ISDIR(isDir.st_mode) && url != "/"){
 			if (conf[url][INDEX] && content.empty())
 				return conf[url].getIndex().substr(1); //may need to pass by another var to be sent
 			if (conf[url][AUTOINDEX] && method == "GET" && content.empty())
-				return url + "/autoindex";
+				return final + "/autoindex";
 			else
 				final = url + content;
 		}
@@ -98,7 +98,10 @@ std::string getRedirPath(ServerConfig& conf, std::string method, std::string& ur
 				final = url;
 		}
 		final = final.substr((final[0] == '/' && final.size()));
-		if (!access((final + content).c_str(), F_OK) || final.find("http") <=final.size())
+		stat((final + content).c_str(), &isDir);
+		if (S_ISDIR(isDir.st_mode) && url != "/")
+			continue;
+		else if (!access((final + content).c_str(), F_OK) || final.find("http") <=final.size())
 			return final;
 		else {
 			if (url == "/")
@@ -264,7 +267,7 @@ bool	isBinaryFile(std::string filename, std::string& type) {
 			}
 		return true;
 	}}
-	if (filename.find(".html") < filename.size())
+	if (filename.find("html") < filename.size())
 		type = "text/html; charset=UTF-8";
 	else
 		type = "text/plain";

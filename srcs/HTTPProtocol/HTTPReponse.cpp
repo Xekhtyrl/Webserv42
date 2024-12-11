@@ -42,13 +42,14 @@ HTTPReponse::HTTPReponse(std::vector<unsigned char> body, HTTPRequest& request) 
 	
 	if (!body.empty() && request.getContent().find(request.getCGIExt()) > request.getContent().size()) { //check for body or if CGI request.getCGIExt()
 		isBinaryFile(request.getContent(), tmp);
+		if (vecToStr(body).find("<!DOCTYPE html>") < request.getBody().size())
+			tmp = "text/html; charset=UTF-8";
 		_header += headerLineFormat("Content-Type", tmp);
 		_header += headerLineFormat("Content-Length", ftToString(_body.size()));
 	}
 	else if (request.getContent().find(request.getCGIExt()) <= request.getContent().size()) {
 		_header += headerLineFormat("Content-Type", "text/html; charset=UTF-8");
 		_header += headerLineFormat("Content-Length", ftToString(_body.size()));
-		// _header += headerLineFormat("Content-Security-Policy", "font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;");
 	}
 
 	formResponse();

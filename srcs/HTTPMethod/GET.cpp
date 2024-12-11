@@ -56,6 +56,9 @@ void makeAutoindex(std::string local, std::vector<unsigned char>& body) {
 }
 
 void	executeGET(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf) {
+	if (request.getContent().find("autoindex") <= request.getContent().size()){
+		std::string local = request.getContent().substr(0, request.getContent().find("autoindex"));
+		return makeAutoindex(local, response);}
 	if (isBinaryFile(request.getContent(), request.getHeader()["Content-Type"])){
 		std::vector<unsigned char> vec = binaryFileToVector(request.getContent());
 		response = vec;
