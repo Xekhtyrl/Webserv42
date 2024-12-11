@@ -5,6 +5,7 @@
 #include "../../includes/webserv.hpp"
 #include "../Configuration/ServerConfig.hpp"
 // # include "SERVERCONFIG_PATH" //
+#define VERBOSE true
 
 class Client;
 class ServerConfig;
@@ -25,6 +26,7 @@ class Server {
 		Client* listenNewConnections(void) ;
 		void readSocket(Client *client);
 		void writeSocket(Client *client);
+		void printHeader(std::vector<unsigned char> buffer, int max) const;
 
 	private:
 		void closeConnection(Client *client);
