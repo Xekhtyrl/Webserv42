@@ -197,13 +197,18 @@ bool	HTTPRequest::incompleteBody(std::vector<unsigned char> buffer){
 	std::vector<unsigned char>::iterator it = buffer.begin();
 	int l = 0;
 
-	while (!findWithIter(it, buffer.end(), 4, "\r\n\r\n"))
+	while (!findWithIter(it, buffer.end(), 4, "\r\n\r\n")){
 		it++;
-	for (int i = 0; i < 4; i++)
+		l++;
+	}
+	for (int i = 0; i < 4; i++){
 		it++;
-	for (l = 0; l < atoi(getHeader()["Content-Length"].c_str()) && it != buffer.end(); l++)
-		it++;
-	if (it == buffer.end() && l < atoi(getHeader()["Content-Length"].c_str()))
+		l++;
+	}
+	// for (l = 0; l < atoi(getHeader()["Content-Length"].c_str()) && it != buffer.end(); l++)
+	// 	it++;
+	std::cout<<"received == "<<buffer.size()<<"; total == "<<(size_t)atoll(getHeader()["Content-Length"].c_str()) + l<<"/"<<getHeader()["Content-Length"]<<std::endl;
+	if (buffer.size() <(size_t)atoll(getHeader()["Content-Length"].c_str()) + l)
 		return true;
 	return false;
 }

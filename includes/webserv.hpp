@@ -1,6 +1,6 @@
 #pragma once
 
-# define BUFFER_SIZE 1024
+# define BUFFER_SIZE 1000000
 # define E400 "400 Bad Request"
 # define E404 "404 Not Found"
 # define E405 "405 Method Not Allowed"
@@ -53,7 +53,7 @@ void						executePOST(HTTPRequest& request, std::vector<unsigned char>& response
 void						executeDELETE(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf);
 void						executeGET(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf);
 void						StrToBinaryFile(std::string filename, std::string& body, std::string boundary);
-void						StrToTextFile(std::string filename, std::stringstream& s, std::string boundary);
+void						StrToTextFile(std::string filename, std::stringstream& s, std::string boundary, HTTPRequest& request);
 std::string					getRedirPath(ServerConfig& conf, std::string method, std::string& url, std::string& content);
 void						appendToVector(std::vector<unsigned char>& vec, std::vector<unsigned char> container);
 
@@ -63,4 +63,4 @@ void						appendToVector(std::vector<unsigned char>& vec, std::string container)
 #define EXTENSION_CGI ".py"
 // #define GET_LOCATION "./webdata/"
 // #define POST_LOCATION "./webdata/"
-// #define MAX_CLIENT_SIZE 100000
+// #define MAX_CLIENT_SIZE 10000000

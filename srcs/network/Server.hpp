@@ -5,7 +5,7 @@
 #include "../../includes/webserv.hpp"
 #include "../Configuration/ServerConfig.hpp"
 // # include "SERVERCONFIG_PATH" //
-#define VERBOSE true
+#define VERBOSE false
 
 class Client;
 class ServerConfig;

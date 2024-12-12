@@ -21,17 +21,21 @@ void	StrToBinaryFile(std::string filename, std::string& body, std::string bounda
 	file.close();
 }
 
-void	StrToTextFile(std::string filename, std::stringstream& s, std::string boundary) {
+void	StrToTextFile(std::string filename, std::stringstream& s, std::string boundary, HTTPRequest& request) {
 	std::string tmp;
-
 	std::ofstream file(filename.c_str(), std::ios::out);
-
+	bool firstline = true;
+	(void)request;
+	
 	if (!file.is_open())
 		throw std::runtime_error(E400);
-	while(getline(s, tmp, '\n')){
+	while(getline(s, tmp)){
 		if (!boundary.empty() && tmp.find(boundary) < tmp.size())
 			break;
-		file<<strTrim(tmp, "\r\n")<<std::endl;
+		if (!firstline)
+			file<<std::endl;
+		file<<strTrim(tmp, "\r\n");
+		firstline = false;
 	}
 	file.close();
 }

@@ -2,7 +2,7 @@
 
 # include "../../includes/webserv.hpp"
 //#include "../network.hpp"
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 1000000
 #include <ctime>
 #include <vector>
 #include <string>

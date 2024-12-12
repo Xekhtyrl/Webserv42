@@ -22,7 +22,7 @@ void	uploadFile(std::string boundary, HTTPRequest& request, std::vector<unsigned
 	if (isBinaryFile(request.getContent(), tmp))
 		StrToBinaryFile(filename, bodyStr, boundary);
 	else
-		StrToTextFile(filename, s, boundary);
+		StrToTextFile(filename, s, boundary, request);
 	appendToVector(response, "File uploaded successfully.\r\n");
 }
 
