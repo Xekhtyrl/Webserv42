@@ -21,6 +21,7 @@ class Client {
 		std::vector<unsigned char> getReadBuffer(void) const;
 		bool getIsAlive(void) const;
 		Server* getServer(void) const ;
+		int	getBodySize(void) const ;
 
 		void kill(void);
 		void appendReadBuffer(char *readBuffer[BUFFER_SIZE], int received);
@@ -39,4 +40,5 @@ class Client {
 		std::vector<unsigned char> _writeBuffer;
 		Server*	_server;
 		bool	_isAlive;
+		int	_bodySize;
 };

@@ -3,6 +3,7 @@
 Client::Client(int sock, Server* server): _sock(sock), _server(server) {
 	_isAlive = true;
 	_delete = false;
+	_bodySize = 0;
 }
 
 Client& Client::operator=(const Client &c) {
@@ -11,6 +12,7 @@ Client& Client::operator=(const Client &c) {
 	_writeBuffer = c.getWriteBufferVect();
 	_isAlive = c.getIsAlive();
 	_server = c.getServer();
+	_bodySize = c.getBodySize();
 	return *this;
 }
 
@@ -34,6 +36,9 @@ bool Client::getIsAlive(void) const {
 }
 Server* Client::getServer(void) const {
 	return _server;
+}
+int	Client::getBodySize(void) const {
+	return _bodySize;
 }
 
 void Client::kill(void) {

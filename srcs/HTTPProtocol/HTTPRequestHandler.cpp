@@ -18,9 +18,9 @@ char **setEnvCGI(HTTPRequest& request) {
 	env[size - 1] = 0;
 	env[0] = strdup(tmp.append("METHOD=" + request.getMethod()).c_str());
 	if (request.getMethod() != "GET") {
-		tmp = "CONTENT-TYPE=" + request.getHeader()["Content-Type"];
+		tmp = "CONTENT-TYPE=" + request.getHeader()["Content-Type"]; 
 		env[1] = strdup(tmp.c_str());
-		tmp = "CONTENT-LENGTH=" + request.getHeader()["Content-Type"];
+		tmp = "CONTENT-LENGTH=" + request.getHeader()["Content-Type"]; //???????????????????
 		env[2] = strdup(tmp.c_str());
 	}
 	else{

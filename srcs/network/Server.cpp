@@ -2,13 +2,13 @@
 
 // Server::Server(ServerConfig config, int domain, int service, int protocol, u_long interface, int backlog) {
 // 	_listenSocket = new ListenSocket(domain, service, protocol, config.getPort(), interface, backlog);
-// 	_buffer = (char*)calloc(BUFFER_SIZE + 1, 1);
+// 	_buffer = new char[BUFFER_SIZE + 1];
 // 	_config = config;
 // 	std::cout << config.getPort()<< " listening to new connections on port " << ntohs(_listenSocket->getAddress().sin_port) << std::endl;
 // }
 Server::Server(ServerConfig config) {
 	_listenSocket = new ListenSocket(AF_INET, SOCK_STREAM, 0, config.getPort(), INADDR_ANY, 20);
-	_buffer = (char*)calloc(BUFFER_SIZE + 1, 1);
+	_buffer = new char[BUFFER_SIZE + 1];
 	_config = config;
 	std::cout << "Host:" << config.getHost()<< " listening to new connections on Port:" << ntohs(_listenSocket->getAddress().sin_port) << std::endl;
 }
@@ -56,19 +56,28 @@ void Server::writeSocket(Client *client) {
 
 void Server::readSocket(Client *client) {
 	int sock = client->getSock();
-	int received = BUFFER_SIZE;
-	memset(_buffer, 0, BUFFER_SIZE + 1);
-	received = read(sock, _buffer, BUFFER_SIZE);
+	int received = 0;
+	char *readBuffer = _buffer;
+	int	bufferSize = BUFFER_SIZE;
+
+	if (client->getbodySize()) {
+		bufferSize += client->getBodySize();
+		readBuffer = new char[bufferSize];
+	}
+	received = read(sock, readBuffer, bufferSize);
 	if (received <= 0) {
 		if (received < 0)
 			std::cout << "read() error" << std::endl;
+		if (client->getBodySize())
+			delete readBuffer;
 		closeConnection(client);
 		return;
 	}
-	else {
-
-	}
-	client->appendReadBuffer(&_buffer, received);
+	else
+		readBuffer[received] = '\0';
+	client->appendReadBuffer(&readBuffer, received);
+	if (client->getBodySize())
+			delete readBuffer;
 	if (VERBOSE)
 		printHeader(client->getReadBuffer(), received);
 	requestToResponseProcess(client, _config); //Leo's part
