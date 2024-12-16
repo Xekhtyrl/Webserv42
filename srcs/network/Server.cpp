@@ -60,10 +60,10 @@ void Server::readSocket(Client *client) {
 	char *readBuffer = _buffer;
 	int	bufferSize = BUFFER_SIZE;
 
-	if (client->getbodySize()) {
-		bufferSize += client->getBodySize();
-		readBuffer = new char[bufferSize];
-	}
+	// if (client->getbodySize()) {
+	// 	bufferSize += client->getBodySize();
+	// 	readBuffer = new char[bufferSize];
+	// }
 	received = read(sock, readBuffer, bufferSize);
 	if (received <= 0) {
 		if (received < 0)
@@ -76,8 +76,8 @@ void Server::readSocket(Client *client) {
 	else
 		readBuffer[received] = '\0';
 	client->appendReadBuffer(&readBuffer, received);
-	if (client->getBodySize())
-			delete readBuffer;
+	// if (client->getBodySize())
+	// 		delete readBuffer;
 	if (VERBOSE)
 		printHeader(client->getReadBuffer(), received);
 	requestToResponseProcess(client, _config); //Leo's part
