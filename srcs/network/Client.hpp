@@ -1,8 +1,6 @@
 #pragma once
 
 # include "../../includes/webserv.hpp"
-//#include "../network.hpp"
-#define BUFFER_SIZE 10000
 #include <ctime>
 #include <vector>
 #include <string>

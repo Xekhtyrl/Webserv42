@@ -60,7 +60,7 @@ void Server::readSocket(Client *client) {
 	char *readBuffer = _buffer;
 	int	bufferSize = BUFFER_SIZE;
 
-	if (client->getBodySize()) {
+	if (client->getBodySize()) { //if incomplete request on first read() but we know the body size
 		bufferSize += client->getBodySize() - client->getReadBuffer().size();
 		readBuffer = new char[bufferSize];
 	}

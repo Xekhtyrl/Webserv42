@@ -8,13 +8,14 @@ Manager::~Manager(void) {}
 
 void Manager::loop(void) {
 	while (true) {
-		checkSockets();
-		if (processClientQueue() == 0)
-			processServerQueue();
+		if (checkSockets() == 0) {
+			if (processClientQueue() != 0)
+				processServerQueue();
+		};
 	}
 }
 
-void Manager::checkSockets(void) { 
+int Manager::checkSockets(void) { 
 	int sock;
 	int maxFd = 0;
 
@@ -40,8 +41,11 @@ void Manager::checkSockets(void) {
 				maxFd = sock;
 		}
 	}
-	if (select(maxFd + 1, &_readFds, &_writeFds, NULL, &_selectTimeout) < 0 && errno != EINTR) //EINTR = caught signal
+	if (select(maxFd + 1, &_readFds, &_writeFds, NULL, &_selectTimeout) < 0) {
 		perror("error: select(): ");
+		return 1;
+	}
+	return 0;
 }
 
 int Manager::processClientQueue(void) {
@@ -56,17 +60,17 @@ int Manager::processClientQueue(void) {
 			_clientQueue.push_back(client);
 			if (FD_ISSET(client->getSock(), &_readFds)) {
 				client->getServer()->readSocket(client);	//read operation execution
-				return 1;
+				return 0;
 			}
 			else if (FD_ISSET(client->getSock(), &_writeFds)) {
 				client->getServer()->writeSocket(client);	//write operation execution
-				return 1;
+				return 0;
 			}
 		}
 		else
 			delete client;
 	}
-	return 0;
+	return 1;
 }
 
 void Manager::processServerQueue(void) {

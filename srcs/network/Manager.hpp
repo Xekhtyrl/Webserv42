@@ -13,7 +13,7 @@ class Manager {
 		void loop(void);
 
 	private:
-		void	checkSockets(void);
+		int		checkSockets(void);
 		int		processClientQueue(void);
 		void	processServerQueue(void);
 		void	handleNewConnection(Server *server);

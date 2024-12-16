@@ -55,17 +55,19 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 		std::string path = request.getCGIPath();
 		char *tab[3] = {(char *)path.c_str(), (char*)content.c_str(), 0};
 		execve(path.c_str(), tab, env);
+		perror("error: execve(): ");
+		exit(1);
 	}
 	close(fd[1]);
 	if (request.getMethod() == "POST"){ //send the input
 		close(input[0]);
-		write(input[1], vecToStr(request.getBody()).c_str(), request.getBody().size()); //ERR?
+		write(input[1], vecToStr(request.getBody()).c_str(), request.getBody().size()); //ERR? //OFSTREAM?
 		close(input[1]);
 	}
 	int r;
 	char tmp[1];
 	response.clear();
-	while ((r = read(fd[0], tmp, 1)) > 0){ //get the ouput	//ERR?
+	while ((r = read(fd[0], tmp, 1)) > 0){ //get the ouput	//ERR? //OFSTREAM?
 		// tmp[r] = 0;
 		response.push_back(tmp[0]);
 	}
