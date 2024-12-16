@@ -2,6 +2,7 @@
 # include <netinet/in.h>
 # include <unistd.h>
 # include <iostream>
+# include <csignal>
 # include "network/ConnectSocket.hpp"
 # include "network/ListenSocket.hpp"
 # include "network/Server.hpp"
@@ -9,9 +10,28 @@
 # include "network/Client.hpp"
 # include "../includes/webserv.hpp"
 
-int main(int argc, char **argv) {
-	//get the configs from the conf file
 
+
+//initialize the servers vector, containing our running servers. Globally so that we can exit them gracefully with signal handling
+std::deque<Server*> servers;
+
+void serverClear(int signum) {
+	(void)signum;
+	for (std::deque<Server*>::iterator it = servers.begin(); it < servers.end(); ++it) {
+		delete *it;
+	}
+	servers.clear();
+	exit(1);
+}
+
+
+int main(int argc, char **argv) {
+
+	// Register signal handler for SIGINT
+    std::signal(SIGINT, serverClear);
+
+
+	//get the configs from the conf file
 	Config config;
 
 	try {
@@ -29,10 +49,14 @@ int main(int argc, char **argv) {
 	}
 	
 	
-	//initialize the servers vector, containing our running servers.
-	std::deque<Server*> servers;
+	
 	for (std::vector<ServerConfig>::iterator it = configs.begin(); it < configs.end(); ++it) {
-		servers.push_back(new Server(*it));
+		try {
+			servers.push_back(new Server(*it));
+		}
+		catch (const std::invalid_argument& e) {
+			serverClear(0);
+		}
 	}
 
 	//initialize the server operations manager from the servers vector
@@ -44,4 +68,5 @@ int main(int argc, char **argv) {
 	for (std::deque<Server*>::iterator it = servers.begin(); it < servers.end(); ++it) {
 		delete *it;
 	}
+	return (0);
 }

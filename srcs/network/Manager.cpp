@@ -1,6 +1,6 @@
 #include "Manager.hpp"
 
-Manager::Manager(std::deque<Server *> servers): _serverQueue(servers) {
+Manager::Manager(std::deque<Server *> &servers): _serverQueue(servers) {
 	_selectTimeout.tv_sec = 0; _selectTimeout.tv_usec = 50000;
 }
 

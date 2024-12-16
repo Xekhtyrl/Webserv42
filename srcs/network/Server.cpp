@@ -14,6 +14,7 @@ Server::Server(ServerConfig config) {
 }
 
 Server::~Server(void) {
+	std::cout << "Shutting down server Host:" << _config.getHost()<< " Port:" << ntohs(_listenSocket->getAddress().sin_port) << std::endl;
 	close(_listenSocket->getSocket());
 	delete _listenSocket;
 	delete _buffer;

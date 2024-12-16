@@ -11,7 +11,8 @@ ASocket::ASocket(int domain, int service, int protocol, int port, u_long interfa
 void ASocket::testConnection(int item) const {
 	if (item < 0) {
 		perror("Failed to connect: ");
-		exit(1);
+		throw std::invalid_argument("Port or socket already in use");
+		// exit(1);
 	}
 }
 

@@ -8,7 +8,7 @@ class Server;
 
 class Manager {
 	public:
-		Manager(std::deque<Server *> servers);
+		Manager(std::deque<Server *> &servers);
 		~Manager(void);
 		void loop(void);
 
