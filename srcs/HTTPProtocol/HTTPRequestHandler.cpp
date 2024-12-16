@@ -19,13 +19,16 @@ char **setEnvCGI(HTTPRequest& request) {
 	env[0] = strdup(tmp.append("METHOD=" + request.getMethod()).c_str());
 	if (request.getMethod() != "GET") {
 		tmp = "CONTENT-TYPE=" + request.getHeader()["Content-Type"]; 
-		env[1] = strdup(tmp.c_str());
+		env[1] = new char[tmp.size()];
+		env[1] = strcpy(env[1], tmp.c_str());
 		tmp = "CONTENT-LENGTH=" + request.getHeader()["Content-Type"]; //???????????????????
-		env[2] = strdup(tmp.c_str());
+		env[2] = new char[tmp.size()];
+		env[2] = strcpy(env[2], tmp.c_str());
 	}
 	else{
 		tmp = "QUERY_STRING=" + request.getQuery();
-		env[1] = strdup(tmp.c_str());
+		env[1] = new char[tmp.size()];
+		env[1] = strcpy(env[1], tmp.c_str());
 	}
 	return env;
 }
@@ -68,6 +71,9 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 	}
 	close(fd[0]);
 	wait(0);
+	for (int i = 0; env[i]; i++)
+		delete[] env[i];
+	delete[] env;
 	// appendToVector(response, retVal); //return the response to be send
 	//see RFC CGI
 	//execve with cmd to execute extension, the name of the file to execute, env?

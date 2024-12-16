@@ -209,9 +209,7 @@ bool	HTTPRequest::incompleteBody(std::vector<unsigned char> buffer){
 		it++;
 		l++;
 	}
-	// for (l = 0; l < atoi(getHeader()["Content-Length"].c_str()) && it != buffer.end(); l++)
-	// 	it++;
-	std::cout<<"received == "<<buffer.size()<<"; total == "<<(size_t)atoll(getHeader()["Content-Length"].c_str()) + l<<"/"<<getHeader()["Content-Length"]<<std::endl;
+	std::cout<<"received == "<<buffer.size()<<"; total == "<<(size_t)atoll(getHeader()["Content-Length"].c_str()) + l<<std::endl;
 	if (buffer.size() <(size_t)atoll(getHeader()["Content-Length"].c_str()) + l)
 		return true;
 	return false;
