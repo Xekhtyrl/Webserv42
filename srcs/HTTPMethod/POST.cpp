@@ -49,6 +49,7 @@ void	executePOST(HTTPRequest& request, std::vector<unsigned char>& response, Ser
 		throw std::runtime_error(E501 ": This POST option is not implemented");
 	else if (Content.find("text/plain") < Content.size())
 		POSTsimpleContent(response, body);
-	else
-		throw std::runtime_error(E400);
+	else{
+		std::cout<<"here"<<std::endl;
+		throw std::runtime_error(E400);}
 }
