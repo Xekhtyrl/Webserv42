@@ -28,12 +28,16 @@ HTTPRequest::HTTPRequest(Client *client, ServerConfig& conf) {
 		throw std::runtime_error(E505);
 
 	_header = splitHeader(request);
-	if (incompleteBody(client->getReadBuffer()))
+	if (incompleteBody(client->getReadBuffer())) {
+		if (!_header["Content-Length"].empty())
+			client->setBodySize(atoll(_header["Content-Length"].c_str()));
 		throw std::runtime_error("incomplete");
+	}
+	client->setBodySize(-1);
 	if (_header["Content-Length"].empty() == 0)
 		setBody(client->getReadBuffer());
-	else
-		_body.push_back('\0');
+	else{
+		_body.push_back('\0');}
 
 	_status = "200";
 	_route = "";

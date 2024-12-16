@@ -2,7 +2,7 @@
 
 # include "../../includes/webserv.hpp"
 //#include "../network.hpp"
-#define BUFFER_SIZE 1000000
+#define BUFFER_SIZE 10000
 #include <ctime>
 #include <vector>
 #include <string>
@@ -22,6 +22,7 @@ class Client {
 		bool getIsAlive(void) const;
 		Server* getServer(void) const ;
 		int	getBodySize(void) const ;
+		void setBodySize(int size) ;
 
 		void kill(void);
 		void appendReadBuffer(char *readBuffer[BUFFER_SIZE], int received);

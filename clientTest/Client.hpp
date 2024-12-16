@@ -1,7 +1,7 @@
 #pragma once
 
 #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 1000000
+# define BUFFER_SIZE 10000
 #endif
 
 #include "../srcs/network/ConnectSocket.hpp"

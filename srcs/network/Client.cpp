@@ -40,6 +40,9 @@ Server* Client::getServer(void) const {
 int	Client::getBodySize(void) const {
 	return _bodySize;
 }
+void Client::setBodySize(int size) {
+	_bodySize = size;
+}
 
 void Client::kill(void) {
 	_isAlive = false;

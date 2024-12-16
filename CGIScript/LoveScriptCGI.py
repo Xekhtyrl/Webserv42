@@ -138,7 +138,7 @@ def main():
 		value = "miiiiiiiiille"
 	# print(tab["name1"][0], "loves", tab["name2"][0], "=", value, "%")
 	with open("test.html", 'w') as file:
-		file.write(createHTMLformat(tab["name1"][0], tab["name2"][0], value))
+		file.write(createHTMLformat(tab["name1"][0], tab["name2"][0], value)) #ERR?
 	print(createHTMLformat(tab["name1"][0], tab["name2"][0], value))
 
 

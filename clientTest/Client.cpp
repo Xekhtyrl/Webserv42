@@ -66,7 +66,8 @@ void Client::talk(int n_xchange) {
 
 void Client::sendMsg(std::string msg) {
     if (write(_socket->getSocket(), msg.c_str(), msg.size()) < 0) {
-        perror("Client write() error:");
+        std::cerr << "Write() error" << std::endl;
+        // perror("Client write() error:");
     };
 }
 
@@ -74,7 +75,8 @@ std::string Client::receiveMsg(void) {
     memset(_buffer, 0, BUFFER_SIZE);
     int bytes_received = read(_socket->getSocket(), _buffer, BUFFER_SIZE);
     if (bytes_received < 0) {
-        perror("Client read() error:");
+        std::cerr << "Read() error" << std::endl;
+        // perror("Client read() error:");
     }
     return std::string(_buffer, bytes_received);
 }

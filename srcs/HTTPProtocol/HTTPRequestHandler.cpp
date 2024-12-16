@@ -56,13 +56,13 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 	close(fd[1]);
 	if (request.getMethod() == "POST"){ //send the input
 		close(input[0]);
-		write(input[1], vecToStr(request.getBody()).c_str(), request.getBody().size());
+		write(input[1], vecToStr(request.getBody()).c_str(), request.getBody().size()); //ERR?
 		close(input[1]);
 	}
 	int r;
 	char tmp[1];
 	response.clear();
-	while ((r = read(fd[0], tmp, 1)) > 0){ //get the ouput
+	while ((r = read(fd[0], tmp, 1)) > 0){ //get the ouput	//ERR?
 		// tmp[r] = 0;
 		response.push_back(tmp[0]);
 	}

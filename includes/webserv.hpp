@@ -1,6 +1,6 @@
 #pragma once
 
-# define BUFFER_SIZE 1000000
+# define BUFFER_SIZE 10000
 # define E400 "400 Bad Request"
 # define E404 "404 Not Found"
 # define E405 "405 Method Not Allowed"

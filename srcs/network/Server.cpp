@@ -60,8 +60,8 @@ void Server::readSocket(Client *client) {
 	char *readBuffer = _buffer;
 	int	bufferSize = BUFFER_SIZE;
 
-	if (client->getbodySize()) {
-		bufferSize += client->getBodySize();
+	if (client->getBodySize()) {
+		bufferSize += client->getBodySize() - client->getReadBuffer().size();
 		readBuffer = new char[bufferSize];
 	}
 	received = read(sock, readBuffer, bufferSize);
@@ -69,7 +69,7 @@ void Server::readSocket(Client *client) {
 		if (received < 0)
 			std::cout << "read() error" << std::endl;
 		if (client->getBodySize())
-			delete readBuffer;
+			delete[] readBuffer;
 		closeConnection(client);
 		return;
 	}
@@ -77,7 +77,7 @@ void Server::readSocket(Client *client) {
 		readBuffer[received] = '\0';
 	client->appendReadBuffer(&readBuffer, received);
 	if (client->getBodySize())
-			delete readBuffer;
+		delete[] readBuffer;
 	if (VERBOSE)
 		printHeader(client->getReadBuffer(), received);
 	requestToResponseProcess(client, _config); //Leo's part
@@ -100,6 +100,7 @@ void Server::printHeader(std::vector<unsigned char> buffer, int max) const {
 		if (buffer[i] == '\n' && i + 1 < max && buffer[i + 1] == '\r')
 			max = i;
 	}
-	std::cout.write(reinterpret_cast<const char*>(&buffer[0]), max);
+	if (std::cout.write(reinterpret_cast<const char*>(&buffer[0]), max).fail())
+		std::cerr << "Failed to write ostream";
 	std::cout << std::endl;
 }

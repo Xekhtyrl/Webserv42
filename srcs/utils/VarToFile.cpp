@@ -17,7 +17,7 @@ void	StrToBinaryFile(std::string filename, std::string& body, std::string bounda
 	std::ofstream file(filename.c_str(), std::ios::out); // POST LOCATION MACRO REMOVED
 	if (!file.is_open())
 		throw std::runtime_error(E400);
-	file.write(str.data(), str.size());
+	file.write(str.data(), str.size()); //ERR?
 	file.close();
 }
 
