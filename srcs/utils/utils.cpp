@@ -1,5 +1,6 @@
 #include "../../includes/webserv.hpp"
 #include <ctime>
+#include <sys/stat.h>
 
 std::string strTrim(std::string str, std::string set) {
 	int	n;
@@ -31,41 +32,6 @@ std::string	getTimeStamp() {
 	return strTrim(timeStr, "\n");
 }
 
-// std::string getRedirPath(ServerConfig& conf, std::string method, std::string url, std::string content) {
-// 	//check for autoindex also?
-// 	std::string final;
-// 	if (method == "GET" && conf[url][AUTOINDEX] && content.empty())
-// 			final = url + "/autoindex"; 
-// 	if (method == "GET" && conf[url][REDIRECT]){
-// 		final = conf[url].getRedirect();
-// 		if (!content.size() && !access(final.substr(1).c_str(), F_OK))
-// 			return final.substr(1);
-// 	}
-// 	if (method == "GET" && conf[url][ROOT]){
-// 		if (!access(("." + conf[url].getRoot() + content).c_str(), F_OK))
-// 			final = conf[url].getRoot();
-// 	}
-// 	if (method == "GET" && conf[url][INDEX])
-// 		if (!access(("." + conf[url].getIndex() + content).c_str(), F_OK))
-// 			final = conf[url].getIndex();
-// 	if (method == "GET" && conf[url][UPLOAD])
-// 		if (!access(("." + conf[url].getUpload() + content).c_str(), F_OK))
-// 			final = conf[url].getUpload();
-// 	if ((method == "POST" || method == "DELETE") && conf[url][UPLOAD])
-// 		final = conf[url].getUpload();
-// 	if ((!access(("." + url).c_str(), F_OK) && url != "/") || url.find("http") < url.size()){
-// 		final = url;}
-// 	if (!final.size() && url != "/")
-// 	{
-// 		final = getRedirPath(conf, method, "/", url);
-// 		final += url;
-// 		url = "/";
-// 	}
-// 	if (final.size() && final[0] == '/')
-// 		final = final.substr(1);
-// 	return final;
-// }
-#include <sys/stat.h>
 std::string getRedirPath(ServerConfig& conf, std::string method, std::string& url, std::string& content){
 	struct stat isDir;
 	std::string final;
