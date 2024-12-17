@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 # include <iostream>
+# include <cstring>
 
 # include "Config.hpp"
 # include "ServerConfig.hpp"
@@ -24,13 +25,14 @@ void	Config::checkParameters(int ac, char **av) {
 			configFile.open(av[1]);
 			if (!configFile.is_open())
 				throw std::runtime_error(std::string("Failed to open ") + av[1]);
-		} else
-			throw std::invalid_argument("File must be of *.conf type");
+		}
+		else
+			throw std::invalid_argument("Config file must be of *.conf type");
 	}
 	else {
 		configFile.open("webserv.conf");
 		if (!configFile.is_open())
-				throw std::runtime_error("Failed to open default file");	
+			throw std::runtime_error("Failed to open default file");	
 	}
 }
 
@@ -105,6 +107,8 @@ void	Config::parseConfigFile() {
 		else
 			throw std::invalid_argument(std::string("Syntax error from " + tokens[0]));
 	}
+	if (!inSrv && configFile.peek() == EOF)
+		throw std::runtime_error("No server defined");
 	if (inSrv && !hasPort)
 		throw std::invalid_argument("No port specfied");
 }
@@ -179,6 +183,8 @@ void	Config::processRule(int port, std::string route, std::vector <std::string> 
 bool	Config::hasExtension(std::string filename, std::string extension) {
 	size_t	filenameLength = filename.length();
 	size_t	extensionLength = extension.length();
+	if (filename <= extension)
+		return (false);
 	return (filename.substr(filenameLength - extensionLength) == extension);
 }
 
