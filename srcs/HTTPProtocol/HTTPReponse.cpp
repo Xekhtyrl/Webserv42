@@ -13,7 +13,7 @@ HTTPReponse::HTTPReponse(std::string errorMsg, ServerConfig& conf) {
 	if (conf[code]){
 		appendToVector(_body, fileToStr(conf.getErrorPage(code)));}
 	else{
-		appendToVector(_body, fileToStr("./error/404.html"));}
+		appendToVector(_body, fileToStr("./error/400.html"));}
 	_header += headerLineFormat("Content-Length", ftToString(_body.size()));
 	formResponse();
 

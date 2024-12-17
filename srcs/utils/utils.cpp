@@ -45,8 +45,8 @@ std::string getRedirPath(ServerConfig& conf, std::string method, std::string& ur
 				return conf[url].getIndex().substr(1); //may need to pass by another var to be sent
 			if (conf[url][AUTOINDEX] && method == "GET" && content.empty())
 				return final + "/autoindex";
-			else
-				final = url + content;
+			else 
+				break;
 		}
 		else {
 			if (conf[url][UPLOAD] && method == "GET")
@@ -64,9 +64,12 @@ std::string getRedirPath(ServerConfig& conf, std::string method, std::string& ur
 				final = url;
 		}
 		final = final.substr((final[0] == '/' && final.size()));
-		stat((final + content).c_str(), &isDir);
+		stat(("./" + final + content).c_str(), &isDir);
+
 		if (S_ISDIR(isDir.st_mode) && url != "/")
 			continue;
+		else if  (S_ISDIR(isDir.st_mode))
+			break;
 		else if (!access((final + content).c_str(), F_OK) || final.find("http") <=final.size())
 			return final;
 		else {

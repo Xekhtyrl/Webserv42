@@ -50,6 +50,5 @@ void	executePOST(HTTPRequest& request, std::vector<unsigned char>& response, Ser
 	else if (Content.find("text/plain") < Content.size())
 		POSTsimpleContent(response, body);
 	else{
-		std::cout<<"here"<<std::endl;
 		throw std::runtime_error(E400);}
 }

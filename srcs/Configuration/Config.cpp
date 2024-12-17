@@ -71,6 +71,8 @@ void	Config::parseConfigFile() {
 		if (indentLevel(0) && tokens[0] == "server") {
 			if (tokens.size() != 1)
 				throw std::invalid_argument("Server bloc shouldn't have any argument");
+			if (inSrv && !hasPort)
+				throw std::invalid_argument("No port specfied");
 			inSrv	= true;
 			hasPort = false;
 			inRoute = false;
@@ -78,9 +80,10 @@ void	Config::parseConfigFile() {
 		}
 		else if (indentLevel(1) && inSrv && !inRoute && tokens[0] == "listen" && tokens.size() == 2) {
 			if (hasPort)
-				throw std::invalid_argument("Defining multiple ports for the same server");
+				throw std::invalid_argument("Trying to define multiple ports for the same server");
 			std::istringstream	stream(tokens[1]);
-			stream >> port;
+			if (!(stream >> port) || port < 1024 || port > 65535)
+				throw std::invalid_argument("Port " + tokens[1] + " is outside expected ports range (1024 to 65535)");
 			addPort(port);
 			serverConfigs[port].setPort(port);
 			hasPort = true;
@@ -102,6 +105,8 @@ void	Config::parseConfigFile() {
 		else
 			throw std::invalid_argument(std::string("Syntax error from " + tokens[0]));
 	}
+	if (inSrv && !hasPort)
+		throw std::invalid_argument("No port specfied");
 }
 
 void	Config::processDirective(int port, std::vector <std::string> tokens) {
@@ -118,7 +123,7 @@ void	Config::processDirective(int port, std::vector <std::string> tokens) {
 		serverConfigs[port].setHost(tokens[1]);
 	else if (directive == "error_page") {
 		int	code;
-		if (stream >> code && stream.eof()) // Make isPath and isDir utils methods to check tokens[2] ?
+		if (stream >> code && stream.eof())
 			serverConfigs[port].addErrorPage(code, tokens[2]);
 		else
 			throw std::invalid_argument(std::string("Bad argument used with ") + directive);

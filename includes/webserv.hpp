@@ -6,6 +6,7 @@
 # define E405 "405 Method Not Allowed"
 # define E411 "411 Length Required"
 # define E413 "413 Payload Too Large"
+# define E500 "500 Internal Server Error"
 # define E501 "501 Not Implemented"
 # define E505 "505 HTTP Version Not Supported"
 
