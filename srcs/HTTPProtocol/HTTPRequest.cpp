@@ -145,7 +145,7 @@ void	HTTPRequest::changePathURL(ServerConfig& conf) {
 	std::string urlEnd = "";
 
 	final = getRedirPath(conf, _method, urlBeg, urlEnd);
-	if (!urlBeg.size())
+	if (!urlBeg.size() || final.empty())
 		return;
 	if (urlBeg[0] == '/')
 		_route = urlBeg;
