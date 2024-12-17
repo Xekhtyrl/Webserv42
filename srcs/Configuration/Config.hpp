@@ -47,8 +47,9 @@ class	Config {
 		
 		// Getters
 
-		std::set	<int>					getPorts();
-		std::map 	<int, ServerConfig>		getServers();
+		std::set	<int>					&getPorts();
+		std::map 	<int, ServerConfig>		&getServers();
+		std::vector <ServerConfig>			&getConfigs();
 	
 	private:
 		std::ifstream						configFile;
@@ -59,4 +60,5 @@ class	Config {
 		
 		std::set	<int>					usedPorts;
 		std::map	<int, ServerConfig>		serverConfigs;
+		std::vector	<ServerConfig>			configs;
 };

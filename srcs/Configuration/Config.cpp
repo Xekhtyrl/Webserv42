@@ -107,10 +107,14 @@ void	Config::parseConfigFile() {
 		else
 			throw std::invalid_argument(std::string("Syntax error from " + tokens[0]));
 	}
+	
 	if (!inSrv && configFile.peek() == EOF)
 		throw std::runtime_error("No server defined");
 	if (inSrv && !hasPort)
 		throw std::invalid_argument("No port specfied");
+
+	for (std::set<int>::iterator it = usedPorts.begin(); it != usedPorts.end(); it++)
+		configs.push_back(serverConfigs[*it]);
 }
 
 void	Config::processDirective(int port, std::vector <std::string> tokens) {
@@ -224,7 +228,7 @@ void							Config::addPort(int port) {
 		std::ostringstream oss;
 		oss << "Port " << port << " is already defined for "
 		<< serverConfigs[port].getHost() << ":" << port;
-		throw std::logic_error(oss.str());
+		throw std::invalid_argument(oss.str());
 	}
 	usedPorts.insert(port);
 }
@@ -235,10 +239,14 @@ void							Config::addServer(int port, ServerConfig srv) {
 
 // GETTERS
 
-std::set <int>					Config::getPorts() {
+std::set <int>					&Config::getPorts() {
 	return (usedPorts);
 }
 
-std::map <int, ServerConfig>	Config::getServers() {
+std::map <int, ServerConfig>	&Config::getServers() {
 	return (serverConfigs);
+}
+
+std::vector <ServerConfig>		&Config::getConfigs() {
+	return (configs);
 }
