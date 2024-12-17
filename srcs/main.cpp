@@ -31,25 +31,20 @@ int main(int argc, char **argv) {
     std::signal(SIGINT, serverClear);
 
 
-	//get the configs from the conf file
-	Config config;
+	// Parse the servers from the config file
+	Config 						conf;
+	std::vector <ServerConfig>	configs;
 
 	try {
-		config.checkParameters(argc, argv);
-		config.parseConfigFile();
+		conf.checkParameters(argc, argv);
+		conf.parseConfigFile();
+		configs = conf.getConfigs();
 	} catch (std::exception &e) {
 		std::cerr << "Error: " << e.what() << '\n';
 		exit(1);
 	}
 
-	std::vector<ServerConfig> configs;
-	std::set<int> ports = config.getPorts();
-	for (std::set<int>::iterator it = ports.begin(); it != ports.end(); it++) {
-		configs.push_back(config.getServers()[*it]);
-	}
-	
-	
-	
+	// Create and populate the server objects with their configs
 	for (std::vector<ServerConfig>::iterator it = configs.begin(); it < configs.end(); ++it) {
 		try {
 			servers.push_back(new Server(*it));
@@ -59,10 +54,10 @@ int main(int argc, char **argv) {
 		}
 	}
 
-	//initialize the server operations manager from the servers vector
+	// Initialize the server operations manager from the servers vector
 	Manager serverManager(servers);
 
-	//run it all
+	// Run it all
 	serverManager.loop();
 
 	for (std::deque<Server*>::iterator it = servers.begin(); it < servers.end(); ++it) {
