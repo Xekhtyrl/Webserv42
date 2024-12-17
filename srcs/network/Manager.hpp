@@ -22,5 +22,4 @@ class Manager {
 		std::deque<Server *>	_serverQueue;
 		fd_set					_readFds;
 		fd_set					_writeFds;
-		struct timeval			_selectTimeout;
 };

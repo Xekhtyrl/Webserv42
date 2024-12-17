@@ -61,26 +61,27 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 	close(fd[1]);
 	if (request.getMethod() == "POST"){ //send the input
 		close(input[0]);
-		write(input[1], vecToStr(request.getBody()).c_str(), request.getBody().size()); //ERR? //OFSTREAM?
+		try {
+			safeWrite(input[1], request.getBody(), 5); //ERR? //OFSTREAM?
+		}
+		catch (std::exception &e) {
+			close(input[1]);
+			close(fd[0]);
+		}
 		close(input[1]);
 	}
-	int r;
-	char tmp[1];
 	response.clear();
-	while ((r = read(fd[0], tmp, 1)) > 0){ //get the ouput	//ERR? //OFSTREAM?
-		// tmp[r] = 0;
-		response.push_back(tmp[0]);
+	try {
+		std::vector<unsigned char> readVect = safeRead(fd[0]);
+		response.insert(response.end(), readVect.begin(), readVect.end());			///////POSSIBLE QUE RESPONSE SOIT VIDE EN CAS D'ERREUR
+	}
+	catch (std::exception &e) {
 	}
 	close(fd[0]);
 	wait(0);
 	for (int i = 0; env[i]; i++)
 		delete[] env[i];
 	delete[] env;
-	// appendToVector(response, retVal); //return the response to be send
-	//see RFC CGI
-	//execve with cmd to execute extension, the name of the file to execute, env?
-	//send the body to the program and then get the result at the end and send it as a response
-	//file has to exist to be excuted, so need to implement a program (request.getCGIExt()) for it to be testable and prooved 
 }
 
 void	executeRequest(HTTPRequest& request, std::vector<unsigned char>& response, ServerConfig& conf){
@@ -93,14 +94,14 @@ void	executeRequest(HTTPRequest& request, std::vector<unsigned char>& response, 
 	else if (request.getMethod() == "DELETE")
 		executeDELETE(request, response, conf);
 }
-// PROTECT BODY SIZE LIMIT!!!
+
 void	requestToResponseProcess(Client *client, ServerConfig& conf) {
 	std::vector<unsigned char> final;
 	std::vector<unsigned char> repBody;
 
 	try {
 		HTTPRequest request(client, conf);
-		executeRequest(request, repBody, conf); //CGI???
+		executeRequest(request, repBody, conf);
 		HTTPReponse response(repBody, request);
 		final = response.getFinal();
 	}

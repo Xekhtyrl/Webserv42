@@ -1,8 +1,6 @@
 #include "Manager.hpp"
 
-Manager::Manager(std::deque<Server *> &servers): _serverQueue(servers) {
-	_selectTimeout.tv_sec = 0; _selectTimeout.tv_usec = 50000;
-}
+Manager::Manager(std::deque<Server *> &servers): _serverQueue(servers) {}
 
 Manager::~Manager(void) {}
 
@@ -41,9 +39,12 @@ int Manager::checkSockets(void) {
 				maxFd = sock;
 		}
 	}
-	if (select(maxFd + 1, &_readFds, &_writeFds, NULL, &_selectTimeout) < 0) {
-		perror("error: select(): ");
-		return 1;
+	try {
+		callSelect(maxFd, &_readFds, &_writeFds);
+	}
+	catch (std::exception &e) {
+		std::cerr << "caught an exception 3" << std::endl;
+		return -1;
 	}
 	return 0;
 }

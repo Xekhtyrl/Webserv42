@@ -56,11 +56,7 @@ void						StrToBinaryFile(std::string filename, std::string& body, std::string b
 void						StrToTextFile(std::string filename, std::stringstream& s, std::string boundary, HTTPRequest& request);
 std::string					getRedirPath(ServerConfig& conf, std::string method, std::string& url, std::string& content);
 void						appendToVector(std::vector<unsigned char>& vec, std::vector<unsigned char> container);
-
 void						appendToVector(std::vector<unsigned char>& vec, std::string container);
-
-// ces macro sont defini ici par facilité de code mais seront des valeurs recuperer du conf file
-#define EXTENSION_CGI ".py"
-// #define GET_LOCATION "./webdata/"
-// #define POST_LOCATION "./webdata/"
-// #define MAX_CLIENT_SIZE 10000000
+void                        callSelect(int maxFd, fd_set *readFds, fd_set *writeFds);
+void                        safeWrite(int fd, std::vector<unsigned char> writeVect, int n_tries);
+std::vector<unsigned char>  safeRead(int fd);

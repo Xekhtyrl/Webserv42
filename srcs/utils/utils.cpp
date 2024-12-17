@@ -246,3 +246,52 @@ void	appendToVector(std::vector<unsigned char>& vec, std::vector<unsigned char> 
 void	appendToVector(std::vector<unsigned char>& vec, std::string container){
 	vec.insert(vec.end(), container.begin(), container.end());
 }
+
+void callSelect(int maxFd, fd_set *readFds, fd_set *writeFds) {
+	struct timeval			selectTimeout;
+	selectTimeout.tv_sec = 0; selectTimeout.tv_usec = 50000;
+
+	if (select(maxFd + 1, readFds, writeFds, NULL, &selectTimeout) < 0)
+		throw std::exception();
+}
+
+void safeWrite(int fd, std::vector<unsigned char> writeVect, int n_tries) {
+	if (n_tries == 0)
+		throw std::exception();
+	else if (writeVect.empty())
+		return;
+	fd_set writeFd;
+	const char *writeBuffer = reinterpret_cast<const char *>(vecToStr(writeVect).c_str());
+
+	FD_ZERO(&writeFd);
+	FD_SET(fd, &writeFd);
+	callSelect(fd, NULL, &writeFd);
+	if (!FD_ISSET(fd, &writeFd))
+		throw std::exception();
+	int ret = write(fd, writeBuffer, writeVect.size());
+	if (ret < 0)
+		throw std::exception();
+	writeVect.erase(writeVect.begin(), writeVect.begin() + ret);
+	safeWrite(fd, writeVect, --n_tries);
+}
+
+std::vector<unsigned char> safeRead(int fd) {
+	fd_set readFd;
+	unsigned char buffer[BUFFER_SIZE];
+	
+
+	FD_ZERO(&readFd);
+	FD_SET(fd, &readFd);
+	callSelect(fd, &readFd, NULL);
+	if (!FD_ISSET(fd, &readFd))
+		throw std::exception();
+	int ret = read(fd, buffer, BUFFER_SIZE);
+	if (ret < 0)
+		throw std::exception();
+	std::vector<unsigned char> readVect(buffer, buffer + ret);
+	if (ret == BUFFER_SIZE) {
+		std::vector<unsigned char> readMaterial = safeRead(fd);
+		readVect.insert(readVect.end(), readMaterial.begin(), readMaterial.end());
+	}
+	return readVect;
+}
