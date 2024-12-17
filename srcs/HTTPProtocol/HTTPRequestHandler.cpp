@@ -40,9 +40,9 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 	(void)conf;
 
 	if (pipe(fd) || pipe(input)) //the fd pipe is for retrieving the content of the executed file, the input pipe is for sending the body to the CGI file
-		throw std::runtime_error("serveur error: pipe"); // don't know how to process this kind of error
+		throw std::runtime_error(E500); // don't know how to process this kind of error
 	if (!access(request.getContent().c_str(), X_OK))
-		throw std::runtime_error(/*ERROR ACCESS DENIED*/"ERROR ACCESS DENIED");
+		throw std::runtime_error(E404);
 	env = setEnvCGI(request); //needed to send the data to create the response body int the request.getCGIExt() file... still don't know if necessary
 	if (fork() == 0){
 		dup2(fd[1], STDOUT_FILENO); //get the ouput
@@ -56,6 +56,7 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 		char *tab[3] = {(char *)path.c_str(), (char*)content.c_str(), 0};
 		execve(path.c_str(), tab, env);
 		perror("error: execve(): ");
+		throw std::runtime_error(E500);
 		exit(1);
 	}
 	close(fd[1]);
