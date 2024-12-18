@@ -185,11 +185,9 @@ void	Config::processRule(int port, std::string route, std::vector <std::string> 
 }
 
 bool	Config::hasExtension(std::string filename, std::string extension) {
-	size_t	filenameLength = filename.length();
-	size_t	extensionLength = extension.length();
-	if (filenameLength <= extensionLength)
+	if (filename.length() <= extension.length())
 		return (false);
-	return (filename.substr(filenameLength - extensionLength) == extension);
+	return (filename.substr(filename.length() - extension.length()) == extension);
 }
 
 bool	Config::isDirective(std::string token) {
