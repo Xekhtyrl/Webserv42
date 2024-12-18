@@ -1,7 +1,7 @@
 *.o
-src/*.o
+srcs/*.o
 *.a
 */*.a
 */*/*.a
-minishell
-test2.cpp
+webserv
+TestFile

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 # include <iostream>
+# include <cstring>
 
 # include "Config.hpp"
 # include "ServerConfig.hpp"
@@ -24,13 +25,14 @@ void	Config::checkParameters(int ac, char **av) {
 			configFile.open(av[1]);
 			if (!configFile.is_open())
 				throw std::runtime_error(std::string("Failed to open ") + av[1]);
-		} else
-			throw std::invalid_argument("File must be of *.conf type");
+		}
+		else
+			throw std::invalid_argument("Config file must be of *.conf type");
 	}
 	else {
 		configFile.open("webserv.conf");
 		if (!configFile.is_open())
-				throw std::runtime_error("Failed to open default file");	
+			throw std::runtime_error("Failed to open default file");	
 	}
 }
 
@@ -105,8 +107,14 @@ void	Config::parseConfigFile() {
 		else
 			throw std::invalid_argument(std::string("Syntax error from " + tokens[0]));
 	}
+	
+	if (!inSrv && configFile.peek() == EOF)
+		throw std::runtime_error("No server defined");
 	if (inSrv && !hasPort)
 		throw std::invalid_argument("No port specfied");
+
+	for (std::set<int>::iterator it = usedPorts.begin(); it != usedPorts.end(); it++)
+		configs.push_back(serverConfigs[*it]);
 }
 
 void	Config::processDirective(int port, std::vector <std::string> tokens) {
@@ -177,9 +185,9 @@ void	Config::processRule(int port, std::string route, std::vector <std::string> 
 }
 
 bool	Config::hasExtension(std::string filename, std::string extension) {
-	size_t	filenameLength = filename.length();
-	size_t	extensionLength = extension.length();
-	return (filename.substr(filenameLength - extensionLength) == extension);
+	if (filename.length() <= extension.length())
+		return (false);
+	return (filename.substr(filename.length() - extension.length()) == extension);
 }
 
 bool	Config::isDirective(std::string token) {
@@ -218,7 +226,7 @@ void							Config::addPort(int port) {
 		std::ostringstream oss;
 		oss << "Port " << port << " is already defined for "
 		<< serverConfigs[port].getHost() << ":" << port;
-		throw std::logic_error(oss.str());
+		throw std::invalid_argument(oss.str());
 	}
 	usedPorts.insert(port);
 }
@@ -229,10 +237,14 @@ void							Config::addServer(int port, ServerConfig srv) {
 
 // GETTERS
 
-std::set <int>					Config::getPorts() {
+std::set <int>					&Config::getPorts() {
 	return (usedPorts);
 }
 
-std::map <int, ServerConfig>	Config::getServers() {
+std::map <int, ServerConfig>	&Config::getServers() {
 	return (serverConfigs);
+}
+
+std::vector <ServerConfig>		&Config::getConfigs() {
+	return (configs);
 }

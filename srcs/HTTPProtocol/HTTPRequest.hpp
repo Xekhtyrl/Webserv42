@@ -1,22 +1,18 @@
 #ifndef HTTPREQUEST_HPP_
-#define HTTPREQUEST_HPP_
+# define HTTPREQUEST_HPP_
 
-#include <iostream>
-#include "../../includes/webserv.hpp"
-#include <fstream>
-#include <sstream>
-
-
-// #include <vector>
+# include <iostream>
+# include "../../includes/webserv.hpp"
+# include <fstream>
+# include <sstream>
 
 class ServerConfig;
 class Client;
-// Class declaration
+
 class HTTPRequest {
  public:
   HTTPRequest();
   HTTPRequest(Client *client, ServerConfig& conf);
-  //HTTPRequest(std::string request, ServerConfig& conf); //old constructor
   HTTPRequest(const HTTPRequest &other);
   HTTPRequest &operator=(const HTTPRequest &rhs);
   ~HTTPRequest();

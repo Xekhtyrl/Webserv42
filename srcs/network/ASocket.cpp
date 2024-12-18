@@ -12,7 +12,6 @@ void ASocket::testConnection(int item) const {
 	if (item < 0) {
 		perror("Failed to connect: ");
 		throw std::invalid_argument("Port or socket already in use");
-		// exit(1);
 	}
 }
 

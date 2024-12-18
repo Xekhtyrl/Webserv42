@@ -117,7 +117,6 @@ std::map<std::string, std::string> HTTPRequest::splitHeader(std::string request)
 
 bool	HTTPRequest::checkMethod(std::string method, ServerConfig& conf) {
 	std::string	route;
-
 	if (method == "GET" && conf[_route][GET])
 		return true;
 	if (method == "POST" && conf[_route][POST])
@@ -145,12 +144,12 @@ void	HTTPRequest::changePathURL(ServerConfig& conf) {
 	std::string urlEnd = "";
 
 	final = getRedirPath(conf, _method, urlBeg, urlEnd);
-	if (!urlBeg.size() || final.empty())
-		return;
 	if (urlBeg[0] == '/')
 		_route = urlBeg;
 	else
 		_route = "/" + urlBeg;
+	if (!urlBeg.size() || final.empty())
+		return;
 	if (_content.find(conf.getRoute()[_route].getExt())){
 		_CGIExt = conf.getRoute()[urlBeg].getExt();
 		_CGIPath = conf.getRoute()[urlBeg].getPath();
@@ -209,7 +208,7 @@ bool	HTTPRequest::incompleteBody(std::vector<unsigned char> buffer){
 		it++;
 		l++;
 	}
-	std::cout<<"received == "<<buffer.size()<<"; total == "<<(size_t)atoll(getHeader()["Content-Length"].c_str()) + l<<std::endl;
+	// std::cout<<"received == "<<buffer.size()<<"; total == "<<(size_t)atoll(getHeader()["Content-Length"].c_str()) + l<<std::endl;
 	if (buffer.size() <(size_t)atoll(getHeader()["Content-Length"].c_str()) + l)
 		return true;
 	return false;
@@ -236,7 +235,3 @@ void	HTTPRequest::divideUrlQuery(std::string statusLine){
 		_query = statusLine.substr(statusLine.find('?') + 1, statusLine.find_last_of(' ') - statusLine.find('?') - 1);
 	}
 }
-
-//tester redirection url
-//tester GET avec just enouvrant un dossier ex GET /webdata
-//autoindex how it work > how to GET

@@ -10,7 +10,7 @@ DIR_TEST	=	clientTest/
 DIR_CONF	=	Configuration/
 
 CONFIG		=	Config.cpp	RouteConfig.cpp	ServerConfig.cpp
-NETWORK		=	ASocket.cpp BindSocket.cpp ConnectSocket.cpp ListenSocket.cpp Server.cpp Client.cpp Manager.cpp 
+NETWORK		=	ASocket.cpp BindSocket.cpp ListenSocket.cpp Server.cpp Client.cpp Manager.cpp 
 UTILS		=	utils.cpp FileToVar.cpp VarToFile.cpp
 METHOD		=	DELETE.cpp GET.cpp POST.cpp
 PROTOCOL	=	HTTPReponse.cpp HTTPRequest.cpp HTTPRequestHandler.cpp
