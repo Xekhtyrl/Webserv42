@@ -15,12 +15,11 @@
 std::deque<Server*> servers;
 
 void serverClear(int signum) {
-	(void)signum;
 	for (std::deque<Server*>::iterator it = servers.begin(); it < servers.end(); ++it) {
 		delete *it;
 	}
 	servers.clear();
-	exit(1);
+	exit(signum);
 }
 
 
@@ -49,7 +48,8 @@ int main(int argc, char **argv) {
 			servers.push_back(new Server(*it));
 		}
 		catch (const std::invalid_argument& e) {
-			serverClear(0);
+			std::cerr << "Server deque size = " << servers.size() << std::endl;
+			serverClear(1);
 		}
 	}
 
@@ -59,8 +59,5 @@ int main(int argc, char **argv) {
 	// Run it all
 	serverManager.loop();
 
-	for (std::deque<Server*>::iterator it = servers.begin(); it < servers.end(); ++it) {
-		delete *it;
-	}
-	return (0);
+	serverClear(0);
 }

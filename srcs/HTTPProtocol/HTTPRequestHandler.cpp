@@ -39,14 +39,10 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 	int input[2];
 	(void)conf;
 
-	std::cerr<<"OH NO1"<<std::endl;
 	if (pipe(fd) || pipe(input)){
-		std::cerr<<"OH NO2"<<std::endl; //the fd pipe is for retrieving the content of the executed file, the input pipe is for sending the body to the CGI file
 		throw std::runtime_error(E500);} // don't know how to process this kind of error
-	std::cerr<<"OH NO3"<<std::endl;
 	if (!access(request.getContent().c_str(), X_OK))
 		throw std::runtime_error(E404);
-	std::cerr<<"OH NO4"<<std::endl;
 	env = setEnvCGI(request); //needed to send the data to create the response body int the request.getCGIExt() file... still don't know if necessary
 	if (fork() == 0){
 		dup2(fd[1], STDOUT_FILENO); //get the ouput
@@ -67,26 +63,27 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 	if (request.getMethod() == "POST"){ //send the input
 		close(input[0]);
 		try {
-			std::cerr<<"OH NO5"<<std::endl;
 			safeWrite(input[1], request.getBody(), 5);
 		}
 		catch (std::exception &e) {
 			throw std::runtime_error(E500);
 			close(input[1]);
-			// close(fd[0]);
+			for (int i = 0; env[i]; i++)
+				delete[] env[i];
+			delete[] env;
 			throw std::runtime_error(E500);
 		}
 		close(input[1]);
 	}
 	response.clear();
 	try {
-		std::cerr<<"OH NO6"<<std::endl;
 		std::vector<unsigned char> readVect = safeRead(fd[0]);
 		response.insert(response.end(), readVect.begin(), readVect.end());
 	}
 	catch (std::exception &e) {
-		std::cerr<<"OH NO6"<<std::endl;
-		// close(fd[0]);
+		for (int i = 0; env[i]; i++)
+			delete[] env[i];
+		delete[] env;
 		throw ((std::runtime_error&)e);
 	}
 	close(fd[0]);

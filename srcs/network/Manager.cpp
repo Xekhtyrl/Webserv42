@@ -92,7 +92,7 @@ void Manager::handleNewConnection(Server *server) {
 	Client* newClient = server->listenNewConnections();
 	if (!newClient) //error
 		return;
-	else //if new client connection was done by server,
+	else //if client connection was done by server,
 		_clientQueue.push_back(newClient);
 }
 

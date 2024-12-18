@@ -259,8 +259,8 @@ void callSelect(int maxFd, fd_set *readFds, fd_set *writeFds) {
 }
 
 void safeWrite(int fd, std::vector<unsigned char> writeVect, int n_tries) {
-	if (n_tries == 0){std::cerr<<"here1"<<std::endl;
-		throw std::runtime_error(E500);}
+	if (n_tries == 0)
+		throw std::runtime_error(E500);
 	else if (writeVect.empty())
 		return;
 	fd_set writeFd;
@@ -270,11 +270,11 @@ void safeWrite(int fd, std::vector<unsigned char> writeVect, int n_tries) {
 	FD_ZERO(&writeFd);
 	FD_SET(fd, &writeFd);
 	callSelect(fd, NULL, &writeFd);
-	if (!FD_ISSET(fd, &writeFd)){std::cerr<<"here2"<<std::endl;
-		throw std::runtime_error(E500);}
+	if (!FD_ISSET(fd, &writeFd))
+		throw std::runtime_error(E500);
 	int ret = write(fd, writeBuffer, writeVect.size());
-	if (ret < 0){std::cerr<<"here3"<<std::endl;
-		throw std::runtime_error(E500);}
+	if (ret < 0)
+		throw std::runtime_error(E500);
 	writeVect.erase(writeVect.begin(), writeVect.begin() + ret);
 	safeWrite(fd, writeVect, --n_tries);
 }
@@ -288,11 +288,10 @@ std::vector<unsigned char> safeRead(int fd) {
 	FD_SET(fd, &readFd);
 	callSelect(fd, &readFd, NULL);
 	if (!FD_ISSET(fd, &readFd)){
-		std::cerr<<fd<<"here4"<<std::endl;
 		throw std::runtime_error(E500);}
 	int ret = read(fd, buffer, BUFFER_SIZE);
-	if (ret < 0){std::cerr<<"here5"<<std::endl;
-		throw std::runtime_error(E500);}
+	if (ret < 0)
+		throw std::runtime_error(E500);
 	std::vector<unsigned char> readVect(buffer, buffer + ret);
 	if (ret == BUFFER_SIZE) {
 		std::vector<unsigned char> readMaterial = safeRead(fd);
