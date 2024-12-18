@@ -66,6 +66,7 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 			safeWrite(input[1], request.getBody(), 5); //ERR? //OFSTREAM?
 		}
 		catch (std::exception &e) {
+			throw std::runtime_error(E500);
 			close(input[1]);
 			close(fd[0]);
 		}
@@ -77,6 +78,7 @@ void	executeCGI(HTTPRequest& request, std::vector<unsigned char>& response, Serv
 		response.insert(response.end(), readVect.begin(), readVect.end());			///////POSSIBLE QUE RESPONSE SOIT VIDE EN CAS D'ERREUR
 	}
 	catch (std::exception &e) {
+		throw std::runtime_error(E500);
 	}
 	close(fd[0]);
 	wait(0);
