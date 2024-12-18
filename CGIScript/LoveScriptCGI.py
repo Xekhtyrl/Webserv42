@@ -20,7 +20,7 @@ def compareNames(name1, name2):
 						array.append(x)
 					done.append(n)
 				size += 1
-		i += 1  # Increment loop variable
+		i += 1
 	while len(array) > 2:
 	    array = calculateValues(array)
 	if len(array) == 2 and array[0] + array[1] < 6:

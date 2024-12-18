@@ -1,14 +1,14 @@
 
 #ifndef HTTPREPONSE_HPP_
-#define HTTPREPONSE_HPP_
+# define HTTPREPONSE_HPP_
 
-#include "HTTPRequest.hpp"
-#include "../../includes/webserv.hpp"
-#include <iostream>
+# include "HTTPRequest.hpp"
+# include "../../includes/webserv.hpp"
+# include <iostream>
 
 class HTTPRequest;
 class ServerConfig;
-// Class declaration
+
 class HTTPReponse {
  public:
   HTTPReponse();

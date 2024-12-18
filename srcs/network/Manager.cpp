@@ -43,7 +43,6 @@ int Manager::checkSockets(void) {
 		callSelect(maxFd, &_readFds, &_writeFds);
 	}
 	catch (std::exception &e) {
-		std::cerr << "caught an exception 3" << std::endl;
 		return -1;
 	}
 	return 0;

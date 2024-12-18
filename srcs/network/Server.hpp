@@ -4,7 +4,6 @@
 #include "Client.hpp"
 #include "../../includes/webserv.hpp"
 #include "../Configuration/ServerConfig.hpp"
-// # include "SERVERCONFIG_PATH" //
 #define VERBOSE false
 
 class Client;
@@ -13,11 +12,7 @@ class ListenSocket;
 
 class Server {
 	public:
-		// Server();
-		Server(ServerConfig config, int domain, int service, int protocol, u_long interface, int backlog);
 		Server(ServerConfig config);
-		// Server(const Server &other); //can't have two servers on the same port
-		// Server &operator=(const Server &rhs); //idem. Sorry Orthodox
 		~Server(void);
 
 		ListenSocket * getListenSocket(void) const ;
@@ -30,7 +25,6 @@ class Server {
 
 	private:
 		void closeConnection(Client *client);
-		// void checkIdleClient(Client &client);
 
 		ServerConfig 			_config;
 		ListenSocket *			_listenSocket;

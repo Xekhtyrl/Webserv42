@@ -1,11 +1,6 @@
 #include "Server.hpp"
 
-// Server::Server(ServerConfig config, int domain, int service, int protocol, u_long interface, int backlog) {
-// 	_listenSocket = new ListenSocket(domain, service, protocol, config.getPort(), interface, backlog);
-// 	_buffer = new char[BUFFER_SIZE + 1];
-// 	_config = config;
-// 	std::cout << config.getPort()<< " listening to new connections on port " << ntohs(_listenSocket->getAddress().sin_port) << std::endl;
-// }
+
 Server::Server(ServerConfig config) {
 	_listenSocket = new ListenSocket(AF_INET, SOCK_STREAM, 0, config.getPort(), INADDR_ANY, 20);
 	_buffer = new char[BUFFER_SIZE + 1];
@@ -17,7 +12,7 @@ Server::~Server(void) {
 	std::cout << "Shutting down server Host:" << _config.getHost()<< " Port:" << ntohs(_listenSocket->getAddress().sin_port) << std::endl;
 	close(_listenSocket->getSocket());
 	delete _listenSocket;
-	delete _buffer;
+	delete[] _buffer;
 }
 
 ListenSocket* Server::getListenSocket(void) const {
@@ -60,9 +55,11 @@ void Server::readSocket(Client *client) {
 	int received = 0;
 	char *readBuffer = _buffer;
 	int	bufferSize = BUFFER_SIZE;
+	int maxBufferSize = 1024 * 1024 * 6; // 6MB
 
 	if (client->getBodySize()) { //if incomplete request on first read() but we know the body size
 		bufferSize += client->getBodySize() - client->getReadBuffer().size();
+		bufferSize = (bufferSize > maxBufferSize ? maxBufferSize : bufferSize);
 		readBuffer = new char[bufferSize];
 	}
 	received = read(sock, readBuffer, bufferSize);
@@ -81,7 +78,7 @@ void Server::readSocket(Client *client) {
 		delete[] readBuffer;
 	if (VERBOSE)
 		printHeader(client->getReadBuffer(), received);
-	requestToResponseProcess(client, _config); //Leo's part
+	requestToResponseProcess(client, _config);
 }
 
 void Server::closeConnection(Client *client) {
@@ -92,7 +89,7 @@ void Server::closeConnection(Client *client) {
     if (it_1 != _activeConnections.end()) {
         _activeConnections.erase(it_1);
 	}
-	std::cout << "closed connection on socket " << sock << std::endl;
+	std::cout << "Closed connection on socket " << sock << std::endl;
 }
 
 void Server::printHeader(std::vector<unsigned char> buffer, int max) const {

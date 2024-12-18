@@ -11,7 +11,6 @@
 
 #include "network/ASocket.hpp"
 #include "network/BindSocket.hpp"
-#include "network/ConnectSocket.hpp"
 #include "network/ListenSocket.hpp"
 #include "network/Server.hpp"
 #include "network/Client.hpp"
