@@ -264,7 +264,8 @@ void safeWrite(int fd, std::vector<unsigned char> writeVect, int n_tries) {
 	else if (writeVect.empty())
 		return;
 	fd_set writeFd;
-	const char *writeBuffer = reinterpret_cast<const char *>(vecToStr(writeVect).c_str());
+	std::string tmp = vecToStr(writeVect); // macOs compiler was not working if not created as a temp string before 
+	const char *writeBuffer = reinterpret_cast<const char *>(tmp.c_str());
 
 	FD_ZERO(&writeFd);
 	FD_SET(fd, &writeFd);

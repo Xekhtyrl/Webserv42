@@ -38,6 +38,7 @@ void	executePOST(HTTPRequest& request, std::vector<unsigned char>& response, Ser
 	std::string boundary;
 
 	(void)conf;
+	std::cerr<<"here"<<std::endl;
 	if (Content.find("multipart/form-data") < Content.size()) {
 		boundary = Content.substr(Content.find("boundary=") + 9);
 		boundary = strTrim(boundary, "\" \n");
@@ -50,5 +51,6 @@ void	executePOST(HTTPRequest& request, std::vector<unsigned char>& response, Ser
 	else if (Content.find("text/plain") < Content.size())
 		POSTsimpleContent(response, body);
 	else{
+		std::cerr<<"error"<<std::endl;
 		throw std::runtime_error(E400);}
 }

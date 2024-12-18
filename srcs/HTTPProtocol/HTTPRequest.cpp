@@ -117,7 +117,7 @@ std::map<std::string, std::string> HTTPRequest::splitHeader(std::string request)
 
 bool	HTTPRequest::checkMethod(std::string method, ServerConfig& conf) {
 	std::string	route;
-
+	std::cerr<<_route<<std::endl;
 	if (method == "GET" && conf[_route][GET])
 		return true;
 	if (method == "POST" && conf[_route][POST])
@@ -145,12 +145,13 @@ void	HTTPRequest::changePathURL(ServerConfig& conf) {
 	std::string urlEnd = "";
 
 	final = getRedirPath(conf, _method, urlBeg, urlEnd);
-	if (!urlBeg.size() || final.empty())
-		return;
+	std::cerr<<urlBeg<<std::endl;
 	if (urlBeg[0] == '/')
 		_route = urlBeg;
 	else
 		_route = "/" + urlBeg;
+	if (!urlBeg.size() || final.empty())
+		return;
 	if (_content.find(conf.getRoute()[_route].getExt())){
 		_CGIExt = conf.getRoute()[urlBeg].getExt();
 		_CGIPath = conf.getRoute()[urlBeg].getPath();
