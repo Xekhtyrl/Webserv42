@@ -13,6 +13,7 @@ Server::~Server(void) {
 	close(_listenSocket->getSocket());
 	delete _listenSocket;
 	delete[] _buffer;
+	std::cerr << "deleted listen_sozket" << std::endl;
 }
 
 ListenSocket* Server::getListenSocket(void) const {
