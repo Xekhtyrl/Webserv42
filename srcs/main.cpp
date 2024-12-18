@@ -48,7 +48,6 @@ int main(int argc, char **argv) {
 			servers.push_back(new Server(*it));
 		}
 		catch (const std::invalid_argument& e) {
-			std::cerr << "Server deque size = " << servers.size() << std::endl;
 			serverClear(1);
 		}
 	}
