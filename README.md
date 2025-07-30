@@ -40,14 +40,7 @@ make
 ./webserv <config_file_path>  # optional: default used if none provided
 ```
 
----
-
-## 🧪 Testing Tips
-
-* Place a simple website under your `www` directory including `index.html`
-* Try endpoints such as `/cgi-bin/script.py` to execute dynamic scripting
-* Test with HTTP clients (curl, browser, Postman) and observe proper HTTP response codes and headers
-* Create deliberate bad requests to trigger error handling (404, 405, 413)
+then visit at http://localhost::<port>/
 
 ---
 
